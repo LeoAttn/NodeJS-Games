@@ -9,4 +9,4 @@ block content
         - for (var y = 0; y < 10; y++)
             tr
                 - for (var x = 0; x < 10; x++)
-                    td(style="border: 1px solid black; font-size: 15px")= y +" - "+ x
+                    td(class=x+"-"+y style="border: 1px solid black; font-size: 15px")= x +" - "+ y
