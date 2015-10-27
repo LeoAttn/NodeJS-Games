@@ -1,6 +1,12 @@
 extends layout
 
 block content
-  h1= title
+    h1= title
 
-  p "blabla"
+    p "blabla"
+
+    table(style="border-collapse: collapse;")
+        - for (var y = 0; y < 10; y++)
+            tr
+                - for (var x = 0; x < 10; x++)
+                    td(style="border: 1px solid black; font-size: 15px")= y +" - "+ x
