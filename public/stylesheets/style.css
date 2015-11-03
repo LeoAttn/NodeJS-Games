@@ -7,9 +7,19 @@ a {
     color: #00B7FF;
 }
 
+.tab-att {
+    border-collapse: collapse;
+}
+
+.tab-att td {
+    width: 30px;
+    height:30px;
+}
+
 .cell {
     width: 30px;
     height: 30px;
+    cursor: pointer;
 }
 
 .cell-click {
@@ -25,4 +35,9 @@ a {
     bottom: 5px;
     border: 5px solid #cc0000;
     border-radius: 20px;
+}
+
+.cell-center {
+    text-align: center;
+    vertical-align: middle;
 }

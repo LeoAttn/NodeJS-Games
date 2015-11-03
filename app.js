@@ -22,7 +22,7 @@ app.use(session({
     secret: 'Insane Battle',
     resave: false,
     saveUninitialized:true
-}))
+}));
 
 app.use(function(req, res, next){
     var name = req.session.name;

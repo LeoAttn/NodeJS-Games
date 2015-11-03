@@ -3,7 +3,9 @@ extends layout
 block content
     h1(onclick="testlog()")= title
 
-    table(style="border-collapse: collapse; cursor: pointer;")
+    p(class="compt")
+
+    table(class="tab-att cell-center")
         - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
         tr
             td

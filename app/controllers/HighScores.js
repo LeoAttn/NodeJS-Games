@@ -1,7 +1,7 @@
 require('../models/Highscore');
 
-var mongoose = require("mongoose"},
-    Highscore = mongoose.model('User')r
+var mongoose = require("mongoose"),
+    Highscore = mongoose.model('User');
 
 
 var Highscores = {
