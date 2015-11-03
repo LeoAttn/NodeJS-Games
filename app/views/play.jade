@@ -1,13 +1,20 @@
 extends layout
 
+
 block content
     h1(onclick="testlog()")= title
 
-    table(style="border-collapse: collapse;")
+    table(style="border-collapse: collapse; cursor: pointer;")
+        - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+        tr
+            td
+            - for (var x = 0; x < 10; x++)
+                td!= "<strong>" + (lettre[x]) + "</strong>"
         - for (var y = 0; y < 10; y++)
             tr
+                td!= "<strong>" + (y+1) + "</strong>"
                 - for (var x = 0; x < 10; x++)
-                    td(class=x + "-" + y style="border: 1px solid black; font-size: 15px")= x + " - " + y
+                    td(class="cellule "+x+"-"+y onclick="clictab("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")= x + " - " + y
 
     img(src="/images/tux.png" width="250px")
 

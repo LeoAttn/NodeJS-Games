@@ -1,7 +1,13 @@
-var x = 0;
+var clic = 0;
 
 function testlog() {
-    x++;
+    clic++;
     console.log("TEST");
     console.log(x);
+}
+
+function clictab(x, y) {
+    console.log("Le joueur a clique sur la case x=" + x + " et y=" + y + ".");
+    $(".cellule").css("background", "none");
+    $("."+x+"-"+y).css("background", "red");
 }
