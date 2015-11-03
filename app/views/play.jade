@@ -14,7 +14,7 @@ block content
             tr
                 td!= "<strong>" + (y+1) + "</strong>"
                 - for (var x = 0; x < 10; x++)
-                    td(class="cellule "+x+"-"+y onclick="clictab("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")= x + " - " + y
+                    td(class="cell "+x+"-"+y onclick="clictab("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")
 
     img(src="/images/tux.png" width="250px")
 
