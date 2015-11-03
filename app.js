@@ -1,4 +1,6 @@
 var express = require('express');
+var session = require('express-session')
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -16,6 +18,22 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(session({
+    secret: 'Insane Battle',
+    resave: false,
+    saveUninitialized:true
+}))
+
+app.use(function(req, res, next){
+    var name = req.session.name;
+    if(!name)
+    {
+        name = req.session.name = "";
+    }
+    next();
+});
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
