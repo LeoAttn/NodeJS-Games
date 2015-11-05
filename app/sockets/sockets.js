@@ -35,7 +35,7 @@ var IO = {
     },
     TirClient: function (s) {
         s.on('TirClient', function (datax, datay) {
-            console.log("valeur tir : (" + datax + ", " + datay + ")");
+            console.log("position tir : (" + datax + ", " + datay + ")");
             s.emit('TirServ', datax, datay);
         });
     }
