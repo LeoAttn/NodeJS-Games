@@ -9,6 +9,7 @@ var IO = {
         this.connection(function (socket) {
           // Toutes les fonctions que l'on va rajouter devront être ici
             $this.disconnect(socket);
+            $this.tir(socket);
         });
     },
     get: function () {
@@ -31,6 +32,11 @@ var IO = {
                 s.broadcast.emit('UserState', io.sockets.sockets.length);
             });
         }
+    },
+    tir: function (s) {
+        s.on('tir', function (datax, datay) {
+            console.log("valeur tir : (" + datax + ", " + datay + ")");
+        });
     }
 };
 

@@ -1,22 +1,24 @@
 extends layout
 
 block content
+    - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+
     h1(onclick="testlog()")= title
 
-    p(class="compt")
+    p(class="compt") 0
 
     table(class="tab-att cell-center")
-        - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
         tr
             td
-            - for (var x = 0; x < 10; x++)
-                td!= "<strong>" + (lettre[x]) + "</strong>"
+            - for (var x = 1; x <= 10; x++)
+                td!= "<strong>" + (x) + "</strong>"
         - for (var y = 0; y < 10; y++)
             tr
-                td!= "<strong>" + (y+1) + "</strong>"
+                td!= "<strong>" + (lettre[y]) + "</strong>"
                 - for (var x = 0; x < 10; x++)
                     td(class="cell "+x+"-"+y onclick="clictab("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")
 
     img(src="/images/tux.png" width="250px")
 
-    script(src="/javascripts/test.js")
+block script
+    script(src="/javascripts/playClient.js")
