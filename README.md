@@ -1,8 +1,10 @@
 # NodeJS-Games
 
-Test depuis Github
-2
+*Projet à réaliser en Node.js*
 
-test test
+Contributeurs :
 
-test apres push 42
+- Léo
+- Timothé
+
+**Sujet : Créer un site pour jouer à la Bataille Navale.**

@@ -20,6 +20,11 @@ socket.on('UserState', function (data) {
 socket.on('TirServ', function (x, y) {
     $(".cell-def").removeClass("cell-click");
     $(".cell-def."+x+"-"+y).addClass("cell-click");
+    /*setTimeout(function() {
+        var x = Math.ceil(Math.random()*10)-1;
+        var y = Math.ceil(Math.random()*10)-1;
+        clicTabAtt(x, y);
+    }, 300);*/
 });
 
 

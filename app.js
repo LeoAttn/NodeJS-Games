@@ -1,5 +1,5 @@
 var express = require('express');
-var session = require('express-session')
+var session = require('express-session');
 
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,6 +11,7 @@ var routes = require('./app/routes/index');
 var play = require('./app/routes/play');
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app/views'));
@@ -73,6 +74,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;
