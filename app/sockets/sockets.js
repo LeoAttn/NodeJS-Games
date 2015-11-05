@@ -1,4 +1,4 @@
-var io; 
+var io;
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -7,9 +7,9 @@ var IO = {
 
         //on appelle cette function à chaque connection d'un nouvel utilisateur
         this.connection(function (socket) {
-          // Toutes les fonctions que l'on va rajouter devront être ici
+            // Toutes les fonctions que l'on va rajouter devront être ici
             $this.disconnect(socket);
-            $this.tir(socket);
+            $this.TirClient(socket);
         });
     },
     get: function () {
@@ -28,14 +28,15 @@ var IO = {
     disconnect: function (s) {
         if (s) {
             s.on('disconnect', function () {
-              // On prévient tout le monde qu'une personne s'est deconnectée 
+                // On prévient tout le monde qu'une personne s'est deconnectée
                 s.broadcast.emit('UserState', io.sockets.sockets.length);
             });
         }
     },
-    tir: function (s) {
-        s.on('tir', function (datax, datay) {
+    TirClient: function (s) {
+        s.on('TirClient', function (datax, datay) {
             console.log("valeur tir : (" + datax + ", " + datay + ")");
+            s.emit('TirServ', datax, datay);
         });
     }
 };

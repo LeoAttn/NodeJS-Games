@@ -7,7 +7,7 @@ block content
 
     p(class="compt") 0
 
-    table(class="tab-att cell-center")
+    table(class="tab tab-att cell-center float")
         tr
             td
             - for (var x = 1; x <= 10; x++)
@@ -16,7 +16,18 @@ block content
             tr
                 td!= "<strong>" + (lettre[y]) + "</strong>"
                 - for (var x = 0; x < 10; x++)
-                    td(class="cell "+x+"-"+y onclick="clictab("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")
+                    td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")
+
+    table(class="tab tab-def cell-center float")
+        tr
+            td
+            - for (var x = 1; x <= 10; x++)
+                td!= "<strong>" + (x) + "</strong>"
+        - for (var y = 0; y < 10; y++)
+            tr
+                td!= "<strong>" + (lettre[y]) + "</strong>"
+                - for (var x = 0; x < 10; x++)
+                    td(class="cell cell-def "+x+"-"+y style="border: 1px solid black; font-size: 15px")
 
     img(src="/images/tux.png" width="250px")
 

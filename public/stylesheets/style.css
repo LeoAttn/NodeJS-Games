@@ -7,11 +7,11 @@ a {
     color: #00B7FF;
 }
 
-.tab-att {
+.tab {
     border-collapse: collapse;
 }
 
-.tab-att td {
+.tab td {
     width: 30px;
     height:30px;
 }
@@ -24,6 +24,7 @@ a {
 
 .cell-click {
     position: relative;
+    animation: tir 0.5s linear;
 }
 
 .cell-click:after {
@@ -40,4 +41,14 @@ a {
 .cell-center {
     text-align: center;
     vertical-align: middle;
+}
+
+.float {
+    float: left;
+}
+
+@keyframes tir {
+    0% {background-color: transparent;}
+    20% {background-color: #ff827b;}
+    100% {background-color: transparent;}
 }
