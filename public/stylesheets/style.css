@@ -1,54 +1,60 @@
 body {
-    padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-    color: #00B7FF;
+  color: #00B7FF;
 }
 
 .tab {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 .tab td {
-    width: 30px;
-    height:30px;
+  width: 30px;
+  height: 30px;
+}
+
+.tab-container {
+  display: flex;
 }
 
 .cell {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 
 .cell-click {
-    position: relative;
-    animation: tir 0.5s linear;
+  position: relative;
+  animation: tir 0.5s linear;
 }
 
 .cell-click:after {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 5px solid #cc0000;
-    border-radius: 20px;
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border: 5px solid #cc0000;
+  border-radius: 20px;
 }
 
 .cell-center {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.float {
-    float: left;
+  text-align: center;
+  vertical-align: middle;
 }
 
 @keyframes tir {
-    0% {background-color: transparent;}
-    20% {background-color: #ff827b;}
-    100% {background-color: transparent;}
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: #ff827b;
+  }
+  100% {
+    background-color: transparent;
+  }
 }

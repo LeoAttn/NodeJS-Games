@@ -38,7 +38,7 @@ var IO = {
             console.log("position tir : (" + datax + ", " + datay + ")");
             setTimeout(function() {
                 s.emit('TirServ', datax, datay)
-            }, 100);
+            }, 000);
         });
     }
 };
