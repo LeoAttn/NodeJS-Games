@@ -1,6 +1,8 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #333;
+  color: #FFF;
 }
 
 a {
@@ -24,14 +26,20 @@ a {
   width: 30px;
   height: 30px;
   cursor: pointer;
+  border: solid 1px #FFF;
 }
 
-.cell-click {
+.cell-touche {
   position: relative;
-  animation: tir 0.5s linear;
+  animation: touche 0.5s linear;
 }
 
-.cell-click:after {
+.cell-dansleau {
+  position: relative;
+  animation: dansleau 0.5s linear;
+}
+
+.cell-touche:after, .cell-dansleau:after {
   content: '';
   position: absolute;
   top: 5px;
@@ -42,17 +50,33 @@ a {
   border-radius: 20px;
 }
 
+.cell-dansleau:after {
+  border-color: #FFF;
+}
+
 .cell-center {
   text-align: center;
   vertical-align: middle;
 }
 
-@keyframes tir {
+@keyframes touche {
   0% {
     background-color: transparent;
   }
   20% {
     background-color: #ff827b;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes dansleau {
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: #BBB;
   }
   100% {
     background-color: transparent;

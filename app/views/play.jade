@@ -3,9 +3,11 @@ extends layout
 block content
     - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
-    h1(onclick="testlog()")= title
+    h1(onclick="testLog()")= title
 
     p(class="compt") 0
+
+    button(onclick="clicButValid()") Valider les positions
 
     div(class="tab-container")
         table(class="tab tab-att cell-center")
@@ -17,7 +19,7 @@ block content
                 tr
                     td!= "<strong>" + (lettre[y]) + "</strong>"
                     - for (var x = 0; x < 10; x++)
-                        td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="border: 1px solid black; font-size: 15px")
+                        td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="font-size: 15px")
 
         div(style="width: 50px")
         table(class="tab tab-def cell-center")
@@ -29,9 +31,11 @@ block content
                 tr
                     td!= "<strong>" + (lettre[y]) + "</strong>"
                     - for (var x = 0; x < 10; x++)
-                        td(class="cell cell-def "+x+"-"+y style="border: 1px solid black; font-size: 15px")
+                        td(id="id-"+x+"-"+y class="cell cell-def "+x+"-"+y ondrop="drop(event)" ondragover="allowDrop(event)")
 
-    img(src="/images/tux.png" width="250px")
+    img(id="Bat1" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
+    img(id="Bat2" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
+    img(id="Bat3" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
 
 block script
     script(src="/javascripts/playClient.js")

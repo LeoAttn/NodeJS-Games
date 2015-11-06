@@ -10,6 +10,7 @@ var IO = {
             // Toutes les fonctions que l'on va rajouter devront être ici
             $this.disconnect(socket);
             $this.TirClient(socket);
+            $this.BatPos(socket);
         });
     },
     get: function () {
@@ -34,11 +35,42 @@ var IO = {
         }
     },
     TirClient: function (s) {
-        s.on('TirClient', function (datax, datay) {
-            console.log("position tir : (" + datax + ", " + datay + ")");
-            setTimeout(function() {
-                s.emit('TirServ', datax, datay)
-            }, 000);
+        s.on('TirClient', function (x, y) {
+            var type;
+            console.log("position tir : (" + x + ", " + y + ")");
+            if (y < 5) {
+                type = "dansleau";
+            } else {
+                type = "touche";
+            }
+            s.emit('TirServ', type, x, y)
+        });
+    },
+    BatPos: function (s) {
+        s.on('BatPos', function (pos) {
+            console.log(pos);
+
+            var bat1 = pos.Bat1.match(/[0-9]+/ig);
+            var bat2 = pos.Bat2.match(/[0-9]+/ig);
+            var bat3 = pos.Bat3.match(/[0-9]+/ig);
+            console.log(bat1);
+
+            var batPos = {
+                "Bat1": {
+                    x: bat1[0],
+                    y: bat1[1]
+                },
+                "Bat2": {
+                    x: bat2[0],
+                    y: bat2[1]
+                },
+                "Bat3": {
+                    x: bat3[0],
+                    y: bat3[1]
+                }
+            };
+
+            console.log(batPos);
         });
     }
 };
