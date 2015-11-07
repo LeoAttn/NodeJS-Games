@@ -33,11 +33,8 @@ block content
                     - for (var x = 0; x < 10; x++)
                         td(id="id-"+x+"-"+y class="cell cell-def "+x+"-"+y ondrop="drop(event)" ondragover="allowDrop(event)")
 
-    img(id="Bat1" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
-    img(id="Bat2" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
-    img(id="Bat3" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
-    img(id="Bat4" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
-    img(id="Bat5" src="/images/tux.png" width="25px" draggable=true ondragstart="drag(event)")
+    - for (var i=1; i<=5; i++)
+        img(id="Bat"+i class="bat" src="/images/tux.png" width="25px" draggable="true" ondragstart="drag(event)" style="cursor: grab;")
 
 block script
     script(src="/javascripts/playClient.js")

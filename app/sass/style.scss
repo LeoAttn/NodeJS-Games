@@ -27,9 +27,14 @@ a {
 .cell {
     width: $cellSize;
     height: $cellSize;
-    cursor: pointer;
     border: solid 1px #FFF;
 
+}
+
+.tab-att {
+    .cell {
+        cursor: pointer;
+    }
 }
 
 .cell-touche {

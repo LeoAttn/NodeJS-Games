@@ -29,7 +29,7 @@ app.use(session({
 app.use('/stylesheets', sass({
     src: __dirname + '/app/sass',
     dest: __dirname + '/public/stylesheets',
-    debug: true,
+    debug: false,
     outputStyle: 'expanded'
 }));
 

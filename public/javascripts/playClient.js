@@ -14,13 +14,10 @@ function clicButValid() {
         "Bat4": $('#Bat4').last().parent().prop('id'),
         "Bat5": $('#Bat5').last().parent().prop('id')
     };
-    /*console.log($('#Bat1').last().parent().prop('id'));
-    var batPos = {
-        "Bat1": "1-1",
-        "Bat2": "4-8",
-        "Bat3": "6-2"
-    };*/
     socket.emit('BatPos', batPos);
+
+    $(".bat").attr('draggable', 'false')
+             .css('cursor', 'default');
 }
 
 function clicTabAtt(x, y) {
@@ -30,20 +27,7 @@ function clicTabAtt(x, y) {
     socket.emit('TirClient', x, y);
 }
 
-socket.on('UserState', function (data) {
-    $('.compt').text(data);
-});
-
-socket.on('TirServ', function (type, x, y) {
-    if (type == "touche") {
-        //$(".cell-def").removeClass("cell-touche");
-        $(".cell-att." + x + "-" + y).addClass("cell-touche");
-    } else if (type == "dansleau") {
-        //$(".cell-def").removeClass("cell-aleau");
-        $(".cell-att." + x + "-" + y).addClass("cell-dansleau");
-    }
-});
-
+// Fonction pour gérer le drag n' drop
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -58,5 +42,19 @@ function drop(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
+// Gestion des évènemment emit par le serveur
 
+socket.on('UserState', function (data) {
+    $('.compt').text(data);
+});
+
+socket.on('TirServ', function (type, x, y) {
+    if (type == "touche") {
+        //$(".cell-def").removeClass("cell-touche");
+        $(".cell-att." + x + "-" + y).addClass("cell-touche");
+    } else if (type == "dansleau") {
+        //$(".cell-def").removeClass("cell-aleau");
+        $(".cell-att." + x + "-" + y).addClass("cell-dansleau");
+    }
+});
 
