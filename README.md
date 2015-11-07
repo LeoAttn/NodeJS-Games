@@ -1,10 +1,10 @@
 # NodeJS-Games
 
-*Projet à réaliser en Node.js*
+*Projet Ã  rÃ©aliser en Node.js*
 
 Contributeurs :
 
-- Léo
-- Timothé
+- LÃ©o
+- TimothÃ©
 
-**Sujet : Créer un site pour jouer à la Bataille Navale.**
+**Sujet : CrÃ©er un site pour jouer Ã  la Bataille Navale.**
