@@ -1,4 +1,5 @@
 var io;
+var batPos = [[], [], [], [], [], [], [], [], [], []];
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -38,10 +39,10 @@ var IO = {
         s.on('TirClient', function (x, y) {
             var type;
             console.log("position tir : (" + x + ", " + y + ")");
-            if (y < 5) {
-                type = "dansleau";
-            } else {
+            if (batPos[x][y]) {
                 type = "touche";
+            } else {
+                type = "dansleau";
             }
             s.emit('TirServ', type, x, y)
         });
@@ -50,25 +51,15 @@ var IO = {
         s.on('BatPos', function (pos) {
             console.log(pos);
 
-            var bat1 = pos.Bat1.match(/[0-9]+/ig);
-            var bat2 = pos.Bat2.match(/[0-9]+/ig);
-            var bat3 = pos.Bat3.match(/[0-9]+/ig);
-            console.log(bat1);
+            var bat = [];
+            bat[0] = pos.Bat1.match(/[0-9]+/ig);
+            bat[1] = pos.Bat2.match(/[0-9]+/ig);
+            bat[2] = pos.Bat3.match(/[0-9]+/ig);
+            bat[3] = pos.Bat4.match(/[0-9]+/ig);
+            bat[4] = pos.Bat5.match(/[0-9]+/ig);
 
-            var batPos = {
-                "Bat1": {
-                    x: bat1[0],
-                    y: bat1[1]
-                },
-                "Bat2": {
-                    x: bat2[0],
-                    y: bat2[1]
-                },
-                "Bat3": {
-                    x: bat3[0],
-                    y: bat3[1]
-                }
-            };
+            for (var i=0; i<5; i++)
+                batPos[parseInt(bat[i][0])][parseInt(bat[i][1])] = 1;
 
             console.log(batPos);
         });

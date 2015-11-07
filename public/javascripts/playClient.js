@@ -10,7 +10,9 @@ function clicButValid() {
     var batPos = {
         "Bat1": $('#Bat1').last().parent().prop('id'),
         "Bat2": $('#Bat2').last().parent().prop('id'),
-        "Bat3": $('#Bat3').last().parent().prop('id')
+        "Bat3": $('#Bat3').last().parent().prop('id'),
+        "Bat4": $('#Bat4').last().parent().prop('id'),
+        "Bat5": $('#Bat5').last().parent().prop('id')
     };
     /*console.log($('#Bat1').last().parent().prop('id'));
     var batPos = {
