@@ -1,7 +1,8 @@
 $cellSize: 30px;
+$cellSpace: 2px;
 
 body {
-    padding: 50px;
+    padding: 30px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: #333;
     color: #FFF;
@@ -9,6 +10,14 @@ body {
 
 a {
     color: #00B7FF;
+}
+
+.bat-container {
+    display: flex;
+    margin: 40px;
+    div {
+        margin: 10px;
+    }
 }
 
 .tab {
@@ -28,7 +37,6 @@ a {
     width: $cellSize;
     height: $cellSize;
     border: solid 1px #FFF;
-
 }
 
 .tab-att {
@@ -50,12 +58,12 @@ a {
 .cell-touche:after, .cell-dansleau:after {
     content: '';
     position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 5px solid #cc0000;
-    border-radius: 20px;
+    top: $cellSpace * 3 - 1;
+    left: $cellSpace * 3 - 1;
+    right: $cellSpace * 3;
+    bottom: $cellSpace * 3;
+    border: ($cellSpace * 3 - $cellSpace / 2) solid #cc0000;
+    border-radius: $cellSize / 2;
 }
 
 .cell-dansleau:after {
@@ -65,6 +73,15 @@ a {
 .cell-center {
     text-align: center;
     vertical-align: middle;
+}
+
+.bat {
+    width: $cellSize - $cellSpace * 2;
+    height: $cellSize - $cellSpace * 2;
+    margin: $cellSpace;
+    background-color: #22A7F0;
+    border-radius: ($cellSize - $cellSpace) / 4;
+    cursor: grab;
 }
 
 

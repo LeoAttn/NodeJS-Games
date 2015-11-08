@@ -51,15 +51,13 @@ var IO = {
         s.on('BatPos', function (pos) {
             console.log(pos);
 
-            var bat = [];
-            bat[0] = pos.Bat1.match(/[0-9]+/ig);
-            bat[1] = pos.Bat2.match(/[0-9]+/ig);
-            bat[2] = pos.Bat3.match(/[0-9]+/ig);
-            bat[3] = pos.Bat4.match(/[0-9]+/ig);
-            bat[4] = pos.Bat5.match(/[0-9]+/ig);
-
-            for (var i=0; i<5; i++)
-                batPos[parseInt(bat[i][0])][parseInt(bat[i][1])] = 1;
+            var bat;
+            for (var k in pos) {
+                if (bat = pos[k].match(/[0-9]+/ig))
+                    batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
+                else
+                    s.emit('Message', 'Veuillez placer les cinq bateaux !');
+            }
 
             console.log(batPos);
         });

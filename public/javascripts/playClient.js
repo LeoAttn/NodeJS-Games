@@ -58,3 +58,7 @@ socket.on('TirServ', function (type, x, y) {
     }
 });
 
+socket.on('Message', function (msg) {
+    console.log(msg);
+});
+
