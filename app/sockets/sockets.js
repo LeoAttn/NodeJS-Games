@@ -1,5 +1,5 @@
 var io;
-var batPos = [[], [], [], [], [], [], [], [], [], []];
+var batPos = [[]];
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
