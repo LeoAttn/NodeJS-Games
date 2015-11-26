@@ -19,5 +19,7 @@ var Users = {
             password: req.body.pseudo,
             email: req.body.email
         });
-    },
-}
+    }
+};
+
+module.exports = Users;

@@ -1,6 +1,6 @@
 require('../models/Room');
 
-var Users = require('Users');
+var Users = require('./Users');
 
 var mongoose = require("mongoose"),
     Room = mongoose.model('Room');
@@ -34,4 +34,6 @@ var Rooms = {
             }
         }
     }
-}
+};
+
+module.exports = Rooms;

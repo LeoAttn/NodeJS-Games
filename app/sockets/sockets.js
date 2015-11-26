@@ -1,5 +1,5 @@
 var io;
-var batPos = [[]];
+var varRoom = [];
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -12,6 +12,7 @@ var IO = {
             $this.disconnect(socket);
             $this.TirClient(socket);
             $this.BatPos(socket);
+            $this.adduser(socket);
         });
     },
     get: function () {
@@ -35,21 +36,39 @@ var IO = {
             });
         }
     },
+    adduser: function (s) {
+        if (s) {
+            s.on('adduser', function (name) {
+                s.username = name;
+                s.room = name+'01';
+                s.join(name+'01');
+            });
+        }
+    },
     TirClient: function (s) {
         s.on('TirClient', function (x, y) {
             var type;
             console.log("position tir : (" + x + ", " + y + ")");
-            if (batPos[x][y]) {
+            if (varRoom[s.room].Tab1[x][y]) {
                 type = "touche";
             } else {
                 type = "dansleau";
             }
-            s.emit('TirServ', type, x, y)
+            s.emit('TirServ', type, x, y);
+            console.log("Name : " + s.username);
+            console.log("Room : " + s.room);
+            for (var k in varRoom)
+                console.log(varRoom[k]);
         });
     },
     BatPos: function (s) {
         s.on('BatPos', function (pos) {
             console.log(pos);
+
+            var batPos = [[], [], [], [], [], [], [], [], [], []];
+            for (var y=0; y<10; y++)
+                for (var x=0; x<10; x++)
+                    batPos[x][y] = 0;
 
             var bat;
             for (var k in pos) {
@@ -58,6 +77,8 @@ var IO = {
                 else
                     s.emit('Message', 'Veuillez placer les cinq bateaux !');
             }
+            varRoom[s.room] = {};
+            varRoom[s.room].Tab1 = batPos;
 
             console.log(batPos);
         });

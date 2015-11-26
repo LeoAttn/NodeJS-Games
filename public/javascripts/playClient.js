@@ -44,6 +44,10 @@ function drop(ev) {
 
 // Gestion des évènemment emit par le serveur
 
+socket.on('connect', function() {
+    socket.emit('adduser', prompt("What's your name?"));
+});
+
 socket.on('UserState', function (data) {
     $('.compt').text(data);
 });

@@ -17,6 +17,6 @@ var Highscores = {
             pseudo : req.body.pseudo,
             score: req.body.score
         });
-    },
+    }
     
-}
+};
