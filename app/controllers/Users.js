@@ -5,15 +5,15 @@ var mongoose = require("mongoose"),
 
 
 var Users = {
-    
-    index : function(req, res){
-        User.find({}), function (err, users){
-            if(err) throw err;
+
+    index: function (req, res) {
+        User.find({}), function (err, users) {
+            if (err) throw err;
         }
     },
-    create : function(req,res) {
+    create: function (req, res) {
         var u = new User({
-            last_name:req.body.last_names,
+            last_name: req.body.last_names,
             first_name: req.body.first_name,
             pseudo: req.body.pseudo,
             password: req.body.pseudo,

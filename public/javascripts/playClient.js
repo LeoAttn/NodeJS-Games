@@ -17,7 +17,7 @@ function clicButValid() {
     socket.emit('BatPos', batPos);
 
     $(".bat").attr('draggable', 'false')
-             .css('cursor', 'default');
+        .css('cursor', 'default');
 }
 
 function clicTabAtt(x, y) {
@@ -44,7 +44,7 @@ function drop(ev) {
 
 // Gestion des évènemment emit par le serveur
 
-socket.on('connect', function() {
+socket.on('connect', function () {
     socket.emit('adduser', prompt("What's your name?"));
 });
 

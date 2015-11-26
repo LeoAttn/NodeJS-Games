@@ -40,8 +40,8 @@ var IO = {
         if (s) {
             s.on('adduser', function (name) {
                 s.username = name;
-                s.room = name+'01';
-                s.join(name+'01');
+                s.room = name + '01';
+                s.join(name + '01');
             });
         }
     },
@@ -66,8 +66,8 @@ var IO = {
             console.log(pos);
 
             var batPos = [[], [], [], [], [], [], [], [], [], []];
-            for (var y=0; y<10; y++)
-                for (var x=0; x<10; x++)
+            for (var y = 0; y < 10; y++)
+                for (var x = 0; x < 10; x++)
                     batPos[x][y] = 0;
 
             var bat;

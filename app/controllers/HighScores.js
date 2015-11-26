@@ -5,18 +5,18 @@ var mongoose = require("mongoose"),
 
 
 var Highscores = {
-    
-    index: function(req,res){
-        Highscore.find({}, function (err, users){
-             
+
+    index: function (req, res) {
+        Highscore.find({}, function (err, users) {
+
         });
-        
+
     },
-    create: function(req,res){
+    create: function (req, res) {
         var h = new Highscore({
-            pseudo : req.body.pseudo,
+            pseudo: req.body.pseudo,
             score: req.body.score
         });
     }
-    
+
 };
