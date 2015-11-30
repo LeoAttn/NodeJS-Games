@@ -15,9 +15,6 @@ function clicButValid() {
         "Bat5": $('#Bat5').last().parent().prop('id')
     };
     socket.emit('BatPos', batPos);
-
-    $(".bat").attr('draggable', 'false')
-        .css('cursor', 'default');
 }
 
 function clicTabAtt(x, y) {
@@ -45,11 +42,16 @@ function drop(ev) {
 // Gestion des évènemment emit par le serveur
 
 socket.on('connect', function () {
-    socket.emit('adduser', prompt("What's your name?"));
+        socket.emit('adduser', prompt("Quel est votre nom ?"));
 });
 
 socket.on('UserState', function (data) {
     $('.compt').text(data);
+});
+
+socket.on('PosBatValid', function () {
+    $(".bat").attr('draggable', 'false')
+        .css('cursor', 'default');
 });
 
 socket.on('TirServ', function (type, x, y) {

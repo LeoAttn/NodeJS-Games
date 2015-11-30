@@ -9,17 +9,24 @@ var mongoose = require("mongoose"),
 var Rooms = {
 
     index: function (req, res) {
-        Room.find({}, function (err, rooms) {
+        Room.find({}).exec(function (err, rooms) {
             if (err) throw err;
-        })
+            //res.json(rooms);
+            res.render('index', {title: 'Bataille Navale', room: rooms});
+        });
     },
     create: function (req, res) {
         var board = [[], [], [], [], [], [], [], [], [], []];
         var r = new Room({
-            creator: req.session.USER,
+            //creator: req.session.USER,
             board1: board,
-            private: req.body.private
-        })
+            private: false//req.body.private
+        });
+        r.save(function (err) {
+            if (err) throw err;
+            console.log('User inserted');
+        });
+        res.redirect('/');
     },
     join: function (req, res) {
         Room.findOne({_id: req.query.id}, function (err, room) {
@@ -31,7 +38,7 @@ var Rooms = {
                 room.playing = true;
                 res.render('Join', {title: 'Bataille Navale - En cours'});
             }
-        })
+        });
     }
 };
 

@@ -70,15 +70,21 @@ var IO = {
                 for (var x = 0; x < 10; x++)
                     batPos[x][y] = 0;
 
-            var bat;
+            var bat, nbBat = 0;
             for (var k in pos) {
-                if (bat = pos[k].match(/[0-9]+/ig))
+                if (bat = pos[k].match(/[0-9]+/ig)) {
                     batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
-                else
-                    s.emit('Message', 'Veuillez placer les cinq bateaux !');
+                    nbBat ++;
+                } else {
+                    s.emit('Message', k + ' non defini !');
+                }
             }
-            varRoom[s.room] = {};
-            varRoom[s.room].Tab1 = batPos;
+            if (nbBat == 5) {
+                varRoom[s.room] = {};
+                varRoom[s.room].Tab1 = batPos;
+                s.emit('PosBatValid');
+                s.emit('Message', 'Positions des bateaux validées');
+            }
 
             console.log(batPos);
         });

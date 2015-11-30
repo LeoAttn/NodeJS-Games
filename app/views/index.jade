@@ -1,4 +1,5 @@
 extends layout
+//var room = require('../controllers/Rooms');
 
 block content
     h1= title
@@ -6,3 +7,10 @@ block content
 
     h2
         a(href="play") Commencer une partie
+
+    h2
+        a(href="create") Créer une nouvelle room
+
+    - for (var k in room)
+        h3
+            a(href="join/?id="+k)= "Rejoindre la room " + k
