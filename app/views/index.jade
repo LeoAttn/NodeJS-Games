@@ -14,11 +14,11 @@ block content
 
     form(class = "create-room" action="/create" method = "post")
         label(for= "username") Nom d'utilisateur
-        input(type ="text", name = "username")
+        input(type ="text" name = "username" required="required")
         label(for="roomName") Nom de la partie
-        input(type = "text", name = "roomName")
+        input(type = "text" name = "roomName")
         label(for = "private") Privée
-        input(type = "checkbox", name = "private", value=false)
+        input(type = "checkbox" name = "private", value=false)
         button(name = "submit")= "Créer"
 
     div.list-room
@@ -38,3 +38,4 @@ block content
                     td
                         form(action="/join" method="post")
                             button(name="id" value=room[k]._id) Rejoindre
+                    td: button(onclick='prompt("Lien :", "localhost/join?id='+room[k]._id+'")') Lien

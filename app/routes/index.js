@@ -10,5 +10,6 @@ router.get('/', room.index);
 
 router.post('/create', room.create);
 router.post('/join', room.join);
+router.get('/join', room.joinLink);
 
 module.exports = router;

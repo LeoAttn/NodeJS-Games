@@ -1,5 +1,4 @@
 var io;
-var varRoom = [];
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -8,6 +7,7 @@ var IO = {
 
         //on appelle cette function à chaque connection d'un nouvel utilisateur
         this.connection(function (socket) {
+
             // Toutes les fonctions que l'on va rajouter devront être ici
             $this.disconnect(socket);
             $this.TirClient(socket);
@@ -19,7 +19,18 @@ var IO = {
         return io;
     },
     connection: function (callback) {
-        io.on('connection', function (s) {
+        io.on('connection', function (socket) {
+            socket.on('createRoom', function(data){
+                socket.join(data.room);
+            });
+            socket.on('joinRoom', function (data){
+                socket.join(data.room);
+                io.in(data.room).emit('userJoined', data);
+            });
+            socket.on('leaveRoom', function(data){
+                socket.leave()
+                io.in(data.room).emit('userLeft', data);
+            })
             // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
             s.broadcast.emit('UserState', io.sockets.sockets.length);
             // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter
