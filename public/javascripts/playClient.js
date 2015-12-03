@@ -39,6 +39,10 @@ function drop(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
+function copyclipboard(intext) {
+   prompt(intext);
+}
+
 // Gestion des évènemment emit par le serveur
 
 socket.on('connect', function () {
