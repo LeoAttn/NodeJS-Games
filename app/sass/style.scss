@@ -105,16 +105,32 @@ a {
 }
 
 .list-room{
-    background-color: #F9F9F9;
+    width : 50%;
+    background-color:#F2F2F2;
     border-radius: 10px;
     color:black;
 }
 
 .list-room h3{
-
-    background-color:#F2F2F2;
     text-align: center;
     line-height: 30px;
+}
+
+.list-room table{
+    border-collapse: collapse;
+    background-color: #F9F9F9;
+    border : solid #F2F2F2 10px;
+    border-radius: 10px;
+    width:100%;
+    text-align: center;
+}
+.list-room table td{
+    height : 50px;
+}
+
+.list-room table tr{
+    box-shadow: 0px 0px 0px 2px #656565;
+    border-radius: 10px;
 }
 
 @keyframes touche {

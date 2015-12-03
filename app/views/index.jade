@@ -23,10 +23,17 @@ block content
     div.list-room
         h3 Rejoignez une partie !
         table
+            tr
+                td Nom de la partie
+                td Créateur
+                td IsPlaying
+                td IsPrivate
             - for (var k in room)
                 tr
                     td=room[k].name
                     td=room[k].creator
+                    td=room[k].playing
+                    td=room[k].private
                     td
                         form(action="/join" method="post")
-                            button(name="id" value=room[k]._id)= "Rejoindre la partie " + (k+1)
+                            button(name="id" value=room[k]._id) Rejoindre
