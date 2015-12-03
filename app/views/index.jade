@@ -13,4 +13,6 @@ block content
 
     - for (var k in room)
         h3
-            a(href="join/?id="+k)= "Rejoindre la room " + k
+            form(action="/join" method="post")
+                button(name="id" value=room[k]._id)= "Rejoindre la room " + k
+        p= room[k]

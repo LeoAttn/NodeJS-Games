@@ -9,6 +9,6 @@ var room = require('../controllers/Rooms');
 router.get('/', room.index);
 
 router.get('/create', room.create);
-router.get('/join', room.join);
+router.post('/join', room.join);
 
 module.exports = router;
