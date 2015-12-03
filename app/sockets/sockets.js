@@ -30,13 +30,13 @@ var IO = {
             socket.on('leaveRoom', function(data){
                 socket.leave()
                 io.in(data.room).emit('userLeft', data);
-            })
+            });
             // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
-            s.broadcast.emit('UserState', io.sockets.sockets.length);
+            socket.broadcast.emit('UserState', io.sockets.sockets.length);
             // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter
-            s.emit('UserState', io.sockets.sockets.length);
+            socket.emit('UserState', io.sockets.sockets.length);
 
-            callback(s);
+            callback(socket);
         });
     },
     disconnect: function (s) {
