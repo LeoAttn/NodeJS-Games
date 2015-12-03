@@ -1,4 +1,4 @@
 function click()
 {
-       console.log("test");
+    console.log("test");
 }

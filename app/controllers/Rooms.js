@@ -9,18 +9,21 @@ var mongoose = require("mongoose"),
 var Rooms = {
 
     index: function (req, res) {
+        if(req.query.error == "full")
+            var msg = "La partie est pleine ! Désolé...";
         Room.find({}, function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
-            res.render('index', {title: 'Bataille Navale', room: rooms});
+            res.render('index', {title: 'Bataille Navale', room: rooms, message : msg});
         });
     },
     create: function (req, res) {
         var board = [[], [], [], [], [], [], [], [], [], []];
         var r = new Room({
             //creator: req.session.USER,
+            name: req.body.roomName,
             board1: board,
-            private: false//req.body.private
+            private: req.body.private
         });
         r.save(function (err) {
             if (err) throw err;
@@ -40,6 +43,8 @@ var Rooms = {
                 room.save();
                 res.render('play', {title: 'Bataille Navale - En cours'});
             }
+            else
+                res.redirect('/?error=full');
         });
     }
 };

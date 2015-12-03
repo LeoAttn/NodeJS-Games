@@ -84,6 +84,38 @@ a {
     cursor: grab;
 }
 
+.error-bg {
+    background-color: crimson;
+    height: 50px;
+    border-radius: 10px;
+    color : white;
+    width : 50%;
+    margin: auto;
+    line-height: 50px;
+    text-align: center;
+
+}
+
+.create-room{
+
+}
+
+.create-room label{
+    display:block;
+}
+
+.list-room{
+    background-color: #F9F9F9;
+    border-radius: 10px;
+    color:black;
+}
+
+.list-room h3{
+
+    background-color:#F2F2F2;
+    text-align: center;
+    line-height: 30px;
+}
 
 @keyframes touche {
     0% {background-color: transparent;}

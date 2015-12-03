@@ -5,14 +5,28 @@ block content
     h1= title
     p Welcome to #{title}
 
+    div.error-bg
+        p #{message}
+
     h2
         a(href="play") Commencer une partie
 
-    h2
-        a(href="create") Créer une nouvelle room
+    form(class = "create-room" action="/create" method = "post")
+        label(for= "username") Nom d'utilisateur
+        input(type ="text", name = "username")
+        label(for="roomName") Nom de la partie
+        input(type = "text", name = "roomName")
+        label(for = "private") Privée
+        input(type = "checkbox", name = "private", value=false)
+        button(name = "submit")= "Créer"
 
-    - for (var k in room)
-        h3
-            form(action="/join" method="post")
-                button(name="id" value=room[k]._id)= "Rejoindre la room " + k
-        p= room[k]
+    div.list-room
+        h3 Rejoignez une partie !
+        table
+            - for (var k in room)
+                tr
+                    td=room[k].name
+                    td=room[k].creator
+                    td
+                        form(action="/join" method="post")
+                            button(name="id" value=room[k]._id)= "Rejoindre la partie " + (k+1)
