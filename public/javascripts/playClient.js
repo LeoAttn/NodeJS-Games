@@ -24,7 +24,7 @@ function clicTabAtt(x, y) {
     socket.emit('TirClient', x, y);
 }
 
-// Fonction pour gérer le drag n' drop
+// Fonction pour gÃ©rer le drag n' drop
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -39,7 +39,7 @@ function drop(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
-// Gestion des évènemment emit par le serveur
+// Gestion des Ã©vÃ¨nemment emit par le serveur
 
 socket.on('connect', function () {
         socket.emit('adduser', prompt("Quel est votre nom ?"));
@@ -67,4 +67,3 @@ socket.on('TirServ', function (type, x, y) {
 socket.on('Message', function (msg) {
     console.log(msg);
 });
-
