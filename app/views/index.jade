@@ -5,8 +5,9 @@ block content
     h1= title
     p Welcome to #{title}
 
-    div.error-bg
-        p #{message}
+    if message
+        div.error-bg
+            p #{message}
 
     h2
         a(href="play") Commencer une partie
