@@ -41,6 +41,10 @@ function drop(ev) {
 
 // Gestion des évènemment emit par le serveur
 
+function copyclipboard(intext) {
+   prompt(intext);
+}
+
 socket.on('connect', function () {
         socket.emit('adduser', prompt("Quel est votre nom ?"));
 });
