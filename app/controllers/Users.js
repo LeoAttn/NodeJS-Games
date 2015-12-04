@@ -13,12 +13,13 @@ var Users = {
     },
     create: function (req, res) {
         var u = new User({
-            last_name: req.body.last_names,
+            last_name: req.body.last_name,
             first_name: req.body.first_name,
             pseudo: req.body.pseudo,
             password: req.body.pseudo,
             email: req.body.email
         });
+        u.save();
     }
 };
 

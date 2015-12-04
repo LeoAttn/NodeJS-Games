@@ -1,5 +1,6 @@
 var io;
 var varRoom = [];
+var roomID;
 var isValid = false;
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -10,6 +11,7 @@ var IO = {
         this.connection(function (socket) {
 
             // Toutes les fonctions que l'on va rajouter devront être ici
+            $this.joinRoom(socket);
             $this.disconnect(socket);
             $this.TirClient(socket);
             $this.BatPos(socket);
@@ -21,14 +23,20 @@ var IO = {
     },
     connection: function (callback) {
         io.on('connection', function (socket) {
-            if(!socket.request.session)
-                socket.emit('whoRU', io.socket.)
+            console.log("Client Connected ");
+            socket.emit('handshake');
             // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
             socket.broadcast.emit('UserState', io.sockets.sockets.length);
             // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter
             socket.emit('UserState', socket.handshake.username, io.sockets.sockets.length);
             callback(socket);
         });
+    },
+    joinRoom: function(s){
+        s.on('join', function(data){
+            s.handshake.session = data;
+            console.log("SESSION : " + s.handshake.session.username);
+        })
     },
     disconnect: function (s) {
         s.on('disconnect', function () {
@@ -40,8 +48,8 @@ var IO = {
     adduser: function (s) {
         if (s) {
             s.on('adduser', function (name) {
-                s.username = name;
-                s.room = name + '01';
+                s.handshake.session.username = name;
+                s.handshake.session.roomId = name + '01';
                 s.join(name + '01');
             });
         }

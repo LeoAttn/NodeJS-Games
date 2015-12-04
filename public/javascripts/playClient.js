@@ -1,7 +1,6 @@
 var clic = 0;
 var socket = io.connect('http://localhost');
 
-
 function testLog() {
     clic++;
     console.log("TEST - " + clic);
@@ -45,10 +44,6 @@ function drop(ev) {
 function copyclipboard(intext) {
    prompt(intext);
 }
-
-socket.on('connect', function () {
-
-});
 
 socket.on('whoRU', function(){
     socket.emit('adduser', prompt("Quel est votre nom ?"));
@@ -100,4 +95,9 @@ socket.on('errorMsg', function (session, msg) {
 
 socket.on('Message', function (session, msg) {
     console.log(msg);
+});
+
+socket.on('handshake', function(){
+    console.log(JSON.stringify(sess));
+    socket.emit('joinRoom', sess);
 });

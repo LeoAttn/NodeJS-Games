@@ -20,7 +20,7 @@ var Rooms = {
         });
     },
     create: function (req, res) {
-
+        req.session.username = req.body.username;
         if (!(req.body.roomName))
             req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
 
@@ -28,26 +28,26 @@ var Rooms = {
         req.body.private = (req.body.private == "on");
 
         var r = new Room({
-            //creator: req.session.USER,
+            creator: req.session.username,
             name: req.body.roomName,
             board1: board,
             private: req.body.private
         });
         r.save(function (err) {
             if (err) throw err;
-            console.log('User inserted');
+            console.log('Room inserted');
         });
-        res.redirect('/');
+        res.redirect('/play?id='+ r._id);
     },
     join: function (req, res) {
         Room.findOne({_id: req.body.id}, function (err, room) {
             if (err) throw err;
             //res.json(room);
-            if (room.playing == false) {
+            if (room.ready == false) {
                 var board = [[], [], [], [], [], [], [], [], [], []];
+                room.ready = true;
                 room.board2 = board;
-                room.player2 = req.session.USER;
-                room.playing = true;
+                room.player2 = req.session.username;
                 room.save();
 
                 res.redirect('/play?id='+ room._id);
@@ -62,7 +62,7 @@ var Rooms = {
             //res.json(room);
             if (room) {
                 if (room.playing == false) {
-                    res.redirect('/play?id='+ room._id);
+                    res.redirect('/join');
                 }
                 else
                     res.redirect('/?error=full');
@@ -74,14 +74,26 @@ var Rooms = {
         });
     },
     play:function(req, res){
+
         Room.findOne({_id: req.query.id}, function(err, room){
             if(err) throw err;
             if(room){
-                if (room.playing == false) {
-                    res.render('play', {title: "Battaille Navale en cours", room : room});
+                if (!room.playing) {
+                    if(room.ready)
+                        room.playing = true;
+                    req.session.roomID = room._id;
+                     console.log("SESSION : " + JSON.stringify(req.session));
+                    res.render('play', {title: "Battaille Navale en cours", session : req.session});
+                }
+                else if(room.playing == true)
+                {
+                    res.redirect('/?error=full');
                 }
                 else
-                    res.redirect('/?error=full');
+                {
+                    res.redirect('/?error=joinFirst');
+                }
+
             } else {
                     res.redirect('/?error=noroom');
             }

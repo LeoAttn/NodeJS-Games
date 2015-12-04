@@ -6,6 +6,7 @@ block content
     div(class="tab-container")
         div
             h1(onclick="testLog()")= title
+            p=session.username
             p(class="compt") 0
             button(onclick="clicButValid()") Valider les positions
         div(class="bat-container")
@@ -38,6 +39,6 @@ block content
 
 
 block script
-    script.
-        var room= room;
+    script('text/javascript').
+        var sess = #{session};
     script(src="/javascripts/playClient.js")
