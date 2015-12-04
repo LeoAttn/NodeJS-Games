@@ -1,9 +1,6 @@
 var clic = 0;
 var socket = io.connect('http://localhost');
 
-window.onload = function(){
-   //$(".error-bg").addClass("disable");
-};
 
 function testLog() {
     clic++;
@@ -50,7 +47,11 @@ function copyclipboard(intext) {
 }
 
 socket.on('connect', function () {
-        socket.emit('adduser', prompt("Quel est votre nom ?"));
+
+});
+
+socket.on('whoRU', function(){
+    socket.emit('adduser', prompt("Quel est votre nom ?"));
 });
 
 socket.on('UserState', function (session, data) {

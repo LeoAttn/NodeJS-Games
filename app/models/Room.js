@@ -9,7 +9,8 @@ var schema = new Schema({
     board2: {type: Array, required: false},
     playing: {type: Boolean, default: false},
     private: {type: Boolean, required: true},
-    createdOn: {type: Date, default: Date.now}
+    createdOn: {type: Date, default: Date.now},
+    lastConnect: {type : Date, default:Date.now}
 });
 
 exports.model = mongoose.model('Room', schema);

@@ -7,7 +7,6 @@ var mongoose = require("mongoose"),
 
 
 var Rooms = {
-
     index: function (req, res) {
         if (req.query.error == "full")
             var msg = "La partie est pleine ! Désolé...";
@@ -51,7 +50,7 @@ var Rooms = {
                 room.playing = true;
                 room.save();
 
-                res.redirect('/play');
+                res.redirect('/play?id='+ room._id);
             }
             else
                 res.redirect('/?error=full');
@@ -63,7 +62,7 @@ var Rooms = {
             //res.json(room);
             if (room) {
                 if (room.playing == false) {
-                    res.render('joinLink', {title: 'Bataille Navale', room: room});
+                    res.redirect('/play?id='+ room._id);
                 }
                 else
                     res.redirect('/?error=full');
@@ -72,6 +71,20 @@ var Rooms = {
 
             }
 
+        });
+    },
+    play:function(req, res){
+        Room.findOne({_id: req.query.id}, function(err, room){
+            if(err) throw err;
+            if(room){
+                if (room.playing == false) {
+                    res.render('play', {title: "Battaille Navale en cours", room : room});
+                }
+                else
+                    res.redirect('/?error=full');
+            } else {
+                    res.redirect('/?error=noroom');
+            }
         });
     }
 };
