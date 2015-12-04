@@ -20,10 +20,7 @@ var Rooms = {
         });
     },
     create: function (req, res) {
-<<<<<<< HEAD
         req.session.username = req.body.username;
-=======
->>>>>>> origin/master
         if (!(req.body.roomName))
             req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
         var board = [[], [], [], [], [], [], [], [], [], []];
@@ -85,17 +82,12 @@ var Rooms = {
         Room.findOne({_id: req.query.id}, function(err, room){
             if(err) throw err;
             if(room){
-<<<<<<< HEAD
                 if (!room.playing) {
                     if(room.ready)
                         room.playing = true;
                     req.session.roomID = room._id;
                      console.log("SESSION : " + JSON.stringify(req.session));
                     res.render('play', {title: "Battaille Navale en cours", session : req.session});
-=======
-                if (room.playing != false) {
-                    res.render('play', {title: "Bataille Navale en cours", room : room});
->>>>>>> origin/master
                 }
                 else if(room.playing == true)
                 {
