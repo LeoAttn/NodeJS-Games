@@ -111,6 +111,7 @@ a {
 .list-room {
   min-width: 750px;
   max-width: 50%;
+  margin-bottom: 40px;
   //background-color:#F2F2F2;
   //border-radius: 10px;
   //color:black;
@@ -215,6 +216,10 @@ body.IE7 .Switch { width: 78px; }
   }
 }
 
+.switch-form {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
 
 .switch {
   position: relative;

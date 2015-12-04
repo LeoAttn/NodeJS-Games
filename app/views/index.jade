@@ -9,44 +9,49 @@ block content
         div.error-bg
             p #{message}
 
-    h2
-        a(href="play") Commencer une partie
+    div.list-room
+        h3 Créez une partie !
 
-    form.form-horizontal(class = "create-room" action="/create" method = "post")
-        div.form-group
-            label.col-sm-2.control-label(for= "Uname") Nom d'utilisateur
-            div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" required="required")
-        div.form-group
-            label.col-sm-2.control-label(for="Rname") Nom de la partie
-            div.col-sm-6: input.form-control(type = "text" name = "roomName" id="Rname")
-        div.form-group
-            label.col-sm-2.control-label(for= "private") Partie privée
-            div.col-sm-6
-                label.switch
-                    input.switch-input(type="checkbox" name="private" id="private")
-                    span.switch-label(data-on="On" data-off="Off")
-                    span.switch-handle
-        div.form-group: div.col-sm-offset-2.col-sm-6
-            button.btn.btn-default(name = "submit") Créer la partie
+        form.form-horizontal(class = "create-room" action="/create" method = "post")
+            div.form-group
+                label.col-sm-3.control-label(for= "Uname") Nom d'utilisateur
+                div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" required="required")
+            div.form-group
+                label.col-sm-3.control-label(for="Rname") Nom de la partie
+                div.col-sm-6: input.form-control(type = "text" name = "roomName" id="Rname")
+            div.form-group
+                label.col-sm-3.control-label(for= "private") Partie privée
+                div.col-sm-6.switch-form
+                        label.switch
+                            input.switch-input.checkbox(type="checkbox" name="private" id="private")
+                            span.switch-label(data-on="On" data-off="Off")
+                            span.switch-handle
+            div.form-group: div.col-sm-offset-3.col-sm-6
+                button.btn.btn-primary(name = "submit") Créer la partie
 
     div.list-room
         h3 Rejoignez une partie !
-        table.table.table-striped.table-bordered
-            thead
-                th.center Nom de la partie
-                th.center Créateur
-                th.center IsPlaying
-                th.center IsPrivate
-                th.center Rejoindre
-                th.center Lien
-            - for (var k in room)
-                tr
-                    td=room[k].name
-                    td=room[k].creator
-                    td=room[k].playing
-                    td=room[k].private
-                    td.center
-                        form(action="/join" method="post")
-                            button.btn.btn-primary(name="id" value=room[k]._id) Rejoindre
-                    td.center
-                        button.btn.btn-default(onclick='prompt("Lien :", "localhost/join?id='+room[k]._id+'")') Lien
+        form.form-horizontal(action="/join" method="post")
+            div.form-group
+                label.col-sm-3.control-label(for= "Uname") Nom d'utilisateur
+                div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" required="required")
+
+            table.table.table-striped.table-bordered
+                thead
+                    th.center Nom de la partie
+                    th.center Créateur
+                    th.center IsPlaying
+                    th.center IsPrivate
+                    th.center Rejoindre
+                    th.center Lien
+                - for (var k in room)
+                    tr
+                        td=room[k].name
+                        td=room[k].creator
+                        td=room[k].playing
+                        td=room[k].private
+                        td.center
+
+                                button.btn.btn-primary(name="id" value=room[k]._id) Rejoindre
+                        td.center
+                            button.btn.btn-default(onclick='prompt("Lien :", "localhost/join?id='+room[k]._id+'")') Lien

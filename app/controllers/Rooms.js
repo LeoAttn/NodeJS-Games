@@ -26,7 +26,7 @@ var Rooms = {
         req.body.private = (req.body.private == "on");
 
         var r = new Room({
-            //creator: req.session.USER,
+            creator: req.body.username,
             name: req.body.roomName,
             board1: board,
             private: req.body.private
@@ -38,13 +38,15 @@ var Rooms = {
         res.redirect('/');
     },
     join: function (req, res) {
+        console.log("id = "+req.body.id);
+        console.log("name = "+req.body.username);
         Room.findOne({_id: req.body.id}, function (err, room) {
             if (err) throw err;
             //res.json(room);
             if (room.playing == false) {
                 var board = [[], [], [], [], [], [], [], [], [], []];
                 room.board2 = board;
-                room.player2 = req.session.USER;
+                room.player2 = req.body.username;
                 room.playing = true;
                 room.save(function (err) {
                     if (err) throw err;
