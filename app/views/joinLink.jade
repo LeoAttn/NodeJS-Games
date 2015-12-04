@@ -6,12 +6,13 @@ block content
 
     div.list-room
         h3 Rejoignez une partie !
-        table
-            tr
-                td Nom de la partie
-                td Créateur
-                td IsPlaying
-                td IsPrivate
+        table.table
+            thead
+                th Nom de la partie
+                th Créateur
+                th IsPlaying
+                th IsPrivate
+                th Rejoindre
             tr
                 td=room.name
                 td=room.creator
