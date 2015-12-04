@@ -26,10 +26,13 @@ var IO = {
 <<<<<<< e8927064e0d2eca03d6e072749af0087a60882b2
             if(!socket.request.session)
                 socket.emit('whoRU');
+<<<<<<< HEAD
 =======
             console.log("Client Connected ");
             socket.emit('handshake');
 >>>>>>> update session var between socket and http
+=======
+>>>>>>> origin/master
             // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
             socket.broadcast.emit('UserState', io.sockets.sockets.length);
             // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter
