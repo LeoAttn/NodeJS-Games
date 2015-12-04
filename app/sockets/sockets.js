@@ -1,5 +1,6 @@
 var io;
-
+var varRoom = [];
+var isValid = false;
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
         io = IO;
@@ -24,8 +25,7 @@ var IO = {
             // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
             socket.broadcast.emit('UserState', io.sockets.sockets.length);
             // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter
-            socket.emit('UserState', io.sockets.sockets.length);
-
+            socket.emit('UserState', socket.handshake.username, io.sockets.sockets.length);
             callback(socket);
         });
     },
@@ -48,18 +48,23 @@ var IO = {
     },
     TirClient: function (s) {
         s.on('TirClient', function (x, y) {
-            var type;
-            console.log("position tir : (" + x + ", " + y + ")");
-            if (varRoom[s.room].Tab1[x][y]) {
-                type = "touche";
-            } else {
-                type = "dansleau";
+            if(isValid)
+            {
+                var type;
+                console.log("position tir : (" + x + ", " + y + ")");
+                if (varRoom[s.room].Tab1[x][y]) {
+                    type = "touche";
+                } else {
+                    type = "dansleau";
+                }
+                console.log(type);
+                s.emit('TirServ', type, x, y);
             }
-            s.emit('TirServ', type, x, y);
             console.log("Name : " + s.username);
             console.log("Room : " + s.room);
-            for (var k in varRoom)
-                console.log(varRoom[k]);
+
+            //for (var k in varRoom)
+            //    console.log(varRoom[k])
         });
     },
     BatPos: function (s) {
@@ -77,16 +82,18 @@ var IO = {
                     batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
                     nbBat ++;
                 } else {
-                    s.emit('Message', k + ' non defini !');
+                    s.emit('Message', s.handshake.username,  k + ' non defini !');
                 }
             }
             if (nbBat == 5) {
+                isValid = true;
                 varRoom[s.room] = {};
                 varRoom[s.room].Tab1 = batPos;
                 s.emit('PosBatValid');
-                s.emit('Message', 'Positions des bateaux validées');
+                s.emit('Message', s.handshake.username,  'Positions des bateaux validées');
             }
-
+            else
+                s.emit('errorMsg', s.handshake.username, "Vous n'avez pas mis tous les bateaux !");
             console.log(batPos);
         });
     }

@@ -1,6 +1,10 @@
 var clic = 0;
 var socket = io.connect('http://localhost');
 
+window.onload = function(){
+   //$(".error-bg").addClass("disable");
+};
+
 function testLog() {
     clic++;
     console.log("TEST - " + clic);
@@ -49,16 +53,19 @@ socket.on('connect', function () {
         socket.emit('adduser', prompt("Quel est votre nom ?"));
 });
 
-socket.on('UserState', function (data) {
+socket.on('UserState', function (session, data) {
     $('.compt').text(data);
 });
 
-socket.on('PosBatValid', function () {
-    $(".bat").attr('draggable', 'false')
-        .css('cursor', 'default');
+socket.on('PosBatValid', function (session) {
+    $(".error p").each(function(){
+        if($(this).html() == "Vous n'avez pas mis tous les bateaux !")
+            $(this).parent().remove();
+    })
+    $(".bat").attr('draggable', 'false').css('cursor', 'default');
 });
 
-socket.on('TirServ', function (type, x, y) {
+socket.on('TirServ', function (session, type, x, y) {
     if (type == "touche") {
         //$(".cell-def").removeClass("cell-touche");
         $(".cell-att." + x + "-" + y).addClass("cell-touche");
@@ -68,6 +75,28 @@ socket.on('TirServ', function (type, x, y) {
     }
 });
 
-socket.on('Message', function (msg) {
+socket.on('errorMsg', function (session, msg) {
+    //Créer une div erreur avec le message a l'interieur
+    var elem = $('.error');
+    var testMsg = true;
+    //On vérifie qu'une div avec le meme message n'existe pas.
+    $('.error p').each(function(){
+        var text = $(this).html();
+        if(text == msg)
+            testMsg = false;
+    })
+    //On créer la div si un message identique n'existe pas.
+    if(testMsg)
+    {
+        var div = $('<div>',{
+            class : 'error error-bg'
+        }).prependTo('body');
+        $('<p>', {
+            text: msg
+        }).appendTo(div);
+    }
+})
+
+socket.on('Message', function (session, msg) {
     console.log(msg);
 });

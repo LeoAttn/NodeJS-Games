@@ -133,6 +133,14 @@ a {
     border-radius: 10px;
 }
 
+.disable{
+    display:none;
+}
+
+.enable{
+    display: block;
+}
+
 @keyframes touche {
     0% {background-color: transparent;}
     20% {background-color: #ff827b;}
