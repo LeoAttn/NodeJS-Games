@@ -39,12 +39,19 @@ function drop(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
-// Gestion des évènemment emit par le serveur
-
 function copyclipboard(intext) {
-   prompt(intext);
+    prompt(intext);
 }
 
+<<<<<<< e8927064e0d2eca03d6e072749af0087a60882b2
+// Gestion des évènemment emit par le serveur
+
+socket.on('connect', function () {
+
+});
+
+=======
+>>>>>>> update session var between socket and http
 socket.on('whoRU', function(){
     socket.emit('adduser', prompt("Quel est votre nom ?"));
 });

@@ -23,12 +23,11 @@ var Rooms = {
         req.session.username = req.body.username;
         if (!(req.body.roomName))
             req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
-
         var board = [[], [], [], [], [], [], [], [], [], []];
         req.body.private = (req.body.private == "on");
 
         var r = new Room({
-            creator: req.session.username,
+            creator: req.body.username,
             name: req.body.roomName,
             board1: board,
             private: req.body.private
@@ -40,6 +39,8 @@ var Rooms = {
         res.redirect('/play?id='+ r._id);
     },
     join: function (req, res) {
+        console.log("id = "+req.body.id);
+        console.log("name = "+req.body.username);
         Room.findOne({_id: req.body.id}, function (err, room) {
             if (err) throw err;
             //res.json(room);
@@ -47,8 +48,12 @@ var Rooms = {
                 var board = [[], [], [], [], [], [], [], [], [], []];
                 room.ready = true;
                 room.board2 = board;
-                room.player2 = req.session.username;
-                room.save();
+                room.player2 = req.body.username;
+                room.playing = true;
+                room.save(function (err) {
+                    if (err) throw err;
+                    console.log('User enter in Room');
+                });
 
                 res.redirect('/play?id='+ room._id);
             }
@@ -62,13 +67,12 @@ var Rooms = {
             //res.json(room);
             if (room) {
                 if (room.playing == false) {
-                    res.redirect('/join');
+                    res.render('joinLink',  {title: "Bataille Navale", room : room});
                 }
                 else
                     res.redirect('/?error=full');
             } else {
                 res.redirect('/?error=noroom');
-
             }
 
         });
