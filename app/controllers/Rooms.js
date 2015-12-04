@@ -20,10 +20,8 @@ var Rooms = {
         });
     },
     create: function (req, res) {
-
         if (!(req.body.roomName))
             req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
-
         var board = [[], [], [], [], [], [], [], [], [], []];
         req.body.private = (req.body.private == "on");
 
@@ -35,7 +33,7 @@ var Rooms = {
         });
         r.save(function (err) {
             if (err) throw err;
-            console.log('User inserted');
+            console.log('Room inserted');
         });
         res.redirect('/');
     },
@@ -48,7 +46,10 @@ var Rooms = {
                 room.board2 = board;
                 room.player2 = req.session.USER;
                 room.playing = true;
-                room.save();
+                room.save(function (err) {
+                    if (err) throw err;
+                    console.log('User enter in Room');
+                });
 
                 res.redirect('/play?id='+ room._id);
             }
@@ -62,13 +63,12 @@ var Rooms = {
             //res.json(room);
             if (room) {
                 if (room.playing == false) {
-                    res.redirect('/play?id='+ room._id);
+                    res.render('joinLink',  {title: "Bataille Navale", room : room});
                 }
                 else
                     res.redirect('/?error=full');
             } else {
                 res.redirect('/?error=noroom');
-
             }
 
         });
@@ -77,8 +77,8 @@ var Rooms = {
         Room.findOne({_id: req.query.id}, function(err, room){
             if(err) throw err;
             if(room){
-                if (room.playing == false) {
-                    res.render('play', {title: "Battaille Navale en cours", room : room});
+                if (room.playing != false) {
+                    res.render('play', {title: "Bataille Navale en cours", room : room});
                 }
                 else
                     res.redirect('/?error=full');

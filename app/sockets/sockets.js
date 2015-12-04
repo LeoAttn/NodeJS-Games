@@ -22,7 +22,7 @@ var IO = {
     connection: function (callback) {
         io.on('connection', function (socket) {
             if(!socket.request.session)
-                socket.emit('whoRU', io.socket.)
+                socket.emit('whoRU');
             // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
             socket.broadcast.emit('UserState', io.sockets.sockets.length);
             // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter

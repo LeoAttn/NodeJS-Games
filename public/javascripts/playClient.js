@@ -40,11 +40,11 @@ function drop(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
-// Gestion des évènemment emit par le serveur
-
 function copyclipboard(intext) {
-   prompt(intext);
+    prompt(intext);
 }
+
+// Gestion des évènemment emit par le serveur
 
 socket.on('connect', function () {
 
