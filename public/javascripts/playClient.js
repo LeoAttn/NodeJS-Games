@@ -99,5 +99,5 @@ socket.on('Message', function (session, msg) {
 
 socket.on('handshake', function(){
     console.log(JSON.stringify(sess));
-    socket.emit('joinRoom', sess);
+    socket.emit('join', sess);
 });

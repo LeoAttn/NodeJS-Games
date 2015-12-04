@@ -1,4 +1,7 @@
 var io;
+
+var RoomsC = require('../controllers/Rooms');
+
 var varRoom = [];
 var roomID;
 var isValid = false;
@@ -35,12 +38,14 @@ var IO = {
     joinRoom: function(s){
         s.on('join', function(data){
             s.handshake.session = data;
-            console.log("SESSION : " + s.handshake.session.username);
+            console.log("SESSION : " + JSON.stringify(s.handshake.session));
         })
     },
-    disconnect: function (s) {
-        s.on('disconnect', function () {
+    disconnect: function (s) {        s.on('disconnect', function () {
+            console.log("Client Disconnected");
             s.leave();
+            if(io.sockets.sockets.length == 0)
+            RoomsC.delete(s.handshake.session.roomID);
             // On prévient tout le monde qu'une personne s'est deconnectée
             s.broadcast.emit('UserState', io.sockets.sockets.length);
         });

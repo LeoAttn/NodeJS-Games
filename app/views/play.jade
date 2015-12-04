@@ -39,6 +39,6 @@ block content
 
 
 block script
-    script('text/javascript').
-        var sess = #{session};
+    script(type = "text/javascript").
+        var sess = !{JSON.stringify(session)};
     script(src="/javascripts/playClient.js")
