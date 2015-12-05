@@ -35,17 +35,18 @@ var IO = {
             callback(socket);
         });
     },
-    joinRoom: function(s){
-        s.on('join', function(data){
+    joinRoom: function (s) {
+        s.on('join', function (data) {
             s.handshake.session = data;
             console.log("SESSION : " + JSON.stringify(s.handshake.session));
         })
     },
-    disconnect: function (s) {        s.on('disconnect', function () {
+    disconnect: function (s) {
+        s.on('disconnect', function () {
             console.log("Client Disconnected");
             s.leave();
-            if(io.sockets.sockets.length == 0)
-            RoomsC.delete(s.handshake.session.roomID);
+            if (io.sockets.sockets.length == 0)
+                RoomsC.delete(s.handshake.session.roomID);
             // On prévient tout le monde qu'une personne s'est deconnectée
             s.broadcast.emit('UserState', io.sockets.sockets.length);
         });
@@ -61,8 +62,7 @@ var IO = {
     },
     TirClient: function (s) {
         s.on('TirClient', function (x, y) {
-            if(isValid)
-            {
+            if (isValid) {
                 var type;
                 console.log("position tir : (" + x + ", " + y + ")");
                 if (varRoom[s.room].Tab1[x][y]) {
@@ -93,9 +93,9 @@ var IO = {
             for (var k in pos) {
                 if (bat = pos[k].match(/[0-9]+/ig)) {
                     batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
-                    nbBat ++;
+                    nbBat++;
                 } else {
-                    s.emit('Message', s.handshake.username,  k + ' non defini !');
+                    s.emit('Message', s.handshake.username, k + ' non defini !');
                 }
             }
             if (nbBat == 5) {
@@ -103,7 +103,7 @@ var IO = {
                 varRoom[s.room] = {};
                 varRoom[s.room].Tab1 = batPos;
                 s.emit('PosBatValid');
-                s.emit('Message', s.handshake.username,  'Positions des bateaux validées');
+                s.emit('Message', s.handshake.username, 'Positions des bateaux validées');
             }
             else
                 s.emit('errorMsg', s.handshake.username, "Vous n'avez pas mis tous les bateaux !");

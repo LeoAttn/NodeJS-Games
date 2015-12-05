@@ -69,7 +69,7 @@ var Rooms = {
                     res.redirect('/?error=full');
             });
         }
-        res.redirect('/?=error=alreadyInGame');
+        res.redirect('/?error=alreadyInGame');
     },
     joinLink: function (req, res) {
         Room.findOne({_id: req.query.id}, function (err, room) {

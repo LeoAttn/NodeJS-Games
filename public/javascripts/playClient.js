@@ -24,7 +24,7 @@ function clicTabAtt(x, y) {
     socket.emit('TirClient', x, y);
 }
 
-// Fonction pour gérer le drag n' drop
+// Fonction pour gÃ©rer le drag n' drop
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -43,7 +43,7 @@ function copyclipboard(intext) {
     prompt(intext);
 }
 
-// Gestion des évènemment emit par le serveur
+// Gestion des Ã©vÃ¨nemment emit par le serveur
 
 socket.on('whoRU', function(){
     socket.emit('adduser', prompt("Quel est votre nom ?"));
@@ -72,16 +72,16 @@ socket.on('TirServ', function (session, type, x, y) {
 });
 
 socket.on('errorMsg', function (session, msg) {
-    //Créer une div erreur avec le message a l'interieur
+    //CrÃ©er une div erreur avec le message a l'interieur
     var elem = $('.error');
     var testMsg = true;
-    //On vérifie qu'une div avec le meme message n'existe pas.
+    //On vÃ©rifie qu'une div avec le meme message n'existe pas.
     $('.error p').each(function(){
         var text = $(this).html();
         if(text == msg)
             testMsg = false;
     })
-    //On créer la div si un message identique n'existe pas.
+    //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
         var div = $('<div>',{

@@ -225,7 +225,7 @@ body.IE7 .Switch { width: 78px; }
   position: relative;
   display: inline-block;
   vertical-align: top;
-  width: 56px;
+  width: 64px;
   height: 20px;
   padding: 3px;
   background-color: white;
@@ -249,7 +249,7 @@ body.IE7 .Switch { width: 78px; }
   position: relative;
   display: block;
   height: inherit;
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   background: #eceeef;
   border-radius: inherit;
@@ -276,7 +276,7 @@ body.IE7 .Switch { width: 78px; }
 .switch-label:before {
   content: attr(data-off);
   right: 11px;
-  color: #aaa;
+  color: #666;
   text-shadow: 0 1px rgba(255, 255, 255, 0.5);
 }
 .switch-label:after {
@@ -332,7 +332,7 @@ body.IE7 .Switch { width: 78px; }
   background-image: linear-gradient(to bottom, #eeeeee, white);
 }
 .switch-input:checked ~ .switch-handle {
-  left: 40px;
+  left: 43px;
   box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 

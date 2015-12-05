@@ -8,7 +8,7 @@ block content
             h1(onclick="testLog()")= title
             p=session.username
             p(class="compt") 0
-            button(onclick="clicButValid()") Valider les positions
+            button.btn.btn-default(onclick="clicButValid()") Valider les positions
         div(class="bat-container")
             - for (var i=1; i<=5; i++)
                 div(id="Bat"+i class="bat" draggable="true" ondragstart="drag(event)")
