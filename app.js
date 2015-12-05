@@ -31,7 +31,7 @@ app.use('/stylesheets', sass({
     src: __dirname + '/app/sass',
     dest: __dirname + '/public/stylesheets',
     debug: false,
-    outputStyle: 'expanded'
+    outputStyle: 'compressed'
 }));
 
 app.use(function(req, res, next){

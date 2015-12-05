@@ -24,9 +24,13 @@ var Rooms = {
     create: function (req, res) {
         if(!req.session.roomID)
         {
+            if (req.body.username.length > 20)
+                req.body.username = req.body.username.substr(0,20);
             req.session.username = req.body.username;
             if (!(req.body.roomName))
                 req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
+            else if (req.body.roomName.length > 20)
+                req.body.roomName = req.body.roomName.substr(0,20);
             var board = [[], [], [], [], [], [], [], [], [], []];
             req.body.private = (req.body.private == "on");
             var r = new Room({
@@ -52,6 +56,8 @@ var Rooms = {
                 if (err) throw err;
                 //res.json(room);
                 if (room.ready == false) {
+                    if (req.body.username.length > 20)
+                        req.body.username = req.body.username.substr(0,20);
                     req.session.username = req.body.username;
                     req.session.roomID = room._id;
                     var board = [[], [], [], [], [], [], [], [], [], []];

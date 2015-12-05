@@ -3,7 +3,7 @@ extends layoutPlay
 block content
     - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
-    div(class="tab-container")
+    div.tab-container
         div
             h1(onclick="testLog()")= title
             p=session.username
@@ -13,8 +13,8 @@ block content
             - for (var i=1; i<=5; i++)
                 div(id="Bat"+i class="bat" draggable="true" ondragstart="drag(event)")
 
-    div(class="tab-container")
-        table(class="tab tab-att cell-center")
+    div.tab-container
+        table.tab.tab-att.cell-center
             tr
                 td
                 - for (var x = 1; x <= 10; x++)
@@ -26,7 +26,7 @@ block content
                         td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="font-size: 15px")
 
         div(style="width: 50px")
-        table(class="tab tab-def cell-center")
+        table.tab.tab-def.cell-center
             tr
                 td
                 - for (var x = 1; x <= 10; x++)
