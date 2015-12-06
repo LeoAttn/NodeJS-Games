@@ -45,16 +45,17 @@ var Rooms = {
             });
             res.redirect('/play?id='+ r._id);
         }
-        res.redirect('/?error=alreadyInGame');
+        else
+            res.redirect('/?error=alreadyInGame');
     },
     join: function (req, res) {
-        if(!req.session.roomID)
-        {
-            console.log("id = "+req.body.id);
-            console.log("name = "+req.body.username);
-            Room.findOne({_id: req.body.id}, function (err, room) {
-                if (err) throw err;
-                //res.json(room);
+        console.log("id = "+req.body.id);
+        console.log("name = "+req.body.username);
+        Room.findOne({_id: req.body.id}, function (err, room) {
+            if (err) throw err;
+            //res.json(room);
+            if(!req.session.roomID)
+            {
                 if (room.ready == false) {
                     if (req.body.username.length > 20)
                         req.body.username = req.body.username.substr(0,20);
@@ -73,9 +74,10 @@ var Rooms = {
                 }
                 else
                     res.redirect('/?error=full');
-            });
-        }
-        res.redirect('/?error=alreadyInGame');
+            }
+            else
+                res.redirect('/?error=alreadyInGame');
+        });
     },
     joinLink: function (req, res) {
         Room.findOne({_id: req.query.id}, function (err, room) {
@@ -94,7 +96,6 @@ var Rooms = {
         });
     },
     play:function(req, res){
-
         Room.findOne({_id: req.query.id}, function(err, room){
             if(err) throw err;
             if(room){

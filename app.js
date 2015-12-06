@@ -8,13 +8,28 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sass = require('node-sass-middleware');
 var mongoose = require('mongoose');
-var memStore = session.MemoryStore;
 
 var routes = require('./app/routes/index');
 var play = require('./app/routes/play');
 
 var app = express();
 
+//Initialise le middleware cookie parser
+app.use(cookieParser("secret"));
+//Initialise le middleware de session
+app.use(session({
+    secret: 'secret',
+    saveUninitialized : true,
+    resave : true
+}));
+
+//Lie le css avec le module sass
+app.use('/stylesheets', sass({
+    src: __dirname + '/app/sass',
+    dest: __dirname + '/public/stylesheets',
+    debug: false,
+    outputStyle: 'compressed'
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app/views'));
@@ -26,29 +41,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // init le dossier public comme dossier static
 app.use(express.static(path.join(__dirname, 'public')));
+//Insère la favicon
+app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
 // Init les routes
 app.use('/', routes);
 app.use('/play', play);
-//Insère la favicon
-app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
-//Initialise le middleware cookie parser
-app.use(cookieParser("secret"));
-//Initialise le middleware de session
-app.use(session({
-    secret: 'secret',
-    cookie: {httpOnly: true, secure: true},
-    saveUninitialized : true,
-    resave : true,
-    store : new memStore
-}));
-
-//Lie le css avec le module sass
-app.use('/stylesheets', sass({
-    src: __dirname + '/app/sass',
-    dest: __dirname + '/public/stylesheets',
-    debug: false,
-    outputStyle: 'compressed'
-}));
 
 //A chaque fois qu'une requête est effectué
 app.use(function(req, res, next){
