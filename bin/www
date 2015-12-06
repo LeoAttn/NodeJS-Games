@@ -8,17 +8,12 @@ var app = require('../app');
 var debug = require('debug')('NodeJS-Games:server');
 var http = require('http');
 var sass = require('node-sass');
-var Session = require('express-session');
-
-var session = Session({secret : 'pass', resave : true, saveUninitialized: true});
-
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
-app.use(session);
 
 /**
  * Create HTTP server.
@@ -35,8 +30,8 @@ var ios = require('socket.io-express-session');
            "autoSave": true
            }));*/
 // Nous créons une accès au socket
-io.use(ios(session));
-require('../app/sockets/sockets').set(io);
+io.use(ios(app.session));
+require('../app/sockets/sockets').set(io, ios);
 
 /**
  * Listen on provided port, on all network interfaces.

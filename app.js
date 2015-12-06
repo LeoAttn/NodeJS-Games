@@ -6,9 +6,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//var sass = require('node-sass');
 var sass = require('node-sass-middleware');
 var mongoose = require('mongoose');
+var memStore = session.MemoryStore;
 
 var routes = require('./app/routes/index');
 var play = require('./app/routes/play');
@@ -19,14 +19,30 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
-
+// init morgan logger
+app.use(logger('dev'));
+// init body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+// init le dossier public comme dossier static
+app.use(express.static(path.join(__dirname, 'public')));
+// Init les routes
+app.use('/', routes);
+app.use('/play', play);
+//Insère la favicon
 app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
+//Initialise le middleware cookie parser
+app.use(cookieParser("secret"));
+//Initialise le middleware de session
 app.use(session({
-    secret: 'Insane Battle',
-    resave: false,
-    saveUninitialized:true
+    secret: 'secret',
+    cookie: {httpOnly: true, secure: true},
+    saveUninitialized : true,
+    resave : true,
+    store : new memStore
 }));
 
+//Lie le css avec le module sass
 app.use('/stylesheets', sass({
     src: __dirname + '/app/sass',
     dest: __dirname + '/public/stylesheets',
@@ -34,8 +50,14 @@ app.use('/stylesheets', sass({
     outputStyle: 'compressed'
 }));
 
+//A chaque fois qu'une requête est effectué
 app.use(function(req, res, next){
     var name = req.session.name;
+    var user = req.session.USER;
+    if(!user)
+    {
+        user = req.session.USER = null;
+    }
     if(!name)
     {
         name = req.session.name = "";
@@ -44,14 +66,7 @@ app.use(function(req, res, next){
 });
 
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', routes);
-app.use('/play', play);
+// error handlers
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -59,9 +74,6 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
-
-// error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -73,7 +85,6 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
@@ -84,8 +95,12 @@ app.use(function(err, req, res, next) {
     });
 });
 
+// Connection a la base mongoDb
 mongoose.connect('mongodb://localhost/NodeJS-Games', function(err) {
     if (err) { throw err; }
 });
 
+
+app.session = session;
+app.mongoose = mongoose;
 module.exports = app;
