@@ -14,15 +14,14 @@ html
             div.header.clearfix
                 nav
                     ul.nav.nav-pills.pull-right
-                        if user
-                            if user.roomID
-                                li(role='presentation')
-                                    a(href='/play?id='+(session.roomID)) Partie en cours
+                        if user && user.roomID
+                            li(role='presentation')
+                                a(href='/play?id='+(session.roomID)) Partie en cours
                         li.active(role='presentation')
                             a(href='/') Home
                         li(role='presentation')
                             a(href='#') Highscores
-                    h3.text-muted Bataille Navale
+                    h3.text-muted= title
 
             block content
 

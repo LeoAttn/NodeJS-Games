@@ -10,6 +10,9 @@ body {
 .play {
     background-color: #333;
     color: #FFF;
+    .h3 {
+        color: #FFF !important;
+    }
 }
 
 a {
@@ -87,7 +90,9 @@ a {
 }
 
 .error-bg {
-    background-color: crimson;
+    //background-color: crimson;
+    background: #d00000; /* Old browsers */
+    background: linear-gradient(#d00000, #9b0000); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     height: 50px;
     border-radius: 10px;
     color: white;

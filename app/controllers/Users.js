@@ -7,9 +7,9 @@ var mongoose = require("mongoose"),
 var Users = {
 
     index: function (req, res) {
-        User.find({}), function (err, users) {
+        User.find({}, function (err, users) {
             if (err) throw err;
-        }
+        });
     },
     create: function (req, res) {
         var u = new User({

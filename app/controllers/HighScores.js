@@ -1,4 +1,4 @@
-require('../models/Highscore');
+require('../models/HighScore');
 
 var mongoose = require("mongoose"),
     Highscore = mongoose.model('User');
