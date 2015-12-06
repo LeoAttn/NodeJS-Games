@@ -49,22 +49,22 @@ var IO = {
     joinRoom: function (s) {//Appelé en réponse au message handshake, set la session et rejoins la room
         s.on('join', function (data) {
             s.handshake.session = data;
-            s.handshake.player = {
-                                    id : 0,
-                                    username : data.username,
-                                    batTab : [[],[],[],[],[],[],[],[],[]],
-                                    hasValid: false,
-                                    hasLost: false
-                                 };
+            s.player ={
+                        id : 0,
+                        username : data.username,
+                        batTab : [[],[],[],[],[],[],[],[],[]],
+                        hasValid: false,
+                        hasLost: false
+                     };
             if(io.sockets.sockets.length == 1)
             {
-                s.handshake.player.id = 1;
-                game.player1 = s.handshake.player;
+                s.player.id = 1;
+                game.player1 = s.player;
             }
             else if(io.sockets.sockets.length == 2)
             {
-                s.handshake.player.id = 2;
-                game.player2 = s.handshake.player;
+                s.player.id = 2;
+                game.player2 = s.player;
             }
             console.log("Game Vars : " + JSON.stringify(game));
             s.join(s.handshake.session.roomID);
@@ -103,7 +103,7 @@ var IO = {
     BatPos: function (s) {
         s.on('BatPos', function (pos) {
             console.log(pos);
-            if(!s.handshake.player.hasValid)
+            if(!s.player.hasValid)
             {
                 var batPos = [[], [], [], [], [], [], [], [], [], []];
                 for (var y = 0; y < 10; y++)
@@ -119,8 +119,8 @@ var IO = {
                     }
                 }
                 if (nbBat == 5) {
-                    s.handshake.player.hasValid = true;
-                    s.handshake.player.batTab = batPos;
+                    s.player.hasValid = true;
+                    s.player.batTab = batPos;
                     console.log("Player Vars : " + JSON.stringify(s.handshake.player));
                     s.emit('PosBatValid');
                     s.broadcast.emit('playerReady');
@@ -132,7 +132,7 @@ var IO = {
                         s.emit('turn');
                         var rand = Math.round(Math.random()*2);
                         console.log(rand);
-                        if(rand == s.handshake.player.id)
+                        if(rand == s.player.id)
                             s.emit('uRturn');
                         else
                             s.broadcast('uRturn');
