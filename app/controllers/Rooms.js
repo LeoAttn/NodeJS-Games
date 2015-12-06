@@ -103,6 +103,7 @@ var Rooms = {
                     if(room.ready)
                         room.playing = true;
                     req.session.roomID = room._id;
+                    req.cookies.roomID = room._id;
                      console.log("SESSION : " + JSON.stringify(req.session));
                     res.render('play', {title: "Battaille Navale en cours", session : req.session});
                 }
@@ -131,7 +132,9 @@ var Rooms = {
     delete : function(id){
         Room.findOne({_id : id}, function(err, room){
             if(err) throw err;
-            room.remove();
+            if(room)
+                if(!room.ready || room.playing)
+                    room.remove();
         });
     }
 };

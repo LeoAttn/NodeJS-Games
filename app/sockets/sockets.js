@@ -2,9 +2,23 @@ var io;
 
 var RoomsC = require('../controllers/Rooms');
 
-var varRoom = [];
-var roomID;
 var isValid = false;
+
+var game = {
+    player1 : {
+        username: "",
+        batTab : [],
+        hasValid : false,
+        hasLost : false
+    },
+    player2 : {
+        username: "",
+        batTab : [],
+        hasValid : false,
+        hasLost : false
+    }
+}
+
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
         io = IO;
@@ -18,27 +32,42 @@ var IO = {
             $this.disconnect(socket);
             $this.TirClient(socket);
             $this.BatPos(socket);
-            $this.adduser(socket);
         });
     },
     get: function () {
         return io;
     },
-    connection: function (callback) {
+    connection: function (callback) {//Appellé lors de la connexion du socket
         io.on('connection', function (socket) {
             console.log("Client Connected ");
-            socket.emit('handshake');
-            // On envoie le nombre de personnes actuellement sur le socket à tout le monde (sauf la personne qui vient de se connecter)
-            socket.broadcast.emit('UserState', io.sockets.sockets.length);
-            // On envoie le nombre de personnes actuellement sur le socket à la personne qui vient de se connecter
-            socket.emit('UserState', socket.handshake.username, io.sockets.sockets.length);
+            socket.emit('handshake');///Récupère la session passé en paramètre
+            socket.broadcast.emit('userCount', io.sockets.sockets.length);//Broadcast le nombre de socket connecté
+            socket.emit('userCount', io.sockets.sockets.length);
             callback(socket);
         });
     },
-    joinRoom: function (s) {
+    joinRoom: function (s) {//Appelé en réponse au message handshake, set la session et rejoins la room
         s.on('join', function (data) {
             s.handshake.session = data;
-            console.log("SESSION : " + JSON.stringify(s.handshake.session));
+            s.handshake.player = {
+                                    id : 0,
+                                    username : data.username,
+                                    batTab : [[],[],[],[],[],[],[],[],[]],
+                                    hasValid: false,
+                                    hasLost: false
+                                 };
+            if(io.sockets.sockets.length == 1)
+            {
+                s.handshake.player.id = 1;
+                game.player1 = s.handshake.player;
+            }
+            else if(io.sockets.sockets.length == 2)
+            {
+                s.handshake.player.id = 2;
+                game.player2 = s.handshake.player;
+            }
+            console.log("Game Vars : " + JSON.stringify(game));
+            s.join(s.handshake.session.roomID);
         })
     },
     disconnect: function (s) {
@@ -47,18 +76,9 @@ var IO = {
             s.leave();
             if (io.sockets.sockets.length == 0)
                 RoomsC.delete(s.handshake.session.roomID);
-            // On prévient tout le monde qu'une personne s'est deconnectée
-            s.broadcast.emit('UserState', io.sockets.sockets.length);
+            else// On prévient tout le monde qu'une personne s'est deconnectée
+                s.broadcast.emit('UserState', io.sockets.sockets.length);
         });
-    },
-    adduser: function (s) {
-        if (s) {
-            s.on('adduser', function (name) {
-                s.handshake.session.username = name;
-                s.handshake.session.roomId = name + '01';
-                s.join(name + '01');
-            });
-        }
     },
     TirClient: function (s) {
         s.on('TirClient', function (x, y) {
@@ -83,31 +103,45 @@ var IO = {
     BatPos: function (s) {
         s.on('BatPos', function (pos) {
             console.log(pos);
-
-            var batPos = [[], [], [], [], [], [], [], [], [], []];
-            for (var y = 0; y < 10; y++)
-                for (var x = 0; x < 10; x++)
-                    batPos[x][y] = 0;
-
-            var bat, nbBat = 0;
-            for (var k in pos) {
-                if (bat = pos[k].match(/[0-9]+/ig)) {
-                    batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
-                    nbBat++;
-                } else {
-                    s.emit('Message', s.handshake.username, k + ' non defini !');
+            if(!s.handshake.player.hasValid)
+            {
+                var batPos = [[], [], [], [], [], [], [], [], [], []];
+                for (var y = 0; y < 10; y++)
+                    for (var x = 0; x < 10; x++)
+                        batPos[x][y] = 0;
+                var bat, nbBat = 0;
+                for (var k in pos) {
+                    if (bat = pos[k].match(/[0-9]+/ig)) {
+                        batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
+                        nbBat++;
+                    } else {
+                        s.emit('Message', k + ' non defini !');
+                    }
                 }
+                if (nbBat == 5) {
+                    s.handshake.player.hasValid = true;
+                    s.handshake.player.batTab = batPos;
+                    console.log("Player Vars : " + JSON.stringify(s.handshake.player));
+                    s.emit('PosBatValid');
+                    s.broadcast.emit('playerReady');
+                    s.broadcast.emit('info', "Votre adversaire est prêt !");
+                    if(game.player1.hasValid && game.player2.hasValid)
+                    {
+                        s.broadcast.emit('start');
+                        s.emit('start');
+                        s.emit('turn');
+                        var rand = Math.round(Math.random()*2);
+                        console.log(rand);
+                        if(rand == s.handshake.player.id)
+                            s.emit('uRturn');
+                        else
+                            s.broadcast('uRturn');
+
+                    }
+                }
+                else
+                    s.emit('errorMsg', "Vous n'avez pas mis tous les bateaux !");
             }
-            if (nbBat == 5) {
-                isValid = true;
-                varRoom[s.room] = {};
-                varRoom[s.room].Tab1 = batPos;
-                s.emit('PosBatValid');
-                s.emit('Message', s.handshake.username, 'Positions des bateaux validées');
-            }
-            else
-                s.emit('errorMsg', s.handshake.username, "Vous n'avez pas mis tous les bateaux !");
-            console.log(batPos);
         });
     }
 };

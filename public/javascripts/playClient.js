@@ -1,5 +1,34 @@
 var clic = 0;
 var socket = io.connect('http://localhost');
+var play = io.connect('http://localhost/play'+ sess.roomID);
+
+
+function newMessage(classes, msg) {
+    var elem = $('.'+classes);
+    var testMsg = true;
+    //On vÃ©rifie qu'une div avec le meme message n'existe pas.
+    $('.'+classes + ' p').each(function(){
+        var text = $(this).html();
+        if(text == msg)
+            testMsg = false;
+    })
+    //On crÃ©er la div si un message identique n'existe pas.
+    if(testMsg)
+    {
+        var div = $('<div>',{
+            class : classes +' ' + classes+'-bg'
+        }).appendTo('#msges');
+        $('<p>', {
+            text: msg
+        }).appendTo(div);
+    }
+
+}
+
+function cleanMessages(){
+    console.log($('#msges').html);
+    $('#msges').html = "";
+}
 
 function testLog() {
     clic++;
@@ -14,6 +43,7 @@ function clicButValid() {
         "Bat4": $('#Bat4').last().parent().prop('id'),
         "Bat5": $('#Bat5').last().parent().prop('id')
     };
+    cleanMessages();
     socket.emit('BatPos', batPos);
 }
 
@@ -49,15 +79,11 @@ socket.on('whoRU', function(){
     socket.emit('adduser', prompt("Quel est votre nom ?"));
 });
 
-socket.on('UserState', function (session, data) {
+socket.on('userCount', function (data) {
     $('.compt').text(data);
 });
 
 socket.on('PosBatValid', function (session) {
-    $(".error p").each(function(){
-        if($(this).html() == "Vous n'avez pas mis tous les bateaux !")
-            $(this).parent().remove();
-    })
     $(".bat").attr('draggable', 'false').css('cursor', 'default');
 });
 
@@ -71,33 +97,27 @@ socket.on('TirServ', function (session, type, x, y) {
     }
 });
 
-socket.on('errorMsg', function (session, msg) {
-    //CrÃ©er une div erreur avec le message a l'interieur
-    var elem = $('.error');
-    var testMsg = true;
-    //On vÃ©rifie qu'une div avec le meme message n'existe pas.
-    $('.error p').each(function(){
-        var text = $(this).html();
-        if(text == msg)
-            testMsg = false;
-    })
-    //On crÃ©er la div si un message identique n'existe pas.
-    if(testMsg)
-    {
-        var div = $('<div>',{
-            class : 'error error-bg'
-        }).prependTo('body');
-        $('<p>', {
-            text: msg
-        }).appendTo(div);
-    }
+socket.on('errorMsg', function (msg) {
+    newMessage('error', msg);
 })
 
-socket.on('Message', function (session, msg) {
+socket.on('info', function (msg) {
+    newMessage('info', msg);
+})
+
+socket.on('playerReady', function(){
+    console.log("Oponent ready !");
+})
+
+socket.on('Message', function (msg) {
     console.log(msg);
 });
 
 socket.on('handshake', function(){
     console.log(JSON.stringify(sess));
     socket.emit('join', sess);
+});
+
+socket.on('uRturn', function(){
+
 });

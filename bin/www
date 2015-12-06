@@ -30,8 +30,12 @@ var ios = require('socket.io-express-session');
            "autoSave": true
            }));*/
 // Nous créons une accès au socket
-io.use(ios(app.session));
-require('../app/sockets/sockets').set(io, ios);
+io.use(ios(app.session({
+    secret: 'secret',
+    saveUninitialized : true,
+    resave : true
+})));
+require('../app/sockets/sockets').set(io);
 
 /**
  * Listen on provided port, on all network interfaces.

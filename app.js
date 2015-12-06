@@ -14,6 +14,11 @@ var play = require('./app/routes/play');
 
 var app = express();
 
+// view engine setup
+app.set('views', path.join(__dirname, 'app/views'));
+app.set('view engine', 'jade');
+// init morgan logger
+app.use(logger('dev'));
 //Initialise le middleware cookie parser
 app.use(cookieParser("secret"));
 //Initialise le middleware de session
@@ -31,11 +36,6 @@ app.use('/stylesheets', sass({
     outputStyle: 'compressed'
 }));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'app/views'));
-app.set('view engine', 'jade');
-// init morgan logger
-app.use(logger('dev'));
 // init body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
