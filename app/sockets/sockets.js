@@ -4,20 +4,7 @@ var RoomsC = require('../controllers/Rooms');
 
 var isValid = false;
 
-var game = {
-    player1 : {
-        username: "",
-        batTab : [],
-        hasValid : false,
-        hasLost : false
-    },
-    player2 : {
-        username: "",
-        batTab : [],
-        hasValid : false,
-        hasLost : false
-    }
-}
+var game = [];
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -56,17 +43,31 @@ var IO = {
                         hasValid: false,
                         hasLost: false
                      };
+            game[s.handshake.session.roomID] = {
+                player1 : {
+                    username: "",
+                    batTab : [],
+                    hasValid : false,
+                    hasLost : false
+                },
+                player2 : {
+                    username: "",
+                    batTab : [],
+                    hasValid : false,
+                    hasLost : false
+                }
+            }
             if(io.sockets.sockets.length == 1)
             {
                 s.player.id = 1;
-                game.player1 = s.player;
+                game[s.handshake.session.roomID].player1 = s.player;
             }
             else if(io.sockets.sockets.length == 2)
             {
                 s.player.id = 2;
-                game.player2 = s.player;
+                game[s.handshake.session.roomID].player2 = s.player;
             }
-            console.log("Game Vars : " + JSON.stringify(game));
+            console.log("Game Vars : " + JSON.stringify(game[s.handshake.session.roomID]));
             s.join(s.handshake.session.roomID);
         })
     },
@@ -125,7 +126,7 @@ var IO = {
                     s.emit('PosBatValid');
                     s.broadcast.emit('playerReady');
                     s.broadcast.emit('info', "Votre adversaire est prêt !");
-                    if(game.player1.hasValid && game.player2.hasValid)
+                    if(game[s.handshake.session.roomID].player1.hasValid && game[s.handshake.session.roomID].player2.hasValid)
                     {
                         s.broadcast.emit('start');
                         s.emit('start');
