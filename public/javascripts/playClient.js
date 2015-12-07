@@ -11,7 +11,7 @@ function newMessage(classes, msg) {
         var text = $(this).html();
         if(text == msg)
             testMsg = false;
-    })
+    });
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
