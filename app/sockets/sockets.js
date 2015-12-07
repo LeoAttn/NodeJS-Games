@@ -52,7 +52,8 @@ var IO = {
         });
     },
     hey : function (socket){
-        socket.on('hey', function(){
+        socket.on('hey', function(username){
+            socket.handshake.session.username = username;
             socket.broadcast.to(socket.handshake.session.roomID).emit('addUser',{ username : socket.handshake.session.username});
             socket.emit('addUser', {username : socket.handshake.session.username});
         });
