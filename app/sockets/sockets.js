@@ -5,7 +5,6 @@ var RoomsC = require('../controllers/Rooms');
 var isValid = false;
 
 var room = [];
-room.clients = 0;
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -30,10 +29,7 @@ var IO = {
     connection: function (callback) {//Appellé lors de la connexion du socket
         io.on('connection', function (s) {
             console.log("Client Connected ");
-			s.emit('handshake');///Récupère la session passé en paramètre
-            s.emit('hey');
-            s.broadcast.emit('userCount', io.sockets.sockets.length);//Broadcast le nombre de socket connecté
-            s.emit('userCount', io.sockets.sockets.length);
+            s.emit('hey');///Récupère la session passé en paramètre
             callback(s);
         });
     },
@@ -43,15 +39,17 @@ var IO = {
 			if(room[s.session.roomID] === undefined)
 			{
 				room[s.session.roomID] = {}
+                room[s.session.roomID].validationCptr = 0;
 				room[s.session.roomID].clients = 0;
 				room[s.session.roomID].players =[];
 			}	
 			if(room[s.session.roomID].clients != 2)
 			{
                 var tmpUsername = s.session.username;
-                if(s.session.username === undefined || !s.session.username)
+                if(s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null)
                     tmpUsername = 'Anonyme';
                 
+                console.log(tmpUsername);
 				s.join(s.session.roomID);
 				s.playerID = room[s.session.roomID].clients.toString;
 				room[s.session.roomID].players[s.playerID] = {
@@ -81,9 +79,9 @@ var IO = {
 	},
     handshake : function(s){
 		s.on('hey', function(username){
-			console.log('store username: ' + s.session.username + ' user ' + username);
+            console.log('Hey : ' + username);
 			s.session.username = username;
-			console.log("Room: " + JSON.stringify(room[s.session.roomID].players[s.playerID]));
+			console.log("Room: " + JSON.stringify(room[s.session.roomID]));
 			room[s.session.roomID].players[s.playerID].username = username;
             s.broadcast.to(s.session.roomID).emit('addUser',{ username : s.session.username});
             s.emit('addUser', {username : s.session.username});
@@ -91,53 +89,18 @@ var IO = {
 		////////=====================================================================
     },
 	game : function(s){
-		s.on('join', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
+		s.on('joinGame', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.session = data;
-            s.player ={
-                        id : 0,
-                        username : data.username,
-                        batTab : [[],[],[],[],[],[],[],[],[]],
-                        state: "",
-                        hasLost: false
-                     };
-            game[s.session.roomID] = {
-                player1 : {
-                    username: "",
-                    batTab : [],
-                    hasValid : false,
-                    hasLost : false
-                },
-                player2 : {
-                    username: "",
-                    batTab : [],
-                    hasValid : false,
-                    hasLost : false
-                }
-            };
-            if(io.sockets.sockets.length == 1)
-            {
-                s.player.id = 1;
-                s.player.state = "attj2";
-                game[s.session.roomID].player1 = s.player;
-                s.player.state = "att_j";
-                game[s.handshake.session.roomID].player1 = s.player;
-            }
-            else if(io.sockets.sockets.length == 2)
-            {
-                s.player.id = 2;
-                s.player.state = "attj2";
-                game[s.session.roomID].player2 = s.player;
-                s.player.state = "pos_bat";
-                game[s.handshake.session.roomID].player2 = s.player;
-                game[s.handshake.session.roomID].player1.state = "pos_bat";
-            }
-            console.log("Game Vars : " + JSON.stringify(game[s.session.roomID]));
+            s.session.username = room[s.session.roomID].players[s.session.playerID].username;
+            room[s.session.roomID].players[s.session.playerID].state = "batPos";
+            room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
+
             s.join(s.session.roomID);
         });
 		///////====================================================
-		s.on('BatPos', function (pos) {
+		s.on('batPos', function (pos) {
             console.log(pos);
-            if(!s.player.hasValid)
+            if(room[s.session.roomID].players[s.session.playerID].state == "batPos")
             {
                 var batPos = [[], [], [], [], [], [], [], [], [], []];
                 for (var y = 0; y < 10; y++)
@@ -153,24 +116,25 @@ var IO = {
                     }
                 }
                 if (nbBat == 5) {
-                    s.player.hasValid = true;
+                    room[s.session.roomID].players[s.session.playerID].state = "batPosValid";
                     s.player.batTab = batPos;
-                    console.log("Player Vars : " + JSON.stringify(s.player));
-                    s.emit('PosBatValid');
-                    s.broadcast.emit('playerReady');
-                    s.broadcast.emit('info', "Votre adversaire est prêt !");
-                    if(game[s.session.roomID].player1.hasValid && game[s.session.roomID].player2.hasValid)
+                    s.emit('batPosValid');
+                    s.broadcast.to(s.session.roomID).emit('info', {msg : "Votre adversaire est prêt !"});
+                    room[s.session.roomID].validationCptr += 1;
+                    if(room[s.session.roomID].validationCptr == 2)
                     {
                         s.broadcast.emit('start');
                         s.emit('start');
-                        s.emit('turn');
-                        var rand = Math.round(Math.random()*2);
+                        var rand = (Math.round(Math.random()*2)).toString();
                         console.log(rand);
-                        if(rand == s.player.id)
-                            s.emit('uRturn');
+                        if(rand == s.session.playerID)
+                        {
+                            s.emit('newState', {state : 'myTurn'});
+                        }
                         else
-                            s.broadcast('uRturn');
-
+                        {
+                            s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
+                        }
                     }
                 }
                 else
@@ -178,23 +142,25 @@ var IO = {
             }
         });
 		/////====================================================================
-		s.on('TirClient', function (x, y) {
-            if (isValid) {
+		s.on('tirClient', function (x, y) {
+            if (room[s.session.roomID].players[s.session.playerID].state == "myTurn") {
                 var type;
                 console.log("position tir : (" + x + ", " + y + ")");
-                if (varRoom[s.room].Tab1[x][y]) {
+                if (room[s.session.roomID].players[s.session.playerID].batTab[x][y]) {
                     type = "touche";
                 } else {
                     type = "dansleau";
                 }
                 console.log(type);
-                s.emit('TirServ', type, x, y);
+                s.emit('tirServ', type, x, y);
+                s.emit('newState', {state : 'wait'});
+                s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
             }
-            console.log("Name : " + s.username);
-            console.log("Room : " + s.room);
-
             //for (var k in varRoom)
             //    console.log(varRoom[k])
+        });
+        s.on('updateState', function(state){
+            room[s.session.roomID].players[s.session.playerID].state = state;
         });
 	},
     disconnect: function (s) {

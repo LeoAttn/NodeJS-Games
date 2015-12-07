@@ -113,6 +113,8 @@ socket.on('hey', function (){
 			tmpUsername = 'Anonyme';
 		sess.username = tmpUsername;
 	}
+    console.log("hey");
+    console.log(sess.username);
 	socket.emit('hey', sess.username);
 });
 

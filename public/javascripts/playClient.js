@@ -73,21 +73,13 @@ function copyclipboard(intext) {
     prompt(intext);
 }
 
-// Gestion des Ã©vÃ¨nemment emit par le serveur
+// Gestion des Ã©vÃ¨nemment emit par le serveu
 
-socket.on('whoRU', function(){
-    socket.emit('adduser', prompt("Quel est votre nom ?"));
-});
-
-socket.on('userCount', function (data) {
-    $('.compt').text(data);
-});
-
-socket.on('PosBatValid', function (session) {
+socket.on('batPosValid', function (session) {
     $(".bat").attr('draggable', 'false').css('cursor', 'default');
 });
 
-socket.on('TirServ', function (session, type, x, y) {
+socket.on('tirServ', function (session, type, x, y) {
     if (type == "touche") {
         //$(".cell-def").removeClass("cell-touche");
         $(".cell-att." + x + "-" + y).addClass("cell-touche");
@@ -96,6 +88,10 @@ socket.on('TirServ', function (session, type, x, y) {
         $(".cell-att." + x + "-" + y).addClass("cell-dansleau");
     }
 });
+
+socket.on('newState', function (stateObj){
+    socket.emit('updateState', stateObj.state);
+})
 
 socket.on('errorMsg', function (msg) {
     newMessage('error', msg);
@@ -109,7 +105,7 @@ socket.on('playerReady', function(){
     console.log("Oponent ready !");
 })
 
-socket.on('Message', function (msg) {
+socket.on('message', function (msg) {
     console.log(msg);
 });
 
