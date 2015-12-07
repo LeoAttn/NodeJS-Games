@@ -73,7 +73,7 @@ var IO = {
                         id : 0,
                         username : data.username,
                         batTab : [[],[],[],[],[],[],[],[],[]],
-                        hasValid: false,
+                        state: "",
                         hasLost: false
                      };
             game[s.handshake.session.roomID] = {
@@ -93,11 +93,13 @@ var IO = {
             if(io.sockets.sockets.length == 1)
             {
                 s.player.id = 1;
+                s.player.state = "attj2";
                 game[s.handshake.session.roomID].player1 = s.player;
             }
             else if(io.sockets.sockets.length == 2)
             {
                 s.player.id = 2;
+                s.player.state = "attj2";
                 game[s.handshake.session.roomID].player2 = s.player;
             }
             console.log("Game Vars : " + JSON.stringify(game[s.handshake.session.roomID]));
