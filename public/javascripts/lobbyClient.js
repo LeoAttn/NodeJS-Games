@@ -72,7 +72,7 @@ function newUser(usernameJO, rank)
 }
 
 function unlockButton(){
-
+	$('#startButton').disabled = false;
 }
 
 function startGame(){
@@ -91,19 +91,23 @@ function sendMessage(){
 
 
 socket.on('hey', function (){
-    socket.emit('handshake', sess);
-    console.log('Session : ', sess);
-    console.log('username : ', sess.username);
+    socket.emit('joinLobby', sess);
     if(sess.username === undefined || sess.username == 'Anonyme')
         socket.emit('hey', prompt('Quel est votre pseudo ?'));
     else
-        socket.emit('hey');
+        socket.emit('hey', sess.username);
+});
+
+socket.on('ready', function(){
+	unlockButton();
 });
 
 socket.on('addUser', function(username, rank){
     var notExist = newUser(username, rank);
     if(notExist)
-        socket.emit('hey');
+	{
+		socket.emit('hey');
+	}
 });
 
 socket.on('chatMessage', function(msgObj){
