@@ -19,7 +19,7 @@ function newMessage(classes, msg) {
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
-        var div = $('<div>',{
+        var div = $('<li>',{
             class : classes +' ' + classes+'-bg'
         }).appendTo('#msges');
         $('<p>', {
