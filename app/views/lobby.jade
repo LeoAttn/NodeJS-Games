@@ -4,7 +4,9 @@ block content
     div
         div.leftBlock
             div#playerList
-            button(onClick = "launchGame()" class = "btn btn-primary btn-lg" disabled)#startButton Lancer la partie
+                h4 Personnes présentes dans le lobby
+                ul
+            button(onClick = "launchGame()" class = "btn btn-success btn-lg btn-block" disabled)#startButton Lancer la partie
         div#chat
             div#chatMessages
                 table.table.table-striped.table-bordered
