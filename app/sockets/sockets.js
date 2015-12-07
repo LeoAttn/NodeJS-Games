@@ -62,9 +62,9 @@ var IO = {
 				console.log('room: ', JSON.stringify(room[s.session.roomID]));
 				var msag = "Bienvenue dans la room !";
             	s.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
-				if(room[s.session.roomID].clients == 2){
-					s.broadcast.to(s.session.roomID).emit('ready', {});
-				}
+                if(room[s.session.roomID].clients == 2){
+                    s.broadcast.to(s.session.roomID).emit('ready', {});
+                }
 			}
 		});
 		s.on('startGame', function(){

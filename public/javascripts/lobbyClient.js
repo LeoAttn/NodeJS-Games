@@ -87,10 +87,11 @@ function newUser(usernameJO, rank)
 }
 
 function unlockButton(){
-	$('#startButton').disabled = false;
+	$('#startButton').removeAttr('disabled');
 }
 
 function startGame(){
+    socket.emit('startGame');
 }
 
 function sendMessage(){
@@ -132,5 +133,5 @@ socket.on('chatMessage', function(msgObj){
 });
 
 socket.on('startGame', function (){
-
+    window.location.replace("http://localhost/play?id="+sess.roomID);
 });
