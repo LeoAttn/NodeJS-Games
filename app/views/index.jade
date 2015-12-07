@@ -29,10 +29,6 @@ block content
     div.list-room
         h3 Rejoignez une partie !
         form.form-horizontal(action="/join" method="post")
-            div.form-group
-                label.col-sm-3.control-label(for= "Uname") Nom d'utilisateur
-                div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" maxlength=20 required="required")
-
             table.table.table-striped.table-bordered
                 thead
                     th.center Nom de la partie

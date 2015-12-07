@@ -48,26 +48,25 @@ var IO = {
 			}	
 			if(room[s.session.roomID].clients != 2)
 			{
+                var tmpUsername = s.session.username;
+                if(s.session.username === undefined || !s.session.username)
+                    tmpUsername = 'Anonyme';
+                
 				s.join(s.session.roomID);
 				s.playerID = room[s.session.roomID].clients.toString;
 				room[s.session.roomID].players[s.playerID] = {
-					username : s.session.username
+					username : tmpUsername
 				}
 				room[s.session.roomID].clients += 1
 				console.log('User entered !');
 				console.log('room: ', JSON.stringify(room[s.session.roomID]));
+				var msag = "Bienvenue dans la room !";
+            	s.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
 				if(room[s.session.roomID].clients == 2){
 					s.broadcast.to(s.session.roomID).emit('ready', {});
 				}
 			}
-	lobby : function(socket){
-		socket.on('joinLobby', function(data){
-            socket.handshake.session = data;
-            socket.join(socket.handshake.session.roomID);
-            var msag = "Bienvenue dans la room !";
-            socket.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
-
-        });
+		});
 		s.on('startGame', function(){
             s.emit('startGame');
             s.broadcast.to(s.session.roomID).emit('startGame', {});
