@@ -60,6 +60,13 @@ var IO = {
 					s.broadcast.to(s.session.roomID).emit('ready', {});
 				}
 			}
+	lobby : function(socket){
+		socket.on('joinLobby', function(data){
+            socket.handshake.session = data;
+            socket.join(socket.handshake.session.roomID);
+            var msag = "Bienvenue dans la room !";
+            socket.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
+
         });
 		s.on('startGame', function(){
             s.emit('startGame');
@@ -113,12 +120,17 @@ var IO = {
                 s.player.id = 1;
                 s.player.state = "attj2";
                 game[s.session.roomID].player1 = s.player;
+                s.player.state = "att_j";
+                game[s.handshake.session.roomID].player1 = s.player;
             }
             else if(io.sockets.sockets.length == 2)
             {
                 s.player.id = 2;
                 s.player.state = "attj2";
                 game[s.session.roomID].player2 = s.player;
+                s.player.state = "pos_bat";
+                game[s.handshake.session.roomID].player2 = s.player;
+                game[s.handshake.session.roomID].player1.state = "pos_bat";
             }
             console.log("Game Vars : " + JSON.stringify(game[s.session.roomID]));
             s.join(s.session.roomID);
