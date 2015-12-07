@@ -108,7 +108,7 @@ socket.on('hey', function (){
     if(sess.username === undefined || sess.username == 'Anonyme')
 	{
 		var tmpUsername = prompt('Quel est votre pseudo ?');
-		if(tmpUsername === undefined)
+		if(tmpUsername === undefined || tmpUsername == null)
 			tmpUsername = 'Anonyme';
 		sess.username = tmpUsername;
 	}
