@@ -36,12 +36,13 @@ function newChatMessage(msgObj) {
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
-        var div = $('<div>',{
+        var div = $('<tr>',{
             class : classes +' ' + classes+'-bg'
-        }).appendTo('#chatMessages');
-        $('<p>', {
+        }).appendTo('#chatMessages table');
+        $('<td>', {
             text: msgObj.username + ': ' +msgObj.msg
         }).appendTo(div);
+        $('#chatMessages').animate({scrollTop : $('#chatMessages').prop('scrollHeight')}, 50);
     }
 
 }

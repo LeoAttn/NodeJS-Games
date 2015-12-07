@@ -1,4 +1,4 @@
-extends layoutPlay
+extends layout
 
 block content
     div
@@ -7,12 +7,11 @@ block content
             button(onClick = "launchGame()" class = "btn btn-primary btn-lg" disabled)#startButton Lancer la partie
         div#chat
             div#chatMessages
-            div(class="form-inline")
-                div(class = "form-group")
-                    div.input-group
-                        input(class = "form-control" placeholder="Type your text here...")#messageInput
-                        button(class = "input-group-addon" onClick = "sendMessage()")#sendMessage
-                            span(class="glyphicon glyphicon-send" aria-hidden="true")
+                table.table.table-striped.table-bordered
+            div.form-group: div.input-group
+                input(class = "form-control" placeholder="Type your text here...")#messageInput
+                div.input-group-addon.btn.btn-default(onClick = "sendMessage()")#sendMessage
+                    span(class="glyphicon glyphicon-send" aria-hidden="true")
 
 block script
     script(type = "text/javascript").

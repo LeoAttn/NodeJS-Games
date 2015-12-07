@@ -2,115 +2,115 @@ $cellSize: 30px;
 $cellSpace: 2px;
 
 body {
-    //padding: 20px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    //background-color: #F1F1F1;
+  //padding: 20px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  //background-color: #F1F1F1;
 }
 
 .play {
-    background-color: #333;
-    color: #FFF;
-    .h3 {
-        color: #FFF !important;
-    }
+  background-color: #333;
+  color: #FFF;
+  .h3 {
+    color: #FFF !important;
+  }
 }
 
 a {
-    color: #00B7FF;
+  color: #00B7FF;
 }
 
 .bat-container {
-    display: flex;
-    margin: 40px;
-    div {
-        margin: 10px;
-    }
+  display: flex;
+  margin: 40px;
+  div {
+    margin: 10px;
+  }
 }
 
 .tab {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 .tab td {
-    width: $cellSize+1;
-    height: $cellSize+1;
+  width: $cellSize+1;
+  height: $cellSize+1;
 }
 
 .tab-container {
-    display: flex;
+  display: flex;
 }
 
 .cell {
-    border: solid 1px #FFF;
+  border: solid 1px #FFF;
 }
 
 .tab-att {
-    .cell {
-        cursor: pointer;
-    }
+  .cell {
+    cursor: pointer;
+  }
 }
 
 .cell-touche {
-    position: relative;
-    animation: touche 0.5s linear;
+  position: relative;
+  animation: touche 0.5s linear;
 }
 
 .cell-dansleau {
-    position: relative;
-    animation: dansleau 0.5s linear;
+  position: relative;
+  animation: dansleau 0.5s linear;
 }
 
 .cell-touche:after, .cell-dansleau:after {
-    content: '';
-    position: absolute;
-    top: $cellSpace * 3 - 1;
-    left: $cellSpace * 3 - 1;
-    right: $cellSpace * 3;
-    bottom: $cellSpace * 3;
-    border: ($cellSpace * 3 - $cellSpace / 2) solid #cc0000;
-    border-radius: $cellSize / 2;
+  content: '';
+  position: absolute;
+  top: $cellSpace * 3 - 1;
+  left: $cellSpace * 3 - 1;
+  right: $cellSpace * 3;
+  bottom: $cellSpace * 3;
+  border: ($cellSpace * 3 - $cellSpace / 2) solid #cc0000;
+  border-radius: $cellSize / 2;
 }
 
 .cell-dansleau:after {
-    border-color: #FFF;
+  border-color: #FFF;
 }
 
 .cell-center {
-    text-align: center;
-    vertical-align: middle;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .bat {
-    width: $cellSize - $cellSpace * 2;
-    height: $cellSize - $cellSpace * 2;
-    margin: $cellSpace;
-    background-color: #22A7F0;
-    border-radius: ($cellSize - $cellSpace) / 4;
-    cursor: grab;
+  width: $cellSize - $cellSpace * 2;
+  height: $cellSize - $cellSpace * 2;
+  margin: $cellSpace;
+  background-color: #22A7F0;
+  border-radius: ($cellSize - $cellSpace) / 4;
+  cursor: grab;
 }
 
 .error-bg {
-    //background-color: crimson;
-    background: #d00000; /* Old browsers */
-    background: linear-gradient(#d00000, #9b0000); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    height: 50px;
-    border-radius: 10px;
-    color: white;
-    width: 50%;
-    margin: auto;
-    line-height: 50px;
-    text-align: center;
+  //background-color: crimson;
+  background: #d00000; /* Old browsers */
+  background: linear-gradient(#d00000, #9b0000); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  height: 50px;
+  border-radius: 10px;
+  color: white;
+  width: 50%;
+  margin: auto;
+  line-height: 50px;
+  text-align: center;
 }
 
 .info-bg {
-    background-color: dodgerblue;
-    height: 50px;
-    border-radius: 10px;
-    color: white;
-    width: 50%;
-    margin: auto;
-    line-height: 50px;
-    text-align: center;
+  background-color: dodgerblue;
+  height: 50px;
+  border-radius: 10px;
+  color: white;
+  width: 50%;
+  margin: auto;
+  line-height: 50px;
+  text-align: center;
 }
 
 .create-room {
@@ -118,235 +118,241 @@ a {
 }
 
 .create-room label {
-    display: block;
+  display: block;
 }
 
 .list-room {
-    min-width: 750px;
-    max-width: 50%;
-    margin-bottom: 40px;
-    //background-color:#F2F2F2;
-    //border-radius: 10px;
-    //color:black;
+  min-width: 750px;
+  max-width: 50%;
+  margin-bottom: 40px;
+  //background-color:#F2F2F2;
+  //border-radius: 10px;
+  //color:black;
 }
 
 .list-room h3 {
-    text-align: center;
-    line-height: 30px;
+  text-align: center;
+  line-height: 30px;
 }
 
 .list-room {
-    td, th {
-        line-height: 34px !important;
-    }
+  td, th {
+    line-height: 34px !important;
+  }
 }
 
 .center {
-    text-align: center;
+  text-align: center;
 }
 
 .disable {
-    display: none;
+  display: none;
 }
 
 .enable {
-    display: block;
+  display: block;
 }
 
-#chat{
-    float : right;
-    display:inline-block;
-    width:50%;
-    height : 400px;
+#chat {
+  float: right;
+  display: inline-block;
+  width: 50%;
+  height: 400px;
 }
 
-.leftBlock{
-    float: left;
-    display:inline-block;
-    width : 50%;
-    height : 400px;
+.leftBlock {
+  float: left;
+  display: inline-block;
+  width: 50%;
+  height: 400px;
 }
 
-#playerList{
-    height : 90%;
+#playerList {
+  height: 90%;
 }
 
-#startButton{
-    height : 10%;
-    width : 100%;
-    background-color : chartreuse;
-    color : black;
+#startButton {
+  height: 10%;
+  width: 100%;
+  background-color: chartreuse;
+  color: black;
 }
 
-#startButton:disabled{
-    background-color: #D2D2D2;
+#startButton:disabled {
+  background-color: #D2D2D2;
 }
 
-#chatMessages{
-    height: 90%;
-    overflow: scroll;
+#chatMessages {
+  height: 90%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: solid 1px #AAA;
+  border-bottom: 0;
+  -webkit-box-shadow: inset 0 0 5px #AAA;
+  -moz-box-shadow: inset 0 0 5px #AAA;
+  box-shadow: inset 0 0 5px #AAA;
 }
 
-#messaOOOeInput{
-    display:inline-block;
-    height:10%;
-    width : 90%;
+#messaOOOeInput {
+  display: inline-block;
+  height: 10%;
+  width: 90%;
 }
 
-#sendOOOMessage{
-    display:inline-block;
-    width : 10%;
-    height:10%;
+#sendOOOMessage {
+  display: inline-block;
+  width: 10%;
+  height: 10%;
 }
 
 @keyframes touche {
-    0% {
-        background-color: transparent;
-    }
-    20% {
-        background-color: #ff827b;
-    }
-    100% {
-        background-color: transparent;
-    }
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: #ff827b;
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 @keyframes dansleau {
-    0% {
-        background-color: transparent;
-    }
-    20% {
-        background-color: #BBB;
-    }
-    100% {
-        background-color: transparent;
-    }
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: #BBB;
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 .switch-form {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 }
 
 .switch {
-    position: relative;
-    display: inline-block;
-    vertical-align: top;
-    width: 64px;
-    height: 20px;
-    padding: 3px;
-    background-color: white;
-    border-radius: 18px;
-    box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    background-image: -webkit-linear-gradient(top, #eeeeee, white 25px);
-    background-image: -moz-linear-gradient(top, #eeeeee, white 25px);
-    background-image: -o-linear-gradient(top, #eeeeee, white 25px);
-    background-image: linear-gradient(to bottom, #eeeeee, white 25px);
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  width: 64px;
+  height: 20px;
+  padding: 3px;
+  background-color: white;
+  border-radius: 18px;
+  box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  background-image: -webkit-linear-gradient(top, #eeeeee, white 25px);
+  background-image: -moz-linear-gradient(top, #eeeeee, white 25px);
+  background-image: -o-linear-gradient(top, #eeeeee, white 25px);
+  background-image: linear-gradient(to bottom, #eeeeee, white 25px);
 }
 
 .switch-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
 }
 
 .switch-label {
-    position: relative;
-    display: block;
-    height: inherit;
-    font-size: 12px;
-    text-transform: uppercase;
-    background: #eceeef;
-    border-radius: inherit;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
-    -webkit-transition: 0.15s ease-out;
-    -moz-transition: 0.15s ease-out;
-    -o-transition: 0.15s ease-out;
-    transition: 0.15s ease-out;
-    -webkit-transition-property: opacity background;
-    -moz-transition-property: opacity background;
-    -o-transition-property: opacity background;
-    transition-property: opacity background;
+  position: relative;
+  display: block;
+  height: inherit;
+  font-size: 12px;
+  text-transform: uppercase;
+  background: #eceeef;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+  -webkit-transition: 0.15s ease-out;
+  -moz-transition: 0.15s ease-out;
+  -o-transition: 0.15s ease-out;
+  transition: 0.15s ease-out;
+  -webkit-transition-property: opacity background;
+  -moz-transition-property: opacity background;
+  -o-transition-property: opacity background;
+  transition-property: opacity background;
 }
 
 .switch-label:before, .switch-label:after {
-    position: absolute;
-    top: 50%;
-    margin-top: -.5em;
-    line-height: 1;
-    -webkit-transition: inherit;
-    -moz-transition: inherit;
-    -o-transition: inherit;
-    transition: inherit;
+  position: absolute;
+  top: 50%;
+  margin-top: -.5em;
+  line-height: 1;
+  -webkit-transition: inherit;
+  -moz-transition: inherit;
+  -o-transition: inherit;
+  transition: inherit;
 }
 
 .switch-label:before {
-    content: attr(data-off);
-    right: 11px;
-    color: #666;
-    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+  content: attr(data-off);
+  right: 11px;
+  color: #666;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .switch-label:after {
-    content: attr(data-on);
-    left: 11px;
-    color: white;
-    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
-    opacity: 0;
+  content: attr(data-on);
+  left: 11px;
+  color: white;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+  opacity: 0;
 }
 
 .switch-input:checked ~ .switch-label {
-    background: #47a8d8;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+  background: #47a8d8;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 .switch-input:checked ~ .switch-label:before {
-    opacity: 0;
+  opacity: 0;
 }
 
 .switch-input:checked ~ .switch-label:after {
-    opacity: 1;
+  opacity: 1;
 }
 
 .switch-handle {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 18px;
-    height: 18px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-    background-image: -webkit-linear-gradient(top, white 40%, #f0f0f0);
-    background-image: -moz-linear-gradient(top, white 40%, #f0f0f0);
-    background-image: -o-linear-gradient(top, white 40%, #f0f0f0);
-    background-image: linear-gradient(to bottom, white 40%, #f0f0f0);
-    -webkit-transition: left 0.15s ease-out;
-    -moz-transition: left 0.15s ease-out;
-    -o-transition: left 0.15s ease-out;
-    transition: left 0.15s ease-out;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+  background-image: -webkit-linear-gradient(top, white 40%, #f0f0f0);
+  background-image: -moz-linear-gradient(top, white 40%, #f0f0f0);
+  background-image: -o-linear-gradient(top, white 40%, #f0f0f0);
+  background-image: linear-gradient(to bottom, white 40%, #f0f0f0);
+  -webkit-transition: left 0.15s ease-out;
+  -moz-transition: left 0.15s ease-out;
+  -o-transition: left 0.15s ease-out;
+  transition: left 0.15s ease-out;
 }
 
 .switch-handle:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -6px 0 0 -6px;
-    width: 12px;
-    height: 12px;
-    background: #f9f9f9;
-    border-radius: 6px;
-    box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
-    background-image: -webkit-linear-gradient(top, #eeeeee, white);
-    background-image: -moz-linear-gradient(top, #eeeeee, white);
-    background-image: -o-linear-gradient(top, #eeeeee, white);
-    background-image: linear-gradient(to bottom, #eeeeee, white);
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -6px 0 0 -6px;
+  width: 12px;
+  height: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+  background-image: -webkit-linear-gradient(top, #eeeeee, white);
+  background-image: -moz-linear-gradient(top, #eeeeee, white);
+  background-image: -o-linear-gradient(top, #eeeeee, white);
+  background-image: linear-gradient(to bottom, #eeeeee, white);
 }
 
 .switch-input:checked ~ .switch-handle {
-    left: 43px;
-    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+  left: 43px;
+  box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
 }

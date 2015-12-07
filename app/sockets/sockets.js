@@ -86,7 +86,7 @@ var IO = {
                     hasValid : false,
                     hasLost : false
                 }
-            }
+            };
             if(io.sockets.sockets.length == 1)
             {
                 s.player.id = 1;
