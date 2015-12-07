@@ -36,11 +36,18 @@ function newChatMessage(msgObj) {
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
-        var div = $('<tr>',{
-            class : classes +' ' + classes+'-bg'
-        }).appendTo('#chatMessages table');
+        if (msgObj.from == "server") {
+            var div = $('<tr>',{
+                class : classes +' ' + classes+'-bg ' + msgObj.type
+            }).appendTo('#chatMessages table');
+        } else {
+            var div = $('<tr>',{
+                class : classes +' ' + classes+'-bg'
+            }).appendTo('#chatMessages table');
+        }
+
         $('<td>', {
-            text: msgObj.username + ': ' +msgObj.msg
+            html: '<strong>' + msgObj.username + ' : </strong>' +msgObj.msg
         }).appendTo(div);
         $('#chatMessages').animate({scrollTop : $('#chatMessages').prop('scrollHeight')}, 50);
     }

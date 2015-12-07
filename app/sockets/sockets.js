@@ -63,6 +63,9 @@ var IO = {
 				socket.handshake.session.username = username;
             socket.broadcast.to(socket.handshake.session.roomID).emit('addUser',{ username : socket.handshake.session.username});
             socket.emit('addUser', {username : socket.handshake.session.username});
+            var msag = "Bienvenue dans la room !";
+            socket.emit('chatMessage',{from : 'server', username:'INFO', type: 'info', msg:  msag, date : Date.now});
+
         });
 		////////=====================================================================
     },
@@ -93,14 +96,15 @@ var IO = {
             if(io.sockets.sockets.length == 1)
             {
                 s.player.id = 1;
-                s.player.state = "attj2";
+                s.player.state = "att_j";
                 game[s.handshake.session.roomID].player1 = s.player;
             }
             else if(io.sockets.sockets.length == 2)
             {
                 s.player.id = 2;
-                s.player.state = "attj2";
+                s.player.state = "pos_bat";
                 game[s.handshake.session.roomID].player2 = s.player;
+                game[s.handshake.session.roomID].player1.state = "pos_bat";
             }
             console.log("Game Vars : " + JSON.stringify(game[s.handshake.session.roomID]));
             s.join(s.handshake.session.roomID);
