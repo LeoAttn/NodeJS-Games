@@ -31,46 +31,44 @@ var Rooms = {
                 req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
             else if (req.body.roomName.length > 20)
                 req.body.roomName = req.body.roomName.substr(0,20);
-            var board = [[], [], [], [], [], [], [], [], [], []];
             req.body.private = (req.body.private == "on");
             var r = new Room({
                 creator: req.body.username,
                 name: req.body.roomName,
-                board1: board,
                 private: req.body.private
             });
             r.save(function (err) {
                 if (err) throw err;
                 console.log('Room inserted');
             });
-            res.redirect('/play?id='+ r._id);
+            req.session.roomID = r._id;
+            res.redirect('/lobby?id='+ r._id);
         }
         else
             res.redirect('/?error=alreadyInGame');
     },
-    join: function (req, res) {
-        console.log("id = "+req.body.id);
-        console.log("name = "+req.body.username);
-        Room.findOne({_id: req.body.id}, function (err, room) {
+    joinLobby: function (req, res) {
+        var roomId;
+        if(req.query.roomID)
+            roomId = req.query.roomID;
+        else
+            roomId = req.body.id;
+        Room.findOne({_id: roomId}, function (err, room) {
             if (err) throw err;
             //res.json(room);
             if(!req.session.roomID)
             {
                 if (room.ready == false) {
-                    if (req.body.username.length > 20)
-                        req.body.username = req.body.username.substr(0,20);
-                    req.session.username = req.body.username;
+                    req.session.username = "Anonyme"
                     req.session.roomID = room._id;
-                    var board = [[], [], [], [], [], [], [], [], [], []];
                     room.ready = true;
-                    room.board2 = board;
-                    room.player2 = req.body.username;
+                    room.player2 = req.session.username;
                     room.save(function (err) {
                         if (err) throw err;
                         console.log('User enter in Room');
                     });
 
-                    res.redirect('/play?id='+ room._id);
+                    res.redirect('/lobby?id='+ room._id);
                 }
                 else
                     res.redirect('/?error=full');
@@ -79,21 +77,23 @@ var Rooms = {
                 res.redirect('/?error=alreadyInGame');
         });
     },
-    joinLink: function (req, res) {
-        Room.findOne({_id: req.query.id}, function (err, room) {
-            if (err) throw err;
-            //res.json(room);
-            if (room) {
-                if (room.playing == false) {
-                    res.render('joinLink',  {title: "Bataille Navale", room : room});
+    lobby: function(req, res)
+    {
+        if(req.session.roomID == req.query.id)
+        {
+            Room.findOne({_id : req.query.id}, function(err, room){
+                if (err) throw err;
+                if(room){
+                    res.render('lobby',{title: "Lobby: "+room.name, session : req.session, tRoom: room});
                 }
                 else
-                    res.redirect('/?error=full');
-            } else {
-                res.redirect('/?error=noroom');
-            }
-
-        });
+                    res.redirect('/?error=noroom');
+            });
+        }
+        else
+        {
+            res.redirect('/?error=notAllowed')
+        }
     },
     play:function(req, res){
         Room.findOne({_id: req.query.id}, function(err, room){

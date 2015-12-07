@@ -153,6 +153,52 @@ a {
     display: block;
 }
 
+#chat{
+    float : right;
+    display:inline-block;
+    width:50%;
+    height : 400px;
+}
+
+.leftBlock{
+    float: left;
+    display:inline-block;
+    width : 50%;
+    height : 400px;
+}
+
+#playerList{
+    height : 90%;
+}
+
+#startButton{
+    height : 10%;
+    width : 100%;
+    background-color : chartreuse;
+    color : black;
+}
+
+#startButton:disabled{
+    background-color: #D2D2D2;
+}
+
+#chatMessages{
+    height: 90%;
+    overflow: scroll;
+}
+
+#messaOOOeInput{
+    display:inline-block;
+    height:10%;
+    width : 90%;
+}
+
+#sendOOOMessage{
+    display:inline-block;
+    width : 10%;
+    height:10%;
+}
+
 @keyframes touche {
     0% {
         background-color: transparent;
