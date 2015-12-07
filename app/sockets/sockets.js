@@ -106,10 +106,10 @@ var IO = {
         s.on('disconnect', function () {
             console.log("Client Disconnected");
             s.leave();
-            if (io.sockets.sockets.length == 0)
+            /*if (io.sockets.sockets.length == 0)
                 RoomsC.delete(s.handshake.session.roomID);
             else// On prévient tout le monde qu'une personne s'est deconnectée
-                s.broadcast.to(s.handshake.session.roomID).emit('UserState', io.sockets.sockets.length);
+                s.broadcast.to(s.handshake.session.roomID).emit('UserState', io.sockets.sockets.length);*/
         });
     },
     TirClient: function (s) {
