@@ -94,7 +94,7 @@ socket.on('hey', function (){
     socket.emit('handshake', sess);
     console.log('Session : ', sess);
     console.log('username : ', sess.username);
-    if(sess.username === undefined)
+    if(sess.username === undefined || sess.username == 'Anonyme')
         socket.emit('hey', prompt('Quel est votre pseudo ?'));
     else
         socket.emit('hey', sess.username);
