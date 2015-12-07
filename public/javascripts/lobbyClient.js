@@ -19,7 +19,7 @@ function newMessage(classes, msg) {
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
-        var div = $('<li>',{
+        var div = $('<div>',{
             class : classes +' ' + classes+'-bg'
         }).appendTo('#msges');
         $('<p>', {
@@ -61,7 +61,7 @@ function newUser(usernameJO, rank)
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
-        var div = $('<div>',{
+        var div = $('<li>',{
             class : 'user ' + rank +' ' + rank+'-bg'
         }).appendTo('#playerList');
         $('<p>', {
@@ -88,18 +88,16 @@ function sendMessage(){
     }
 }
 
-
-
 socket.on('hey', function (){
     socket.emit('joinLobby', sess);
     if(sess.username === undefined || sess.username == 'Anonyme')
 	{
-		socket.emit('hey', prompt('Quel est votre pseudo ?'));
+		var tmpUsername = prompt('Quel est votre pseudo ?');
+		if(tmpUsername === undefined)
+			tmpUsername = 'Anonyme';
+		sess.username = tmpUsername;
 	}
-    else
-	{
-		socket.emit('hey', sess.username);
-	}
+	socket.emit('hey', sess.username);
 });
 
 socket.on('ready', function(){
@@ -115,7 +113,6 @@ socket.on('addUser', function(username, rank){
 });
 
 socket.on('chatMessage', function(msgObj){
-	console.log(msgObj);
     newChatMessage(msgObj);
 });
 

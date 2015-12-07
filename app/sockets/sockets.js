@@ -4,7 +4,8 @@ var RoomsC = require('../controllers/Rooms');
 
 var isValid = false;
 
-var game = [];
+var room = [];
+room.clients = 0;
 
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
@@ -27,48 +28,65 @@ var IO = {
         return io;
     },
     connection: function (callback) {//Appellé lors de la connexion du socket
-        io.on('connection', function (socket) {
+        io.on('connection', function (s) {
             console.log("Client Connected ");
-            socket.emit('hey');
-            socket.emit('handshake');///Récupère la session passé en paramètre
-            socket.broadcast.emit('userCount', io.sockets.sockets.length);//Broadcast le nombre de socket connecté
-            socket.emit('userCount', io.sockets.sockets.length);
-            callback(socket);
+			s.emit('handshake');///Récupère la session passé en paramètre
+            s.emit('hey');
+            s.broadcast.emit('userCount', io.sockets.sockets.length);//Broadcast le nombre de socket connecté
+            s.emit('userCount', io.sockets.sockets.length);
+            callback(s);
         });
     },
-	lobby : function(socket){
-		socket.on('joinLobby', function(data){
-            socket.handshake.session = data;
-            socket.join(socket.handshake.session.roomID);
+	lobby : function(s){
+		s.on('joinLobby', function(data){
+            s.session = data;
+			if(room[s.session.roomID] === undefined)
+			{
+				room[s.session.roomID] = {}
+				room[s.session.roomID].clients = 0;
+				room[s.session.roomID].players =[];
+			}	
+			if(room[s.session.roomID].clients != 2)
+			{
+				s.join(s.session.roomID);
+				s.playerID = room[s.session.roomID].clients.toString;
+				room[s.session.roomID].players[s.playerID] = {
+					username : s.session.username
+				}
+				room[s.session.roomID].clients += 1
+				console.log('User entered !');
+				console.log('room: ', JSON.stringify(room[s.session.roomID]));
+				if(room[s.session.roomID].clients == 2){
+					s.broadcast.to(s.session.roomID).emit('ready', {});
+				}
+			}
         });
-		socket.on('startGame', function(){
-            socket.emit('startGame');
-            socket.broadcast.to(socket.handshake.session.roomID).emit('startGame', {});
+		s.on('startGame', function(){
+            s.emit('startGame');
+            s.broadcast.to(s.session.roomID).emit('startGame', {});
         });
 	},
-	chat : function(socket){
-		socket.on('chatMessage', function (msag){
-			console.log("Msg : " + msag + "from user: " + socket.handshake.session.username);
-            socket.broadcast.to(socket.handshake.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: socket.handshake.session.username, date : Date.now});
-            socket.emit('chatMessage',{from : 'user', msg:  msag, username : socket.handshake.session.username, date : Date.now});
+	chat : function(s){
+		s.on('chatMessage', function (msag){
+			console.log("Msg : " + msag + "from user: " + s.session.username);
+            s.broadcast.to(s.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: s.session.username, date : Date.now});
+            s.emit('chatMessage',{from : 'user', msg:  msag, username : s.session.username, date : Date.now});
         });
 	},
-    handshake : function(socket){
-		socket.on('hey', function(username){
-			console.log('store username: ' + socket.handshake.session.username + ' user ' + username);
-			if(username === undefined)
-				if(!socket.handshake.session.username)
-					socket.handshake.session.username = "Anonyme";
-			else
-				socket.handshake.session.username = username;
-            socket.broadcast.to(socket.handshake.session.roomID).emit('addUser',{ username : socket.handshake.session.username});
-            socket.emit('addUser', {username : socket.handshake.session.username});
+    handshake : function(s){
+		s.on('hey', function(username){
+			console.log('store username: ' + s.session.username + ' user ' + username);
+			s.session.username = username;
+			console.log("Room: " + JSON.stringify(room[s.session.roomID].players[s.playerID]));
+			room[s.session.roomID].players[s.playerID].username = username;
+            s.broadcast.to(s.session.roomID).emit('addUser',{ username : s.session.username});
+            s.emit('addUser', {username : s.session.username});
         });
 		////////=====================================================================
     },
 	game : function(s){
 		s.on('join', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
-            s.handshake.session = data;
+            s.session = data;
             s.player ={
                         id : 0,
                         username : data.username,
@@ -76,7 +94,7 @@ var IO = {
                         state: "",
                         hasLost: false
                      };
-            game[s.handshake.session.roomID] = {
+            game[s.session.roomID] = {
                 player1 : {
                     username: "",
                     batTab : [],
@@ -94,16 +112,16 @@ var IO = {
             {
                 s.player.id = 1;
                 s.player.state = "attj2";
-                game[s.handshake.session.roomID].player1 = s.player;
+                game[s.session.roomID].player1 = s.player;
             }
             else if(io.sockets.sockets.length == 2)
             {
                 s.player.id = 2;
                 s.player.state = "attj2";
-                game[s.handshake.session.roomID].player2 = s.player;
+                game[s.session.roomID].player2 = s.player;
             }
-            console.log("Game Vars : " + JSON.stringify(game[s.handshake.session.roomID]));
-            s.join(s.handshake.session.roomID);
+            console.log("Game Vars : " + JSON.stringify(game[s.session.roomID]));
+            s.join(s.session.roomID);
         });
 		///////====================================================
 		s.on('BatPos', function (pos) {
@@ -126,11 +144,11 @@ var IO = {
                 if (nbBat == 5) {
                     s.player.hasValid = true;
                     s.player.batTab = batPos;
-                    console.log("Player Vars : " + JSON.stringify(s.handshake.player));
+                    console.log("Player Vars : " + JSON.stringify(s.player));
                     s.emit('PosBatValid');
                     s.broadcast.emit('playerReady');
                     s.broadcast.emit('info', "Votre adversaire est prêt !");
-                    if(game[s.handshake.session.roomID].player1.hasValid && game[s.handshake.session.roomID].player2.hasValid)
+                    if(game[s.session.roomID].player1.hasValid && game[s.session.roomID].player2.hasValid)
                     {
                         s.broadcast.emit('start');
                         s.emit('start');
@@ -173,9 +191,9 @@ var IO = {
             console.log("Client Disconnected");
             s.leave();
             /*if (io.sockets.sockets.length == 0)
-                RoomsC.delete(s.handshake.session.roomID);
+                RoomsC.delete(s.session.roomID);
             else// On prévient tout le monde qu'une personne s'est deconnectée
-                s.broadcast.to(s.handshake.session.roomID).emit('UserState', io.sockets.sockets.length);*/
+                s.broadcast.to(s.session.roomID).emit('UserState', io.sockets.sockets.length);*/
         });
     },
 };
