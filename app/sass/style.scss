@@ -153,37 +153,32 @@ a {
   display: block;
 }
 
+$lobbyHeight: 400px;
+
 #chat {
   float: right;
   display: inline-block;
   width: 50%;
-  height: 400px;
+  height: $lobbyHeight;
 }
 
 .leftBlock {
   float: left;
   display: inline-block;
+  padding: 0 20px;
   width: 50%;
-  height: 400px;
+  height: $lobbyHeight;
 }
 
 #playerList {
-  height: 90%;
-}
-
-#startButton {
-  height: 10%;
-  width: 100%;
-  background-color: chartreuse;
-  color: black;
-}
-
-#startButton:disabled {
-  background-color: #D2D2D2;
+  height: $lobbyHeight - 42px;
+  li {
+    margin-left: 30px;
+  }
 }
 
 #chatMessages {
-  height: 90%;
+  height: $lobbyHeight - 20px;
   overflow-x: hidden;
   overflow-y: auto;
   border: solid 1px #CCC;
