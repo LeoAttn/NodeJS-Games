@@ -40,6 +40,9 @@ var IO = {
 		socket.on('joinLobby', function(data){
             socket.handshake.session = data;
             socket.join(socket.handshake.session.roomID);
+            var msag = "Bienvenue dans la room !";
+            socket.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
+
         });
 		socket.on('startGame', function(){
             socket.emit('startGame');
@@ -63,9 +66,6 @@ var IO = {
 				socket.handshake.session.username = username;
             socket.broadcast.to(socket.handshake.session.roomID).emit('addUser',{ username : socket.handshake.session.username});
             socket.emit('addUser', {username : socket.handshake.session.username});
-            var msag = "Bienvenue dans la room !";
-            socket.emit('chatMessage',{from : 'server', username:'INFO', type: 'info', msg:  msag, date : Date.now});
-
         });
 		////////=====================================================================
     },
