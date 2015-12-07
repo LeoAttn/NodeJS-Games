@@ -198,6 +198,23 @@ $lobbyHeight: 400px;
 #sendMessage {
   border-top-right-radius: 0;
 }
+
+.loginLobby {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  div {
+    align-self: center;
+    margin: 0 auto;
+  }
+}
+
+
 @keyframes touche {
   0% {
     background-color: transparent;

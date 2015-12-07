@@ -112,6 +112,14 @@ socket.on('hey', function (){
 		if(tmpUsername === undefined || tmpUsername == null)
 			tmpUsername = 'Anonyme';
 		sess.username = tmpUsername;
+		//socket.emit('hey', prompt('Quel est votre pseudo ?'));
+        var div = $('<div>',{
+            class : 'loginLobby'
+        }).appendTo('body');
+        $('<div>', {
+            html: '<div class="form-group"> <div class="input-group"> <input id="loginName" autofocus="autofocus" placeholder="Entrer votre nom" maxlength="200"  class="form-control"/> <div onClick="sendMessage()" class="input-group-addon btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-send"></span></div> </div> </div>'
+        }).appendTo(div);
+        $('#loginName').focus();
 	}
 	socket.emit('hey', sess.username);
 });
