@@ -93,9 +93,13 @@ function sendMessage(){
 socket.on('hey', function (){
     socket.emit('joinLobby', sess);
     if(sess.username === undefined || sess.username == 'Anonyme')
-        socket.emit('hey', prompt('Quel est votre pseudo ?'));
+	{
+		socket.emit('hey', prompt('Quel est votre pseudo ?'));
+	}
     else
-        socket.emit('hey', sess.username);
+	{
+		socket.emit('hey', sess.username);
+	}
 });
 
 socket.on('ready', function(){
@@ -106,7 +110,7 @@ socket.on('addUser', function(username, rank){
     var notExist = newUser(username, rank);
     if(notExist)
 	{
-		socket.emit('hey');
+		socket.emit('hey', sess.username);
 	}
 });
 
