@@ -186,25 +186,23 @@ a {
   height: 90%;
   overflow-x: hidden;
   overflow-y: auto;
-  border: solid 1px #AAA;
+  border: solid 1px #CCC;
   border-bottom: 0;
   -webkit-box-shadow: inset 0 0 5px #AAA;
   -moz-box-shadow: inset 0 0 5px #AAA;
   box-shadow: inset 0 0 5px #AAA;
+  table {
+    margin: 0;
+  }
 }
 
-#messaOOOeInput {
-  display: inline-block;
-  height: 10%;
-  width: 90%;
+#messageInput {
+  border-top-left-radius: 0;
 }
 
-#sendOOOMessage {
-  display: inline-block;
-  width: 10%;
-  height: 10%;
+#sendMessage {
+  border-top-right-radius: 0;
 }
-
 @keyframes touche {
   0% {
     background-color: transparent;
