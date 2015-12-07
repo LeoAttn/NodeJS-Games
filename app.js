@@ -41,13 +41,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // init le dossier public comme dossier static
 app.use(express.static(path.join(__dirname, 'public')));
-//Insère la favicon
+//InsÃ¨re la favicon
 app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
 // Init les routes
 app.use('/', routes);
 app.use('/play', play);
 
-//A chaque fois qu'une requête est effectué
+//A chaque fois qu'une requÃªte est effectuÃ©
 app.use(function(req, res, next){
     var name = req.session.name;
     var user = req.session.USER;
@@ -95,7 +95,7 @@ app.use(function(err, req, res, next) {
 // Connection a la base mongoDb
 mongoose.connect('mongodb://localhost/NodeJS-Games', function(err) {
     if (err) { throw err; }
-    // Pour supprimer la base de donnée
+    // Pour supprimer la base de donnÃ©e
     //mongoose.connection.db.dropDatabase();
 });
 

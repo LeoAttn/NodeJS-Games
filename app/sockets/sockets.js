@@ -15,14 +15,11 @@ var IO = {
         this.connection(function (socket) {
 
             // Toutes les fonctions que l'on va rajouter devront être ici
-            $this.chatMessage(socket);
-            $this.startGame(socket);
-            $this.hey(socket);
+			$this.lobby(socket);
+            $this.chat(socket);
+            $this.game(socket);
             $this.handshake(socket);
-            $this.joinRoom(socket);
             $this.disconnect(socket);
-            $this.TirClient(socket);
-            $this.BatPos(socket);
         });
 
     },
@@ -39,37 +36,38 @@ var IO = {
             callback(socket);
         });
     },
-    chatMessage : function (socket){
-        socket.on('chatMessage', function (msag){
+	lobby : function(socket){
+		socket.on('joinLobby', function(data){
+            socket.handshake.session = data;
+            socket.join(socket.handshake.session.roomID);
+        });
+		socket.on('startGame', function(){
+            socket.emit('startGame');
+            socket.broadcast.to(socket.handshake.session.roomID).emit('startGame', {});
+        });
+	},
+	chat : function(socket){
+		socket.on('chatMessage', function (msag){
 			console.log("Msg : " + msag + "from user: " + socket.handshake.session.username);
             socket.broadcast.to(socket.handshake.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: socket.handshake.session.username, date : Date.now});
             socket.emit('chatMessage',{from : 'user', msg:  msag, username : socket.handshake.session.username, date : Date.now});
         });
-    },
-    startGame : function (socket){
-        socket.on('startGame', function(){
-            socket.emit('startGame');
-            socket.broadcast.to(socket.handshake.session.roomID).emit('startGame', {});
-        });
-    },
-    hey : function (socket){
-        socket.on('hey', function(username){
-			if(username !== 'undefined')
-				console.log('Hey: ' +socket.handshake.session.username);
+	},
+    handshake : function(socket){
+		socket.on('hey', function(username){
+			console.log('store username: ' + socket.handshake.session.username + ' user ' + username);
+			if(username === undefined)
+				if(!socket.handshake.session.username)
+					socket.handshake.session.username = "Anonyme";
 			else
-            	socket.handshake.session.username = username;
+				socket.handshake.session.username = username;
             socket.broadcast.to(socket.handshake.session.roomID).emit('addUser',{ username : socket.handshake.session.username});
             socket.emit('addUser', {username : socket.handshake.session.username});
         });
+		////////=====================================================================
     },
-    handshake : function(socket){
-        socket.on('handshake', function(data){
-            socket.handshake.session = data;
-            socket.join(socket.handshake.session.roomID);
-        })
-    },
-    joinRoom: function (s) {//Appelé en réponse au message handshake, set la session et rejoins la room
-        s.on('join', function (data) {
+	game : function(s){
+		s.on('join', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.handshake.session = data;
             s.player ={
                         id : 0,
@@ -106,40 +104,9 @@ var IO = {
             }
             console.log("Game Vars : " + JSON.stringify(game[s.handshake.session.roomID]));
             s.join(s.handshake.session.roomID);
-        })
-    },
-    disconnect: function (s) {
-        s.on('disconnect', function () {
-            console.log("Client Disconnected");
-            s.leave();
-            /*if (io.sockets.sockets.length == 0)
-                RoomsC.delete(s.handshake.session.roomID);
-            else// On prévient tout le monde qu'une personne s'est deconnectée
-                s.broadcast.to(s.handshake.session.roomID).emit('UserState', io.sockets.sockets.length);*/
         });
-    },
-    TirClient: function (s) {
-        s.on('TirClient', function (x, y) {
-            if (isValid) {
-                var type;
-                console.log("position tir : (" + x + ", " + y + ")");
-                if (varRoom[s.room].Tab1[x][y]) {
-                    type = "touche";
-                } else {
-                    type = "dansleau";
-                }
-                console.log(type);
-                s.emit('TirServ', type, x, y);
-            }
-            console.log("Name : " + s.username);
-            console.log("Room : " + s.room);
-
-            //for (var k in varRoom)
-            //    console.log(varRoom[k])
-        });
-    },
-    BatPos: function (s) {
-        s.on('BatPos', function (pos) {
+		///////====================================================
+		s.on('BatPos', function (pos) {
             console.log(pos);
             if(!s.player.hasValid)
             {
@@ -181,7 +148,36 @@ var IO = {
                     s.emit('errorMsg', "Vous n'avez pas mis tous les bateaux !");
             }
         });
-    }
+		/////====================================================================
+		s.on('TirClient', function (x, y) {
+            if (isValid) {
+                var type;
+                console.log("position tir : (" + x + ", " + y + ")");
+                if (varRoom[s.room].Tab1[x][y]) {
+                    type = "touche";
+                } else {
+                    type = "dansleau";
+                }
+                console.log(type);
+                s.emit('TirServ', type, x, y);
+            }
+            console.log("Name : " + s.username);
+            console.log("Room : " + s.room);
+
+            //for (var k in varRoom)
+            //    console.log(varRoom[k])
+        });
+	},
+    disconnect: function (s) {
+        s.on('disconnect', function () {
+            console.log("Client Disconnected");
+            s.leave();
+            /*if (io.sockets.sockets.length == 0)
+                RoomsC.delete(s.handshake.session.roomID);
+            else// On prévient tout le monde qu'une personne s'est deconnectée
+                s.broadcast.to(s.handshake.session.roomID).emit('UserState', io.sockets.sockets.length);*/
+        });
+    },
 };
 
 module.exports = IO;
