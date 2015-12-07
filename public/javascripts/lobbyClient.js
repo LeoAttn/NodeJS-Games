@@ -1,11 +1,9 @@
 var socket = io.connect('http://localhost');
 
 $('#messageInput').keydown(function(event){
-    if (event.which == 13)
-    {
-        sendMessage();
-    }
-})
+    console.log(event);
+    if (event.which == 13) sendMessage();
+});
 
 function newMessage(classes, msg) {
     var elem = $('.'+classes);
@@ -15,7 +13,7 @@ function newMessage(classes, msg) {
         var text = $(this).html();
         if(text == msg)
             testMsg = false;
-    })
+    });
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
@@ -72,7 +70,7 @@ function newUser(usernameJO, rank)
         var text = $(this).html();
         if(text == username)
             testMsg = false;
-    })
+    });
     //On crÃ©er la div si un message identique n'existe pas.
     if(testMsg)
     {
@@ -104,18 +102,33 @@ function sendMessage(){
     }
 }
 
+function sendLogin(){
+    var name = $('#loginName').val();
+    console.log(name);
+    if(name === undefined || name == null || name == "")
+        name = 'Anonyme';
+    sess.username = name;
+    socket.emit('hey', sess.username);
+    $('#loginName').val('');
+    $('.loginLobby').remove();
+}
+
 socket.on('hey', function (){
     socket.emit('joinLobby', sess);
     if(sess.username === undefined || sess.username == 'Anonyme')
 	{
-		var tmpUsername = prompt('Quel est votre pseudo ?');
-		if(tmpUsername === undefined || tmpUsername == null)
-			tmpUsername = 'Anonyme';
-		sess.username = tmpUsername;
-	}
-    console.log("hey");
-    console.log(sess.username);
-	socket.emit('hey', sess.username);
+        var div = $('<div>',{
+            class : 'loginLobby'
+        }).appendTo('body');
+        $('<div>', {
+            html: '<div class="form-group"> <div class="input-group"> <input id="loginName" autofocus="autofocus" placeholder="Entrer votre nom" maxlength="200"  class="form-control"/> <div onClick="sendLogin()" class="input-group-addon btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span></div> </div> </div>'
+        }).appendTo(div);
+        $('#loginName').focus().keydown(function(event){
+            console.log(event);
+            if (event.which == 13) sendLogin();
+        });
+	} else
+	    socket.emit('hey', sess.username);
 });
 
 socket.on('ready', function(){
