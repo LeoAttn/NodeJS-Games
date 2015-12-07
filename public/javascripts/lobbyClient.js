@@ -97,7 +97,7 @@ socket.on('hey', function (){
     if(sess.username === undefined || sess.username == 'Anonyme')
         socket.emit('hey', prompt('Quel est votre pseudo ?'));
     else
-        socket.emit('hey', sess.username);
+        socket.emit('hey');
 });
 
 socket.on('addUser', function(username, rank){
@@ -107,6 +107,7 @@ socket.on('addUser', function(username, rank){
 });
 
 socket.on('chatMessage', function(msgObj){
+	console.log(msgObj);
     newChatMessage(msgObj);
 });
 

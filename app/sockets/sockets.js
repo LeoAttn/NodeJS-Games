@@ -41,6 +41,7 @@ var IO = {
     },
     chatMessage : function (socket){
         socket.on('chatMessage', function (msag){
+			console.log("Msg : " + msag + "from user: " + socket.handshake.session.username);
             socket.broadcast.to(socket.handshake.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: socket.handshake.session.username, date : Date.now});
             socket.emit('chatMessage',{from : 'user', msg:  msag, username : socket.handshake.session.username, date : Date.now});
         });
@@ -53,7 +54,10 @@ var IO = {
     },
     hey : function (socket){
         socket.on('hey', function(username){
-            socket.handshake.session.username = username;
+			if(username !== 'undefined')
+				console.log('Hey: ' +socket.handshake.session.username);
+			else
+            	socket.handshake.session.username = username;
             socket.broadcast.to(socket.handshake.session.roomID).emit('addUser',{ username : socket.handshake.session.username});
             socket.emit('addUser', {username : socket.handshake.session.username});
         });
