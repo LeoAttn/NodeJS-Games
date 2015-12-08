@@ -90,16 +90,16 @@ function unlockButton(){
 
 function startGame(){
     $.ajax({
-        type: 'UPDATE',
-        url: '/lobby/setReady/' + sess.roomID
-    }).done(function( response ) {
-        if (response.msg === '') {
-            socket.emit('startGame');
-        }
-        else {
-            console.log('Error: ' + response.msg);
-        }
-    });
+        type: 'put',
+        url: '/lobby/set-ready/'+ sess.roomID,
+        data : "id="+sess.roomID
+    })
+    .done(function(data) {
+        socket.emit('startGame');
+    })
+    .fail(function(request,status,error) {
+        console.log('ERROR !');
+    })
 }
 
 function sendMessage(){

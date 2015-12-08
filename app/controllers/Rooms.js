@@ -59,10 +59,9 @@ var Rooms = {
             //res.json(room);
             if(!req.session.roomID)
             {
-                if (room.ready == false) {
+                if (room.player2=== undefined) {
                     req.session.username = "Anonyme"
                     req.session.roomID = room._id;
-                    room.ready = true;
                     room.player2 = req.session.username;
                     room.save(function (err) {
                         if (err) throw err;
@@ -131,19 +130,26 @@ var Rooms = {
             }
         });
     },
-    setReady : function(req, res){
+    setReady : function(req, res, next){
+        console.log("Request Parameters: " + JSON.stringify(req.params))
         Room.findOne({_id : req.params.id}, function(err, room){
             if(err) throw err;
             if(room)
             {
-                if(req.session.roomID == room._id)
-                {
-                    room.ready = true;
-                    room.save(function (err) {
-                        if (err) throw err;
-                        console.log('Room updated');
-                    });
-                }
+                room.ready = true;
+                room.save(function (err) {
+                    if (err) throw err;
+                    console.log('Room updated');
+                    console.log("SUCCESS : STATUS 200")
+                    res.status(200).send('success !');
+                    res.end();
+                });
+            }
+            else
+            {
+                console.log("ERROR : NO CONTENT STATUS 204")
+                res.status(204).send('No content !');
+                res.end();
             }
         });
     },
