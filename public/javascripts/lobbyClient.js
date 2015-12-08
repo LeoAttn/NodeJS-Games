@@ -28,7 +28,6 @@ function newMessage(classes, msg) {
             text: msg
         }).appendTo(div);
     }
-
 }
 
 function newChatMessage(msgObj) {
@@ -163,4 +162,8 @@ socket.on('chatMessage', function(msgObj){
 
 socket.on('startGame', function (){
     window.location.replace("http://localhost/play?id="+sess.roomID);
+});
+
+socket.on('loadMessages', function(msages){
+
 });
