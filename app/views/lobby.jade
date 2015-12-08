@@ -6,8 +6,10 @@ block content
             div#playerList
                 h4 Personnes présentes dans le lobby
                 ul
-            if session.playerID == 'creator'
-                button(onClick = "startGame()" class = "btn btn-success btn-lg btn-block" disabled)#startButton Lancer la partie
+            div.button
+                if session.playerID == 'creator'
+                    button.btn.btn-default.btn-lg.btn-block(onclick='promptLink()') Lien d'invitation
+                    button(onClick = "startGame()" class = "btn btn-success btn-lg btn-block" disabled)#startButton Lancer la partie
         div#chat
             div#chatMessages
                 table.table.table-striped.table-bordered
