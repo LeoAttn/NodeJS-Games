@@ -8,7 +8,7 @@ function updateRoomList()
 {
     $.ajax({
         type: 'get',
-        url: '/api/',
+        url: '/api/'
     })
     .done(function(data) {
 

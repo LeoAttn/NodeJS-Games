@@ -137,7 +137,7 @@ var IO = {
                         if(name == s.session.playerID)
                         {
                             s.emit('newState', {state : 'myTurn'});
-                            s.broadcast.to(s.session.roomID)('newState', {state: 'wait'});
+                            s.broadcast.to(s.session.roomID).emit('newState', {state: 'wait'});
                         }
                         else
                         {
@@ -158,16 +158,21 @@ var IO = {
 		/////====================================================================
 		s.on('tirClient', function (x, y) {
             if (room[s.session.roomID].players[s.session.playerID].state == "myTurn") {
-                var type;
+                var type, playerID;
                 console.log("position tir : (" + x + ", " + y + ")");
-                if (room[s.session.roomID].players[s.session.playerID].batTab[x][y]) {
+                if (s.session.playerID == 'creator')
+                    playerID = 'player2';
+                else
+                    playerID = 'creator';
+                if (room[s.session.roomID].players[playerID].batTab[x][y]) {
                     type = "touche";
                 } else {
                     type = "dansleau";
                 }
                 console.log(type);
-                s.emit('tirServ', type, x, y);
+                s.emit('tirServ', {tab: 'att', type: type, x: x, y :y});
                 s.emit('newState', {state : 'wait'});
+                s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y :y});
                 s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
             }
             //for (var k in varRoom)
