@@ -100,16 +100,18 @@ var Rooms = {
         Room.findOne({_id: req.query.id}, function(err, room){
             if(err) throw err;
             if(room){
-                if (!room.playing) {
+                if (req.session.roomID == room._id) {
                     if(room.ready)
+                    {
                         room.playing = true;
-                    req.session.roomID = room._id;
-                    req.cookies.roomID = room._id;
-                    res.render('play', {title: "Battaille Navale en cours", session : req.session});
-                }
-                else if(room._id == req.session.roomID)
-                {
-                    res.render('play', {title: "Battaille Navale en cours", session : req.session});
+                        req.session.roomID = room._id;
+                        req.cookies.roomID = room._id;
+                        res.render('play', {title: "Battaille Navale en cours", session : req.session});
+                    }
+                    else
+                    {
+                        res.redirect('/lobby?id='+room._id);
+                    }
                 }
                 else if(room._id != req.session.roomID)
                 {
@@ -126,6 +128,22 @@ var Rooms = {
 
             } else {
                     res.redirect('/?error=noroom');
+            }
+        });
+    },
+    setReady : function(req, res){
+        Room.findOne({_id : req.params.id}, function(err, room){
+            if(err) throw err;
+            if(room)
+            {
+                if(req.session.roomID == room._id)
+                {
+                    room.ready = true;
+                    room.save(function (err) {
+                        if (err) throw err;
+                        console.log('Room updated');
+                    });
+                }
             }
         });
     },

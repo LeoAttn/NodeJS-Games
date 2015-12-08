@@ -89,7 +89,17 @@ function unlockButton(){
 }
 
 function startGame(){
-    socket.emit('startGame');
+    $.ajax({
+        type: 'UPDATE',
+        url: '/lobby/setReady/' + sess.roomID
+    }).done(function( response ) {
+        if (response.msg === '') {
+            socket.emit('startGame');
+        }
+        else {
+            console.log('Error: ' + response.msg);
+        }
+    });
 }
 
 function sendMessage(){

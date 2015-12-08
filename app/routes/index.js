@@ -13,4 +13,6 @@ router.post('/join', room.joinLobby);//Rejoins une room via un boutton(form),
 router.get('/join', room.joinLobby);//Rejoins une room via un lien
 router.get('/lobby', room.lobby);
 
+router.put('/lobby/set-ready:id', room.setReady);
+
 module.exports = router;
