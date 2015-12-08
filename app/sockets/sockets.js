@@ -70,6 +70,9 @@ var IO = {
 	},
     handshake : function(s){
 		s.on('hey', function(username){
+            console.log("taille username : "+username.length);
+            if (username.length > 20)
+                username = username.substr(0,20);
 			s.session.username = username;
 			room[s.session.roomID].players[s.session.playerID].username = username;
             s.broadcast.to(s.session.roomID).emit('addUser',{ username :s.session.username});

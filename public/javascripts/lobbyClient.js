@@ -121,7 +121,7 @@ socket.on('hey', function (){
             class : 'loginLobby'
         }).appendTo('body');
         $('<div>', {
-            html: '<div class="form-group"> <div class="input-group"> <input id="loginName" autofocus="autofocus" placeholder="Entrer votre nom" maxlength="200"  class="form-control"/> <div onClick="sendLogin()" class="input-group-addon btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span></div> </div> </div>'
+            html: '<div class="form-group"> <div class="input-group"> <input id="loginName" autofocus="autofocus" placeholder="Entrer votre nom" maxlength="20"  class="form-control"/> <div onClick="sendLogin()" class="input-group-addon btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span></div> </div> </div>'
         }).appendTo(div);
         $('#loginName').focus().keydown(function(event){
             console.log(event);
