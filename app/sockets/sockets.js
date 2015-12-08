@@ -54,7 +54,6 @@ var IO = {
 				room[s.session.roomID].clients += 1
 				var msag = "Bienvenue dans la room !";
             	s.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
-
 			}
 		});
 		s.on('startGame', function(){
@@ -86,6 +85,7 @@ var IO = {
 	game : function(s){
 		s.on('joinGame', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.session = data;
+            console.log('roomID: ' + s.session.roomID);
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID);
             if(room[s.session.roomID].players[s.session.playerID].hasJoined === undefined)
@@ -101,6 +101,7 @@ var IO = {
 		///////====================================================
 		s.on('batPos', function (pos) {
             console.log(pos);
+            console.log('Room ID: '+ s.session.roomID)
             if(room[s.session.roomID].players[s.session.playerID].state == "batPos")
             {
                 var batPos = [[], [], [], [], [], [], [], [], [], []];
@@ -175,10 +176,9 @@ var IO = {
         s.on('updateState', function(state){
             room[s.session.roomID].players[s.session.playerID].state = state;
         });
-        s.on('hello')
-        {
+        s.on('hello', function(){
             sendHello(s);
-        }
+        });
 	},
     disconnect: function (s) {
         s.on('disconnect', function () {
@@ -202,7 +202,7 @@ function initGame(s)
 function loadGame(s)
 {
     var batTab = room[s.session.roomID].players[s.session.playerID].batTab
-    s.emit('placeBoat', {batTab})
+    s.emit('placeBoat', batTab)
     sendHello(s);
 }
 

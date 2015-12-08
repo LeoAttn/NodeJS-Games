@@ -101,10 +101,9 @@ socket.on('newState', function (stateObj){
     switch(stateObj.state)
     {
         case 'wait':
-        
+            break;
         case 'myTurn':
-        
-        case '':
+            break;
     }
     socket.emit('updateState', stateObj.state);
 });
@@ -122,6 +121,22 @@ socket.on('opponent', function (username){
         socket.emit('hello');
     }
 });
+
+socket.on('placeBoat', batTab)
+{
+    var nbBat =1;
+    for (var y = 0; y < 10; y++)
+    {
+        for (var x = 0; x < 10; x++)
+        {
+            if(bat[x][y] ==1)
+            {
+                $('#id-'+ x + '-' + y).append($('#bat'+ nbBat))
+                nbBat ++;
+            }
+        }
+    }
+}
 
 socket.on('notifs', function (msgObj) {
     newMessage( msgObj.type, msgObj.msg);
