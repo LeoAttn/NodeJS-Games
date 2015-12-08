@@ -74,10 +74,6 @@ function drop(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
-function copyclipboard(intext) {
-    prompt(intext);
-}
-
 // Gestion des Ã©vÃ¨nemment emit par le serveu
 
 socket.on('batPosValid', function (session) {
@@ -85,13 +81,15 @@ socket.on('batPosValid', function (session) {
     $("#validBat").remove();
 });
 
-socket.on('tirServ', function (session, type, x, y) {
+socket.on('tirServ', function (obj) {
+    var tab = obj.tab;
+    var type = obj.type;
+    var x = obj.x;
+    var y = obj.y;
     if (type == "touche") {
-        //$(".cell-def").removeClass("cell-touche");
-        $(".cell-att." + x + "-" + y).addClass("cell-touche");
+        $(".cell-"+ tab+"." + x + "-" + y).addClass("cell-touche");
     } else if (type == "dansleau") {
-        //$(".cell-def").removeClass("cell-aleau");
-        $(".cell-att." + x + "-" + y).addClass("cell-dansleau");
+        $(".cell-"+ tab+"." + x + "-" + y).addClass("cell-dansleau");
     }
 });
 
