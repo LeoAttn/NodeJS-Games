@@ -60,7 +60,7 @@ var Rooms = {
             if(!req.session.roomID)
             {
                 if (room.ready == false) {
-                    req.session.username = "Anonyme"
+                    req.session.username = "Anonyme";
                     req.session.roomID = room._id;
                     room.ready = true;
                     room.player2 = req.session.username;
