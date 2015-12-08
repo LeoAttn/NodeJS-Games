@@ -85,7 +85,7 @@ a {
   height: $cellSize - $cellSpace * 2;
   margin: $cellSpace;
   background-color: #22A7F0;
-  border-radius: ($cellSize - $cellSpace) / 4;
+  border-radius: ($cellSize - $cellSpace) / 3;
   cursor: grab;
 }
 
