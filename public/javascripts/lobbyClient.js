@@ -95,7 +95,7 @@ function unlockButton(){
 function startGame(){
     $.ajax({
         type: 'put',
-        url: '/lobby/set-ready/'+ sess.roomID,
+        url: '/api/lobby/set-ready/'+ sess.roomID,
         data : "id="+sess.roomID
     })
     .done(function(data) {

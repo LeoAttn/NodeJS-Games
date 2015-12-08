@@ -36,7 +36,6 @@ block content
                     th.center IsPlaying
                     th.center IsPrivate
                     th.center Rejoindre
-                    th.center Lien
                 - for (var k in room)
                     tr(id=room[k]._id)
                         td=room[k].name
@@ -45,3 +44,5 @@ block content
                         td=room[k].private
                         td.center
                             button.btn.btn-primary(name="id" value=room[k]._id) Rejoindre
+block script
+    script(src="/javascripts/indexClient.js")

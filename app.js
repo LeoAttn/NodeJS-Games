@@ -11,6 +11,7 @@ var mongoose = require('mongoose');
 
 var routes = require('./app/routes/index');
 var play = require('./app/routes/play');
+var api = require('./app/routes/api');
 
 var app = express();
 
@@ -46,6 +47,7 @@ app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
 // Init les routes
 app.use('/', routes);
 app.use('/play', play);
+app.use('/api', api);
 
 //A chaque fois qu'une requête est effectué
 app.use(function(req, res, next){
