@@ -88,11 +88,15 @@ var IO = {
             s.session = data;
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID);
-            s.emit('me', s.session.username);
-            s.broadcast.to(s.session.roomID).emit('opponent', s.session.username);
-            
-            room[s.session.roomID].players[s.session.playerID].state = "batPos";
-            room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
+            if(room[s.session.roomID].players[s.session.playerID].hasJoined === undefined)
+            {
+                room[s.session.roomID].players[s.session.playerID].hasJoined = true;
+                initGame(s);
+            }
+            else
+            {
+                loadGame(s);
+            }
         });
 		///////====================================================
 		s.on('batPos', function (pos) {
@@ -171,6 +175,10 @@ var IO = {
         s.on('updateState', function(state){
             room[s.session.roomID].players[s.session.playerID].state = state;
         });
+        s.on('hello')
+        {
+            sendHello(s);
+        }
 	},
     disconnect: function (s) {
         s.on('disconnect', function () {
@@ -183,5 +191,25 @@ var IO = {
         });
     },
 };
+
+function initGame(s)
+{
+    sendHello(s);
+    room[s.session.roomID].players[s.session.playerID].state = "batPos";
+    room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];   
+}
+
+function loadGame(s)
+{
+    var batTab = room[s.session.roomID].players[s.session.playerID].batTab
+    s.emit('placeBoat', {batTab})
+    sendHello(s);
+}
+
+function sendHello(s)
+{
+    s.emit('me', s.session.username);
+    s.broadcast.to(s.session.roomID).emit('opponent', s.session.username);
+}
 
 module.exports = IO;

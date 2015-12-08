@@ -98,7 +98,29 @@ socket.on('tirServ', function (session, type, x, y) {
 });
 
 socket.on('newState', function (stateObj){
+    switch(stateObj.state)
+    {
+        case 'wait':
+        
+        case 'myTurn':
+        
+        case '':
+    }
     socket.emit('updateState', stateObj.state);
+});
+
+socket.on('me', function (username)
+{
+    $("#myName").text(username);
+});
+          
+socket.on('opponent', function (username){
+    var text = $("#opponentName").text();
+    if(text == '')
+    {
+        $("#opponentName").text(username);
+        socket.emit('hello');
+    }
 });
 
 socket.on('notifs', function (msgObj) {

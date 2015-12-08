@@ -12,9 +12,12 @@ block content
         div(class="bat-container")
             - for (var i=1; i<=5; i++)
                 div(id="Bat"+i class="bat" draggable="true" ondragstart="drag(event)")
-
     div.tab-container
-        table.tab.tab-att.cell-center
+        div#myName
+        
+        div#opponentName
+    div.tab-container
+        table.tab.tab-att.cell-center(id = "opponentTab")
             tr
                 td
                 - for (var x = 1; x <= 10; x++)
@@ -26,7 +29,7 @@ block content
                         td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="font-size: 15px")
 
         div(style="width: 50px")
-        table.tab.tab-def.cell-center
+        table.tab.tab-def.cell-center(id = "myTab")
             tr
                 td
                 - for (var x = 1; x <= 10; x++)
