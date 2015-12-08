@@ -46,17 +46,15 @@ var IO = {
 			{
                 var tmpUsername = s.session.username;
                 if(s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null)
-                    tmpUsername = 'Anonyme'
+                    tmpUsername = 'Anonyme';
 				s.join(s.session.roomID);
 				room[s.session.roomID].players[s.session.playerID] = {
 					username : tmpUsername
-				}
+				};
 				room[s.session.roomID].clients += 1
 				var msag = "Bienvenue dans la room !";
             	s.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
-                if(room[s.session.roomID].clients == 2){
-                    s.broadcast.to(s.session.roomID).emit('ready', {});
-                }
+
 			}
 		});
 		s.on('startGame', function(){
@@ -76,6 +74,9 @@ var IO = {
 			room[s.session.roomID].players[s.session.playerID].username = username;
             s.broadcast.to(s.session.roomID).emit('addUser',{ username :s.session.username});
             s.emit('addUser', {username : s.session.username});
+            if(room[s.session.roomID].clients == 2){
+                s.broadcast.to(s.session.roomID).emit('ready', {});
+            }
         });
 		////////=====================================================================
     },
