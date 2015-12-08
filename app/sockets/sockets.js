@@ -129,7 +129,7 @@ var IO = {
                     {
                         s.broadcast.emit('start');
                         s.emit('start');
-                        var rand = (Math.round(Math.random()*2)).toString();
+                        var rand = (Math.round(Math.random()*2));
                         var name;
                         console.log(rand);
                         if(rand == 0)
@@ -166,16 +166,24 @@ var IO = {
                     playerID = 'player2';
                 else
                     playerID = 'creator';
-                if (room[s.session.roomID].players[playerID].batTab[x][y]) {
-                    type = "touche";
+
+                // vide = 0, bat = 1, touche = 2, dansleau = 3
+                if(room[s.session.roomID].players[playerID].batTab[x][y] >= 2) {
+                    s.emit('notifs', {type : 'error', msg : "Vous avez déja tiré à cette emplacement !"})
                 } else {
-                    type = "dansleau";
+                    if (room[s.session.roomID].players[playerID].batTab[x][y] == 1) {
+                        type = "touche";
+                        room[s.session.roomID].players[playerID].batTab[x][y] = 2;
+                    } else {
+                        type = "dansleau";
+                        room[s.session.roomID].players[playerID].batTab[x][y] = 3;
+                    }
+                    console.log(type);
+                    s.emit('tirServ', {tab: 'att', type: type, x: x, y :y});
+                    s.emit('newState', {state : 'wait'});
+                    s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y :y});
+                    s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
                 }
-                console.log(type);
-                s.emit('tirServ', {tab: 'att', type: type, x: x, y :y});
-                s.emit('newState', {state : 'wait'});
-                s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y :y});
-                s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
             }
             //for (var k in varRoom)
             //    console.log(varRoom[k])
