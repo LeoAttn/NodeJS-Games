@@ -141,7 +141,7 @@ socket.on('placeBoat', function(batTab){
     {
         for (var x = 0; x < 10; x++)
         {
-            if(batTab[x][y] ==1)
+            if(batTab[x][y] ==1 || batTab[x][y] == 2)
             {
                 $('<div>', {
                     id : "Bat" + nbBat,
