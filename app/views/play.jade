@@ -4,11 +4,10 @@ block content
     - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
     div#msges
     div.tab-container
-        div
-            button.btn.btn-default(id ="validBat" onclick="clicButValid()") Valider les positions
+        div(id = "validationButton")
+
         div(class="bat-container")
-            - for (var i=1; i<=5; i++)
-                div(id="Bat"+i class="bat" draggable="true" ondragstart="drag(event)")
+
     div.tab-container
         div#myName
         

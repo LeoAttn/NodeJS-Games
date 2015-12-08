@@ -195,14 +195,17 @@ var IO = {
 function initGame(s)
 {
     sendHello(s);
-    room[s.session.roomID].players[s.session.playerID].state = "batPos";
+    s.emit('newState', {state : 'batPos'});
     room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];   
 }
 
 function loadGame(s)
 {
     var batTab = room[s.session.roomID].players[s.session.playerID].batTab
-    s.emit('placeBoat', batTab)
+    var stateP = room[s.session.roomID].players[s.session.playerID].state
+
+    s.emit('newState', {state : stateP});
+    s.emit('placeBoat', batTab);
     sendHello(s);
 }
 

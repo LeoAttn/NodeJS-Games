@@ -105,7 +105,6 @@ var Rooms = {
                         room.playing = true;
                     req.session.roomID = room._id;
                     req.cookies.roomID = room._id;
-                     console.log("SESSION : " + JSON.stringify(req.session));
                     res.render('play', {title: "Battaille Navale en cours", session : req.session});
                 }
                 else if(room._id == req.session.roomID)

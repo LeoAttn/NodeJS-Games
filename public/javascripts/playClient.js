@@ -1,7 +1,5 @@
 var clic = 0;
 var socket = io.connect('http://localhost');
-var play = io.connect('http://localhost/play'+ sess.roomID);
-
 
 function newMessage(classes, msg) {
     var elem = $('.'+classes);
@@ -104,6 +102,23 @@ socket.on('newState', function (stateObj){
             break;
         case 'myTurn':
             break;
+        case 'batPos':
+            $('<button>',{
+                class : 'btn btn-default',
+                id : 'validBat',
+                onClick : 'clicButValid()',
+                text: 'Valider les positions'
+            }).appendTo('#validationButton');
+            for(var x =1; x <=5; x++)
+            {
+                $('<div>',{
+                    id : "Bat" + x,
+                    class : "bat",
+                    draggable : true,
+                    ondragstart : "drag(event)"
+                }).appendTo('.bat-container')
+            }
+            break;
     }
     socket.emit('updateState', stateObj.state);
 });
@@ -122,21 +137,23 @@ socket.on('opponent', function (username){
     }
 });
 
-socket.on('placeBoat', batTab)
-{
+socket.on('placeBoat', function(batTab){
     var nbBat =1;
     for (var y = 0; y < 10; y++)
     {
         for (var x = 0; x < 10; x++)
         {
-            if(bat[x][y] ==1)
+            if(batTab[x][y] ==1)
             {
-                $('#id-'+ x + '-' + y).append($('#bat'+ nbBat))
+                $('<div>', {
+                    id : "Bat" + nbBat,
+                    class : "bat"
+                }).appendTo('#id-'+ x + '-' + y)
                 nbBat ++;
             }
         }
     }
-}
+});
 
 socket.on('notifs', function (msgObj) {
     newMessage( msgObj.type, msgObj.msg);
@@ -151,6 +168,7 @@ socket.on('message', function (msg) {
 });
 
 socket.on('hey', function(){
+    console.log('test');
     socket.emit('joinGame', sess);
 });
 
