@@ -62,7 +62,7 @@ a {
 
 .cell-touche:after, .cell-dansleau:after {
   content: '';
-  position: absolute;
+    position: absolute;
   top: $cellSpace * 3 - 1;
   left: $cellSpace * 3 - 1;
   right: $cellSpace * 3;
@@ -94,7 +94,7 @@ a {
   background: #d00000; /* Old browsers */
   background: linear-gradient(#d00000, #9b0000); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   height: 50px;
-  border-radius: 10px;
+    border-radius: 10px;
   color: white;
   width: 50%;
   margin: auto;

@@ -13,15 +13,22 @@ function newMessage(classes, msg) {
             testMsg = false;
     });
     //On crÃ©er la div si un message identique n'existe pas.
+    var div;
     if(testMsg)
     {
-        var div = $('<div>',{
-            class : classes +' ' + classes+'-bg'
+        div = $('<div>',{
+            id : msg,
+            class : classes +' ' + classes+'-bg' + ' notifs' 
         }).appendTo('#msges');
         $('<p>', {
             text: msg
         }).appendTo(div);
     }
+    
+    var remove = function(){
+        div.remove();
+    };
+    setTimeout(remove, 2000);
 
 }
 
@@ -44,14 +51,14 @@ function clicButValid() {
         "Bat5": $('#Bat5').last().parent().prop('id')
     };
     cleanMessages();
-    socket.emit('BatPos', batPos);
+    socket.emit('batPos', batPos);
 }
 
 function clicTabAtt(x, y) {
     console.log("Le joueur a clique sur la case x=" + x + " et y=" + y + ".");
     //$(".cell-att").removeClass("cell-click");
     //$(".cell-att."+x+"-"+y).addClass("cell-click");
-    socket.emit('TirClient', x, y);
+    socket.emit('tirClient', x, y);
 }
 
 // Fonction pour gÃ©rer le drag n' drop
@@ -77,6 +84,7 @@ function copyclipboard(intext) {
 
 socket.on('batPosValid', function (session) {
     $(".bat").attr('draggable', 'false').css('cursor', 'default');
+    $("#validBat").remove();
 });
 
 socket.on('tirServ', function (session, type, x, y) {
@@ -91,27 +99,22 @@ socket.on('tirServ', function (session, type, x, y) {
 
 socket.on('newState', function (stateObj){
     socket.emit('updateState', stateObj.state);
-})
+});
 
-socket.on('errorMsg', function (msg) {
-    newMessage('error', msg);
-})
-
-socket.on('info', function (msg) {
-    newMessage('info', msg);
-})
+socket.on('notifs', function (msgObj) {
+    newMessage( msgObj.type, msgObj.msg);
+});
 
 socket.on('playerReady', function(){
     console.log("Oponent ready !");
-})
+});
 
 socket.on('message', function (msg) {
     console.log(msg);
 });
 
-socket.on('handshake', function(){
-    console.log(JSON.stringify(sess));
-    socket.emit('join', sess);
+socket.on('hey', function(){
+    socket.emit('joinGame', sess);
 });
 
 socket.on('uRturn', function(){

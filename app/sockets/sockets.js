@@ -13,7 +13,6 @@ var IO = {
 
         //on appelle cette function à chaque connection d'un nouvel utilisateur
         this.connection(function (socket) {
-
             // Toutes les fonctions que l'on va rajouter devront être ici
 			$this.lobby(socket);
             $this.chat(socket);
@@ -47,17 +46,12 @@ var IO = {
 			{
                 var tmpUsername = s.session.username;
                 if(s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null)
-                    tmpUsername = 'Anonyme';
-                
-                console.log(tmpUsername);
+                    tmpUsername = 'Anonyme'
 				s.join(s.session.roomID);
-				s.playerID = room[s.session.roomID].clients.toString;
-				room[s.session.roomID].players[s.playerID] = {
+				room[s.session.roomID].players[s.session.playerID] = {
 					username : tmpUsername
 				}
 				room[s.session.roomID].clients += 1
-				console.log('User entered !');
-				console.log('room: ', JSON.stringify(room[s.session.roomID]));
 				var msag = "Bienvenue dans la room !";
             	s.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
                 if(room[s.session.roomID].clients == 2){
@@ -72,18 +66,15 @@ var IO = {
 	},
 	chat : function(s){
 		s.on('chatMessage', function (msag){
-			console.log("Msg : " + msag + "from user: " + s.session.username);
             s.broadcast.to(s.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: s.session.username, date : Date.now});
             s.emit('chatMessage',{from : 'user', msg:  msag, username : s.session.username, date : Date.now});
         });
 	},
     handshake : function(s){
 		s.on('hey', function(username){
-            console.log('Hey : ' + username);
 			s.session.username = username;
-			console.log("Room: " + JSON.stringify(room[s.session.roomID]));
-			room[s.session.roomID].players[s.playerID].username = username;
-            s.broadcast.to(s.session.roomID).emit('addUser',{ username : s.session.username});
+			room[s.session.roomID].players[s.session.playerID].username = username;
+            s.broadcast.to(s.session.roomID).emit('addUser',{ username :s.session.username});
             s.emit('addUser', {username : s.session.username});
         });
 		////////=====================================================================
@@ -92,10 +83,12 @@ var IO = {
 		s.on('joinGame', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.session = data;
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
+            s.join(s.session.roomID);
+            s.emit('me', s.session.username);
+            s.broadcast.to(s.session.roomID).emit('opponent', s.session.username);
+            
             room[s.session.roomID].players[s.session.playerID].state = "batPos";
             room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
-
-            s.join(s.session.roomID);
         });
 		///////====================================================
 		s.on('batPos', function (pos) {
@@ -117,28 +110,40 @@ var IO = {
                 }
                 if (nbBat == 5) {
                     room[s.session.roomID].players[s.session.playerID].state = "batPosValid";
-                    s.player.batTab = batPos;
+                    room[s.session.roomID].players[s.session.playerID].batTab = batPos;
                     s.emit('batPosValid');
-                    s.broadcast.to(s.session.roomID).emit('info', {msg : "Votre adversaire est prêt !"});
+                    s.emit('notifs', {type : 'info', msg : "La position des bateaux à été validée"})
                     room[s.session.roomID].validationCptr += 1;
                     if(room[s.session.roomID].validationCptr == 2)
                     {
                         s.broadcast.emit('start');
                         s.emit('start');
                         var rand = (Math.round(Math.random()*2)).toString();
+                        var name;
                         console.log(rand);
-                        if(rand == s.session.playerID)
+                        if(rand == 0)
+                            name = "creator";
+                        else
+                            name = "player2";
+                        if(name == s.session.playerID)
                         {
                             s.emit('newState', {state : 'myTurn'});
+                            s.broadcast.to(s.session.roomID)('newState', {state: 'wait'});
                         }
                         else
                         {
+                            s.emit('newState', {state : 'wait'});
                             s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
                         }
+                        
+                    }
+                    else
+                    {
+                        s.broadcast.to(s.session.roomID).emit('notifs', {type : 'info' , msg : "Votre adversaire est prêt !"});
                     }
                 }
                 else
-                    s.emit('errorMsg', "Vous n'avez pas mis tous les bateaux !");
+                    s.emit('notifs', {type : 'error', msg : "Vous n'avez pas mis tous les bateaux !"});
             }
         });
 		/////====================================================================

@@ -137,7 +137,7 @@ socket.on('ready', function(){
 
 socket.on('addUser', function(username, rank){
     var notExist = newUser(username, rank);
-    if(notExist)
+    if(notExist && username != sess.username)
 	{
 		socket.emit('hey', sess.username);
 	}

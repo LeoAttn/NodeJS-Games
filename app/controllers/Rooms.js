@@ -42,6 +42,7 @@ var Rooms = {
                 console.log('Room inserted');
             });
             req.session.roomID = r._id;
+            req.session.playerID = 'creator';
             res.redirect('/lobby?id='+ r._id);
         }
         else
@@ -67,7 +68,7 @@ var Rooms = {
                         if (err) throw err;
                         console.log('User enter in Room');
                     });
-
+                    req.session.playerID = 'player2';
                     res.redirect('/lobby?id='+ room._id);
                 }
                 else
