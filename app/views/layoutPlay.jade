@@ -14,9 +14,6 @@ html
             div.header.clearfix
                 nav
                     ul.nav.nav-pills.pull-right
-                        if session && session.roomID
-                            li(role='presentation')
-                                a(href='/play?id='+(session.roomID)) Partie en cours
                         li.active(role='presentation')
                             a(href='/') Home
                         li(role='presentation')

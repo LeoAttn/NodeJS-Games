@@ -18,7 +18,7 @@ var Rooms = {
         Room.find({}, function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
-            res.render('index', {title: 'Bataille Navale', session : req.session, room: rooms, message: msg});
+            res.render('index', {title: 'Bataille Navale', returnParty: true, session : req.session, room: rooms, message: msg});
         });
     },
     create: function (req, res) {

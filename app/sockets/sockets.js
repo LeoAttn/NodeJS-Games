@@ -37,10 +37,10 @@ var IO = {
             s.session = data;
 			if(room[s.session.roomID] === undefined)
 			{
-				room[s.session.roomID] = {}
+				room[s.session.roomID] = {};
                 room[s.session.roomID].validationCptr = 0;
 				room[s.session.roomID].clients = 0;
-				room[s.session.roomID].players =[];
+				room[s.session.roomID].players = [];
 			}	
 			if(room[s.session.roomID].clients != 2)
 			{
@@ -189,7 +189,7 @@ var IO = {
             else// On prévient tout le monde qu'une personne s'est deconnectée
                 s.broadcast.to(s.session.roomID).emit('UserState', io.sockets.sockets.length);*/
         });
-    },
+    }
 };
 
 function initGame(s)
