@@ -42,19 +42,15 @@ var IO = {
 				room[s.session.roomID].clients = 0;
 				room[s.session.roomID].players = [];
 			}	
-			if(room[s.session.roomID].clients != 2)
+			if(room[s.session.roomID].clients < 2)
 			{
-                var tmpUsername = s.session.username;
-                if(s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null)
-                    tmpUsername = 'Anonyme';
-				s.join(s.session.roomID);
-				room[s.session.roomID].players[s.session.playerID] = {
-					username : tmpUsername
-				};
-				room[s.session.roomID].clients += 1
-				var msag = "Bienvenue dans la room !";
-            	s.emit('chatMessage',{from : 'server', type: 'info', msg:  msag, date : Date.now});
+                initLobby(s);
 			}
+            else
+            {
+                loadLobby(s);
+            }
+            s.emit('chatMessage',{from : 'server', type: 'info', msg:  "Bienvenue dans la room !", date : Date.now});
 		});
 		s.on('startGame', function(){
             s.emit('startGame');
@@ -65,6 +61,7 @@ var IO = {
 		s.on('chatMessage', function (msag){
             s.broadcast.to(s.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: s.session.username, date : Date.now});
             s.emit('chatMessage',{from : 'user', msg:  msag, username : s.session.username, date : Date.now});
+            room[s.session.roomID].messagesObjs.push({from : 'user', msg: msag, username : s.session.username, date : Date.now});
         });
 	},
     handshake : function(s){
@@ -86,6 +83,11 @@ var IO = {
 		s.on('joinGame', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.session = data;
             console.log('roomID: ' + s.session.roomID);
+            if(room[s.session.roomID] === undefined)
+            {
+                s.emit('redirect', '/');
+                return;
+            }
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID);
             if(room[s.session.roomID].players[s.session.playerID].hasJoined === undefined)
@@ -196,6 +198,30 @@ var IO = {
         });
     }
 };
+
+
+function initLobby(s)
+{
+    var tmpUsername = s.session.username;
+    if(s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null)
+        tmpUsername = 'Anonyme';
+    s.join(s.session.roomID);
+    room[s.session.roomID].players[s.session.playerID] = {
+        username : tmpUsername
+    };
+    room[s.session.roomID].clients += 1
+}
+
+function loadLobby(s)
+{
+    s.session.username = room[s.session.roomID].players[s.session.playerID].username;
+    if(room[s.session.roomID].messagesObjs !== undefined)
+    {
+        s.emit('loadMessages', room[s.session.roomID].messagesObjs);
+    }
+    s.broadcast.to(s.session.roomID).emit('addUser',{ username :s.session.username});
+    s.emit('addUser', {username : s.session.username});
+}
 
 function initGame(s)
 {

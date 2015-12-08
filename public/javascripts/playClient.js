@@ -173,3 +173,7 @@ socket.on('hey', function(){
 socket.on('uRturn', function(){
 
 });
+
+socket.on('redirect', function(where){
+    window.location.replace("http://localhost"+ where);
+})

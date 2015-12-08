@@ -164,6 +164,18 @@ socket.on('startGame', function (){
     window.location.replace("http://localhost/play?id="+sess.roomID);
 });
 
-socket.on('loadMessages', function(msages){
-
+socket.on('loadMessages', function(msgObjs){
+    for(msgObj in msgObjs)
+    {
+        var div = $('<tr>',{
+                class : classes +' ' + classes+'-bg'
+        }).appendTo('#chatMessages table');
+        $('<td>', {
+            html: '<strong>' + msgObj.username + ' : </strong>' +msgObj.msg
+        }).appendTo(div);
+    }
 });
+
+socket.on('redirect', function(where){
+    window.location.replace("http://localhost"+ where);
+})
