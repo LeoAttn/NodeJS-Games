@@ -1,6 +1,6 @@
 var NB_BAT;
 var clic = 0;
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://'+document.location.host);
 
 function newMessage(classes, msg) {
     var elem = $('.'+classes);
@@ -190,5 +190,5 @@ socket.on('uRturn', function(){
 });
 
 socket.on('redirect', function(where){
-    window.location.replace("http://localhost"+ where);
+    window.location.replace("http://"+document.location.host+ where);
 })

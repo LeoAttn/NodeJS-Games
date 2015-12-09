@@ -68,7 +68,7 @@ var IO = {
 		s.on('chatMessage', function (msag){
             s.broadcast.to(s.session.roomID).emit('chatMessage',{from : 'user', msg : msag, username: s.session.username, date : Date.now});
             s.emit('chatMessage',{from : 'user', msg:  msag, username : s.session.username, date : Date.now});
-            room[s.session.roomID].messagesObjs.push({from : 'user', msg: msag, username : s.session.username, date : Date.now});
+            //room[s.session.roomID].messagesObjs.push({from : 'user', msg: msag, username : s.session.username, date : Date.now});
         });
 	},
     handshake : function(s){

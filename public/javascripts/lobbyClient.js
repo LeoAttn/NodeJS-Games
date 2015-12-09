@@ -1,5 +1,5 @@
 var lastNbBat = 5;
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://'+document.location.host);
 
 $('#messageInput').keydown(function(event){
     console.log(event);
@@ -21,7 +21,7 @@ $('#nbBat').change(function () {
 });
 
 function promptLink() {
-    prompt("Lien :", "localhost/join?roomID="+sess.roomID);
+    prompt("Lien :", document.location.host+"/join?roomID="+sess.roomID);
 }
 
 function newMessage(classes, msg) {
@@ -176,7 +176,7 @@ socket.on('chatMessage', function(msgObj){
 });
 
 socket.on('startGame', function (){
-    window.location.replace("http://localhost/play?id="+sess.roomID);
+    window.location.replace("http://"+document.location.host+"/play?id="+sess.roomID);
 });
 
 socket.on('loadMessages', function(msgObjs){
@@ -192,5 +192,5 @@ socket.on('loadMessages', function(msgObjs){
 });
 
 socket.on('redirect', function(where){
-    window.location.replace("http://localhost"+ where);
+    window.location.replace("http://"+document.location.host+ where);
 })
