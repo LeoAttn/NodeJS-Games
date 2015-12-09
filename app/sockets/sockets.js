@@ -126,6 +126,7 @@ var IO = {
                 if (nbBat == 5) {
                     room[s.session.roomID].players[s.session.playerID].state = "batPosValid";
                     room[s.session.roomID].players[s.session.playerID].batTab = batPos;
+                    room[s.session.roomID].players[s.session.playerID].batCoule = 0;
                     s.emit('batPosValid');
                     s.emit('notifs', {type : 'info', msg : "La position des bateaux à été validée"})
                     room[s.session.roomID].validationCptr += 1;
@@ -178,6 +179,7 @@ var IO = {
                     if (room[s.session.roomID].players[playerID].batTab[x][y] == 1) {
                         type = "touche";
                         room[s.session.roomID].players[playerID].batTab[x][y] = 2;
+                        room[s.session.roomID].players[playerID].batCoule++;
                     } else {
                         type = "dansleau";
                         room[s.session.roomID].players[playerID].batTab[x][y] = 3;
@@ -187,6 +189,13 @@ var IO = {
                     s.emit('newState', {state : 'wait'});
                     s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y :y});
                     s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
+
+                    if (room[s.session.roomID].players[playerID].batCoule == 5) {
+                        s.emit('notifs', {type : 'info', msg : "Vous avez gagné !"});
+                        s.emit('newState', {state : 'win'});
+                        s.broadcast.to(s.session.roomID).emit('notifs', {type : 'info', msg : "Vous avez perdu !"});
+                        s.broadcast.to(s.session.roomID).emit('newState', {state : 'loose'});
+                    }
                 }
             }
             //for (var k in varRoom)
