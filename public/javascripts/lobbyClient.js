@@ -1,8 +1,23 @@
+var lastNbBat = 5;
 var socket = io.connect('http://localhost');
 
 $('#messageInput').keydown(function(event){
     console.log(event);
     if (event.which == 13) sendMessage();
+});
+
+$('#nbBat').change(function () {
+    var nbBat = $('#nbBat').val();
+    if (nbBat < 1 || nbBat > 10) {
+        nbBat = lastNbBat;
+    } else {
+        if (nbBat != parseInt(nbBat)) {
+            nbBat = parseInt(nbBat);
+        }
+        lastNbBat = nbBat;
+    }
+    $('#nbBat').val(nbBat);
+    socket.emit('changeNbBat', nbBat);
 });
 
 function promptLink() {

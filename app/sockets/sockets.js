@@ -41,7 +41,8 @@ var IO = {
                 room[s.session.roomID].validationCptr = 0;
 				room[s.session.roomID].clients = 0;
 				room[s.session.roomID].players = [];
-			}	
+				room[s.session.roomID].nbBat = 5;
+			}
 			if(room[s.session.roomID].clients < 2)
 			{
                 initLobby(s);
@@ -52,6 +53,12 @@ var IO = {
             }
             s.emit('chatMessage',{from : 'server', type: 'info', msg:  "Bienvenue dans la room !", date : Date.now});
 		});
+		s.on('changeNbBat', function(nb){
+            nb = parseInt(nb);
+            if (nb >= 1 && nb <= 10) {
+                room[s.session.roomID].nbBat = nb;
+            }
+        });
 		s.on('startGame', function(){
             s.emit('startGame');
             s.broadcast.to(s.session.roomID).emit('startGame', {});
@@ -83,11 +90,13 @@ var IO = {
 		s.on('joinGame', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.session = data;
             console.log('roomID: ' + s.session.roomID);
+
             if(room[s.session.roomID] === undefined)
             {
                 s.emit('redirect', '/');
                 return;
             }
+            s.emit('nbBat', room[s.session.roomID].nbBat);
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID);
             if(room[s.session.roomID].players[s.session.playerID].hasJoined === undefined)
@@ -123,7 +132,7 @@ var IO = {
                         s.emit('Message', k + ' non defini !');
                     }
                 }
-                if (nbBat == 5) {
+                if (nbBat == room[s.session.roomID].nbBat) {
                     room[s.session.roomID].players[s.session.playerID].state = "batPosValid";
                     room[s.session.roomID].players[s.session.playerID].batTab = batPos;
                     room[s.session.roomID].players[s.session.playerID].batCoule = 0;
@@ -190,7 +199,7 @@ var IO = {
                     s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y :y});
                     s.broadcast.to(s.session.roomID).emit('newState', {state : 'myTurn'});
 
-                    if (room[s.session.roomID].players[playerID].batCoule == 5) {
+                    if (room[s.session.roomID].players[playerID].batCoule == room[s.session.roomID].nbBat) {
                         s.emit('notifs', {type : 'info', msg : "Vous avez gagné !"});
                         s.emit('newState', {state : 'win'});
                         s.broadcast.to(s.session.roomID).emit('notifs', {type : 'info', msg : "Vous avez perdu !"});

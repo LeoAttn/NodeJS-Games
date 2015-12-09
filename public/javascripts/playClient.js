@@ -1,3 +1,4 @@
+var NB_BAT;
 var clic = 0;
 var socket = io.connect('http://localhost');
 
@@ -38,20 +39,20 @@ function cleanMessages(){
 function testLog() {
     clic++;
     console.log("TEST - " + clic);
-    var a = 15;
-    var b = a;
-    var b = 2;
-    console.log(a);
 }
 
 function clicButValid() {
-    var batPos = {
+    /*var batPos = {
         "Bat1": $('#Bat1').last().parent().prop('id'),
         "Bat2": $('#Bat2').last().parent().prop('id'),
         "Bat3": $('#Bat3').last().parent().prop('id'),
         "Bat4": $('#Bat4').last().parent().prop('id'),
         "Bat5": $('#Bat5').last().parent().prop('id')
-    };
+    };*/
+    var batPos = {};
+    for (var i=1; i<=NB_BAT; i++) {
+        batPos['Bat'+i] = $('#Bat'+i).last().parent().prop('id');
+    }
     cleanMessages();
     socket.emit('batPos', batPos);
 }
@@ -107,7 +108,7 @@ socket.on('newState', function (stateObj){
                 onClick : 'clicButValid()',
                 text: 'Valider les positions'
             }).appendTo('#validationButton');
-            for(var x =1; x <=5; x++)
+            for(var x =1; x <=NB_BAT; x++)
             {
                 $('<div>',{
                     id : "Bat" + x,
@@ -178,6 +179,10 @@ socket.on('message', function (msg) {
 socket.on('hey', function(){
     console.log('test');
     socket.emit('joinGame', sess);
+});
+
+socket.on('nbBat', function(nbBat){
+    NB_BAT = nbBat;
 });
 
 socket.on('uRturn', function(){
