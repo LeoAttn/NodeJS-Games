@@ -38,6 +38,10 @@ function cleanMessages(){
 function testLog() {
     clic++;
     console.log("TEST - " + clic);
+    var a = 15;
+    var b = a;
+    var b = 2;
+    console.log(a);
 }
 
 function clicButValid() {
@@ -76,7 +80,7 @@ function drop(ev) {
 
 // Gestion des Ã©vÃ¨nemment emit par le serveu
 
-socket.on('batPosValid', function (session) {
+socket.on('batPosValid', function () {
     $(".bat").attr('draggable', 'false').css('cursor', 'default');
     $("#validBat").remove();
 });
@@ -86,11 +90,7 @@ socket.on('tirServ', function (obj) {
     var type = obj.type;
     var x = obj.x;
     var y = obj.y;
-    if (type == "touche") {
-        $(".cell-"+ tab+"." + x + "-" + y).addClass("cell-touche");
-    } else if (type == "dansleau") {
-        $(".cell-"+ tab+"." + x + "-" + y).addClass("cell-dansleau");
-    }
+    $(".cell-"+ tab+"." + x + "-" + y).addClass("cell-"+type);
 });
 
 socket.on('newState', function (stateObj){
@@ -135,19 +135,29 @@ socket.on('opponent', function (username){
     }
 });
 
-socket.on('placeBoat', function(batTab){
-    var nbBat =1;
+socket.on('placeBoat', function(batTab, tirTab){
+    var nbBat = 1;
     for (var y = 0; y < 10; y++)
     {
         for (var x = 0; x < 10; x++)
         {
-            if(batTab[x][y] ==1 || batTab[x][y] == 2)
+            if(batTab[x][y] == 1 || batTab[x][y] == 2)
             {
                 $('<div>', {
                     id : "Bat" + nbBat,
                     class : "bat"
-                }).appendTo('#id-'+ x + '-' + y)
+                }).appendTo('#id-'+ x + '-' + y);
                 nbBat ++;
+            }
+            if (batTab[x][y] == 2) {
+                $('.cell-def.'+x+'-'+y).addClass("cell-touche");
+            } else if (batTab[x][y] == 3) {
+                $('.cell-def.'+x+'-'+y).addClass("cell-dansleau");
+            }
+            if (tirTab[x][y] == 2) {
+                $('.cell-att.'+x+'-'+y).addClass("cell-touche");
+            } else if (tirTab[x][y] == 3) {
+                $('.cell-att.'+x+'-'+y).addClass("cell-dansleau");
             }
         }
     }
