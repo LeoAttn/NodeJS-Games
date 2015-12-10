@@ -44,12 +44,17 @@ function newChatMessage(msgObj) {
     }
 }
 
+function joinChat(){
+    chat.emit('joinChat', sess);
+}
+
 chat.on('chatMessage', function (msgObj) {
     newChatMessage(msgObj);
 });
 
 chat.on('hey', function(){
-    chat.emit('joinChat', sess);
+    if(sess.username != 'Anonyme')
+        chat.emit('joinChat', sess);
 });
 
 chat.on('loadMessages', function(msgObjs){
@@ -59,4 +64,3 @@ chat.on('loadMessages', function(msgObjs){
         newChatMessage(msgObjs[k]);
     }
 });
-

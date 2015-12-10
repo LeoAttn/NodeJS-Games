@@ -85,36 +85,45 @@ function sendLogin() {
     if (name === undefined || name == null || name == "")
         name = 'Anonyme';
     sess.username = name;
-    socket.emit('hey', sess.username);
+    socket.emit('joinLobby', sess);
     $('#loginName').val('');
     $('.loginLobby').remove();
+    if(sess.username != 'Anonyme')
+        joinChat();
 }
 
 socket.on('hey', function () {
     socket.emit('joinLobby', sess);
-    if (sess.username === undefined || sess.username == 'Anonyme') {
-        var div = $('<div>', {
-            class: 'loginLobby'
-        }).appendTo('body');
-        $('<div>', {
-            html: '<div class="form-group"> <div class="input-group"> <input id="loginName" autofocus="autofocus" placeholder="Entrer votre nom" maxlength="20"  class="form-control input-lg"/> <div onClick="sendLogin()" class="input-group-addon btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span></div> </div> </div>'
-        }).appendTo(div);
-        $('#loginName').focus().keydown(function (event) {
-            console.log(event);
-            if (event.which == 13) sendLogin();
-        });
-    } else
-        socket.emit('hey', sess.username);
 });
+
+socket.on('askUsername', function(){
+    var div = $('<div>', {
+        class: 'loginLobby'
+    }).appendTo('body');
+    $('<div>', {
+        html: '<div class="form-group"> <div class="input-group"> <input id="loginName" autofocus="autofocus" placeholder="Entrer votre nom" maxlength="20"  class="form-control input-lg"/> <div onClick="sendLogin()" class="input-group-addon btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span></div> </div> </div>'
+    }).appendTo(div);
+    $('#loginName').focus().keydown(function (event) {
+        console.log(event);
+        if (event.which == 13) sendLogin();
+    });
+})
 
 socket.on('ready', function () {
     unlockButton();
 });
 
-socket.on('addUser', function (username, rank) {
-    var notExist = newUser(username, rank);
-    if (notExist && username != sess.username) {
-        socket.emit('hey', sess.username);
+socket.on('updateUsername', function(username){
+    tmpUsername = sess.username;
+    sess.username = username;
+    if(tmpUsername == 'Anonyme')
+        joinChat();
+})
+
+socket.on('addUser', function (usernameObj , rank) {
+    var notExist = newUser(usernameObj, rank);
+    if (usernameObj.bypass || notExist && usernameObj.username != sess.username && sess.username != "Anonyme") {
+        socket.emit('sendUsername', sess.username);
     }
 });
 

@@ -49,9 +49,6 @@ var IO = {
             room[s.session.roomID].players[s.session.playerID].username = username;
             s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username});
             s.emit('addUser', {username: s.session.username});
-            if (room[s.session.roomID].clients == 2) {
-                s.broadcast.to(s.session.roomID).emit('ready', {});
-            }
         });
         ////////=====================================================================
     },
@@ -66,14 +63,26 @@ var IO = {
                 room[s.session.roomID].messagesObjs = [];
                 room[s.session.roomID].nbBat = 5;
             }
-            if (room[s.session.roomID].clients < 2) {
+            if (room[s.session.roomID].clients < 2 && room[s.session.roomID].players[s.session.playerID] === undefined) {
+                console.log("INIT LOBBY");
                 initLobby(s);
             }
             else {
                 loadLobby(s);
             }
+            if (room[s.session.roomID].clients == 2) {
+                if(s.session.playerID == "creator")
+                    s.emit('ready', {});
+                else
+                    s.broadcast.to(s.session.roomID).emit('ready', {});
+            }
 
         });
+        s.on('sendUsername', function (username){
+            //if(username != "Anonyme" || username != "" || username != )
+            s.emit("addUser", {username : s.session.username});
+            s.broadcast.to(s.session.roomID).emit("addUser", {bypass : false, username:s.session.username});
+        })
         s.on('changeNbBat', function (nb) {
             nb = parseInt(nb);
             if (nb >= 1 && nb <= 10) {
@@ -251,25 +260,34 @@ var IO = {
     }
 };
 
-
 function initLobby(s) {
-    var tmpUsername = s.session.username;
-    if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null)
-        tmpUsername = 'Anonyme';
+    if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null || s.session.username == 'Anonyme'){
+        s.emit("askUsername");
+    }
+    else{
+        room[s.session.roomID].players[s.session.playerID] = {
+                username: s.session.username
+        };
+        s.emit("addUser", {username : s.session.username});
+        s.broadcast.to(s.session.roomID).emit("addUser", {username:s.session.username});
+        room[s.session.roomID].clients += 1;
+    }
     s.join(s.session.roomID);
-    room[s.session.roomID].players[s.session.playerID] = {
-        username: tmpUsername
-    };
-    room[s.session.roomID].clients += 1
 }
 
 function loadLobby(s) {
+    if(s.session.username == "Anonyme")
+        s.emit("updateUsername", room[s.session.roomID].players[s.session.playerID].username);
     s.session.username = room[s.session.roomID].players[s.session.playerID].username;
-    if (room[s.session.roomID].messagesObjs !== undefined) {
-
+    s.join(s.session.roomID);
+    s.broadcast.to(s.session.roomID).emit('addUser', {bypass : true ,username: s.session.username});
+    s.emit('addUser', {bypass : false, username: s.session.username});
+    if (room[s.session.roomID].clients == 2) {
+        if(s.session.playerID == "creator")
+            s.emit('ready', {});
+        else
+            s.broadcast.to(s.session.roomID).emit('ready', {});
     }
-    s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username});
-    s.emit('addUser', {username: s.session.username});
 }
 
 function loadMessages(s){
@@ -331,8 +349,7 @@ function cleanRoom(s){
     delete room[s.session.roomID];
 }
 
-function changeState(s, playerID, newState)
-{
+function changeState(s, playerID, newState){
     room[s.session.roomID].players[playerID].state = newState;
     if(playerID == s.session.playerID)
     {
