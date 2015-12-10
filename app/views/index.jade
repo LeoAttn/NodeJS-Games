@@ -12,7 +12,7 @@ block content
         form.form-horizontal(class = "create-room" action="/create" method = "post")
             div.form-group
                 label.col-sm-3.control-label(for= "Uname") Nom d'utilisateur
-                div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" maxlength=20 required="required")
+                div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" maxlength=20 required="required" value=(session.username) )
             div.form-group
                 label.col-sm-3.control-label(for="Rname") Nom de la partie
                 div.col-sm-6: input.form-control(type = "text" name = "roomName" id="Rname" maxlength=20)

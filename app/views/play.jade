@@ -35,6 +35,14 @@ block content
                     td!= "<strong>" + (lettre[y]) + "</strong>"
                     - for (var x = 0; x < 10; x++)
                         td(id="id-"+x+"-"+y class="cell cell-def "+x+"-"+y ondrop="drop(event)" ondragover="allowDrop(event)")
+    div#chat
+        div#chatMessages
+            table.table.table-striped.table-bordered
+        div.form-group: div.input-group
+            input(class = "form-control" placeholder="Type your text here..." maxlength=200)#messageInput
+            div.input-group-addon.btn.btn-default(onClick = "sendMessage()")#sendMessage
+                span(class="glyphicon glyphicon-send" aria-hidden="true")
+
 
 
 block script

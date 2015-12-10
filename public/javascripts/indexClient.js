@@ -5,7 +5,7 @@ function updateRoomList() {
         url: '/api/'
     })
         .done(function (data) {
-
+            console.log(data);
         })
         .fail(function (request, status, error) {
             console.log('ERROR !');

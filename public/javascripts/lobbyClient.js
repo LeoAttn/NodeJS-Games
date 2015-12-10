@@ -2,7 +2,6 @@ var lastNbBat = 5;
 var socket = io.connect('http://' + document.location.host);
 
 $('#messageInput').keydown(function (event) {
-    console.log(event);
     if (event.which == 13) sendMessage();
 });
 
@@ -44,38 +43,6 @@ function newMessage(classes, msg) {
     }
 }
 
-function newChatMessage(msgObj) {
-    var classes = msgObj.from;
-    var elem = $('.' + classes);
-    var testMsg = true;
-    //On crÃ©er la div si un message identique n'existe pas.
-    if (testMsg) {
-        if (msgObj.from == "server") {
-            var div = $('<tr>', {
-                class: classes + ' ' + classes + '-bg ' + msgObj.type
-            }).appendTo('#chatMessages table');
-            if (msgObj.name) {
-                $('<td>', {
-                    html: '<strong>' + msgObj.name + ' : </strong>' + msgObj.msg
-                }).appendTo(div);
-            } else {
-                $('<td>', {
-                    html: msgObj.msg
-                }).appendTo(div);
-            }
-        } else {
-            var div = $('<tr>', {
-                class: classes + ' ' + classes + '-bg'
-            }).appendTo('#chatMessages table');
-            $('<td>', {
-                html: '<strong>' + msgObj.username + ' : </strong>' + msgObj.msg
-            }).appendTo(div);
-        }
-        $('#chatMessages').animate({scrollTop: $('#chatMessages').prop('scrollHeight')}, 50);
-    }
-
-}
-
 function newUser(usernameJO, rank) {
     var username = usernameJO.username;
     var users = $('.user');
@@ -105,7 +72,7 @@ function unlockButton() {
 function startGame() {
     $.ajax({
         type: 'put',
-        url: '/api/lobby/set-ready/' + sess.roomID,
+        url: '/api/set-ready/' + sess.roomID,
         data: "id=" + sess.roomID
     })
         .done(function (data) {
@@ -114,15 +81,6 @@ function startGame() {
         .fail(function (request, status, error) {
             console.log('ERROR !');
         })
-}
-
-function sendMessage() {
-    var msg = $('#messageInput').val();
-    console.log(msg);
-    if (msg != '') {
-        socket.emit('chatMessage', msg);
-        $('#messageInput').val('');
-    }
 }
 
 function sendLogin() {
@@ -162,10 +120,6 @@ socket.on('addUser', function (username, rank) {
     if (notExist && username != sess.username) {
         socket.emit('hey', sess.username);
     }
-});
-
-socket.on('chatMessage', function (msgObj) {
-    newChatMessage(msgObj);
 });
 
 socket.on('startGame', function () {

@@ -11,6 +11,11 @@ router.post('/create', room.create);//Crée une room,
 router.post('/join', room.joinLobby);//Rejoins une room via un boutton(form),
 router.get('/join', room.joinLobby);//Rejoins une room via un lien
 router.get('/lobby', room.lobby);
+router.get('flush-session', function(req, res){
 
+    delete req.session.roomID;
+    delete req.session.playerID;
+    res.redirect('/');
+})
 
 module.exports = router;

@@ -122,35 +122,6 @@ var Rooms = {
             }
         });
     },
-    apiIndex: function (req, res) {
-        Room.find({}, function (err, rooms) {
-            if (err) throw err;
-            //res.json(rooms);
-            res.status(200).json(rooms);
-            res.end();
-        });
-    },
-    apiUpdateReady: function (req, res) {
-        console.log("Request Parameters: " + JSON.stringify(req.params))
-        Room.findOne({_id: req.params.id}, function (err, room) {
-            if (err) throw err;
-            if (room) {
-                room.ready = true;
-                room.save(function (err) {
-                    if (err) throw err;
-                    console.log('Room updated');
-                    console.log("SUCCESS : STATUS 200")
-                    res.status(200).send('success !');
-                    res.end();
-                });
-            }
-            else {
-                console.log("ERROR : NO CONTENT STATUS 204")
-                res.status(204).send('No content !');
-                res.end();
-            }
-        });
-    },
     delete: function (req, res) {
         Room.findOne({_id: req.params.id}, function (err, room) {
             if (err) throw err;

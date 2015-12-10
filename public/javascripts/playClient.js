@@ -93,7 +93,7 @@ socket.on('tirServ', function (obj) {
     $(".cell-" + tab + "." + x + "-" + y).addClass("cell-" + type);
 });
 
-socket.on('newState', function (stateObj) {
+socket.on('updateState', function (stateObj) {
     switch (stateObj.state) {
         case 'wait':
             break;
@@ -116,7 +116,6 @@ socket.on('newState', function (stateObj) {
             }
             break;
     }
-    socket.emit('updateState', stateObj.state);
 });
 
 socket.on('me', function (username) {
