@@ -1,10 +1,6 @@
 var lastNbBat = 5;
 var socket = io.connect('http://' + document.location.host);
 
-$('#messageInput').keydown(function (event) {
-    if (event.which == 13) sendMessage();
-});
-
 $('#nbBat').change(function () {
     var nbBat = $('#nbBat').val();
     if (nbBat < 1 || nbBat > 10) {

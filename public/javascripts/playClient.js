@@ -96,8 +96,10 @@ socket.on('tirServ', function (obj) {
 socket.on('updateState', function (stateObj) {
     switch (stateObj.state) {
         case 'wait':
+            $('.cell-att').removeClass('pointer');
             break;
         case 'myTurn':
+            $('.cell-att').addClass('pointer');
             break;
         case 'batPos':
             $('<button>', {
