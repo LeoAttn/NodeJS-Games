@@ -3,38 +3,45 @@ extends layoutPlay
 block content
     - var lettre = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
     div#msges
-    div.tab-container
-        div(id = "validationButton")
-
-        div(class="bat-container")
-
-    div.tab-container
-        div#myName
-        
-        div#opponentName
-    div.tab-container
-        table.tab.tab-att.cell-center(id = "opponentTab")
+    div.tab-container.top-container
+        div.bateau
+            div#validationButton
+            div.bat-container
+        table.table.aQuiLeTour
             tr
-                td
-                - for (var x = 1; x <= 10; x++)
-                    td!= "<strong>" + (x) + "</strong>"
-            - for (var y = 0; y < 10; y++)
+                td.prefix Vous :
+                td#myName
+            tr
+                td.prefix Adversaire :
+                td#opponentName
+
+    div.tab-container
+        div
+            h3.center Plateau Adverse
+            table.tab.tab-att.cell-center(id = "opponentTab")
                 tr
-                    td!= "<strong>" + (lettre[y]) + "</strong>"
-                    - for (var x = 0; x < 10; x++)
-                        td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="font-size: 15px")
+                    td
+                    - for (var x = 1; x <= 10; x++)
+                        td!= "<strong>" + (x) + "</strong>"
+                - for (var y = 0; y < 10; y++)
+                    tr
+                        td!= "<strong>" + (lettre[y]) + "</strong>"
+                        - for (var x = 0; x < 10; x++)
+                            td(class="cell cell-att "+x+"-"+y onclick="clicTabAtt("+x+", "+y+")" style="font-size: 15px")
 
         div(style="width: 30px")
-        table.tab.tab-def.cell-center(id = "myTab")
-            tr
-                td
-                - for (var x = 1; x <= 10; x++)
-                    td!= "<strong>" + (x) + "</strong>"
-            - for (var y = 0; y < 10; y++)
+        div
+            h3.center Votre Plateau
+            table.tab.tab-def.cell-center(id = "myTab")
                 tr
-                    td!= "<strong>" + (lettre[y]) + "</strong>"
-                    - for (var x = 0; x < 10; x++)
-                        td(id="id-"+x+"-"+y class="cell cell-def "+x+"-"+y ondrop="drop(event)" ondragover="allowDrop(event)")
+                    td
+                    - for (var x = 1; x <= 10; x++)
+                        td!= "<strong>" + (x) + "</strong>"
+                - for (var y = 0; y < 10; y++)
+                    tr
+                        td!= "<strong>" + (lettre[y]) + "</strong>"
+                        - for (var x = 0; x < 10; x++)
+                            td(id="id-"+x+"-"+y class="cell cell-def "+x+"-"+y ondrop="drop(event)" ondragover="allowDrop(event)")
     div#chat
         div#chatMessages
             table.table.table-striped.table-bordered

@@ -146,6 +146,7 @@ var IO = {
             }
             else if (room[s.session.roomID].players[s.session.playerID].state == "batPos") {
                 changeState(s, s.session.playerID, 'batPos');
+                sendHello(s);
             }
             else {
                 loadGame(s);

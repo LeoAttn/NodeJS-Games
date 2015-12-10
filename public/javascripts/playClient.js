@@ -125,11 +125,8 @@ socket.on('me', function (username) {
 });
 
 socket.on('opponent', function (username) {
-    var text = $("#opponentName").text();
-    if (text == '') {
-        $("#opponentName").text(username);
-        socket.emit('hello');
-    }
+    $("#opponentName").text(username);
+    socket.emit('hello');
 });
 
 socket.on('placeBoat', function (batTab, tirTab) {
