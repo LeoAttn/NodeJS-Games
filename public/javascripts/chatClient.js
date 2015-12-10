@@ -1,6 +1,10 @@
 
 var chat = io.connect('/chat');
 
+$('#messageInput').keydown(function (event) {
+    if (event.which == 13) sendMessage();
+});
+
 function sendMessage() {
     var msg = $('#messageInput').val();
     if (msg != '') {
