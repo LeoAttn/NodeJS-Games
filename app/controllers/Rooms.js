@@ -20,7 +20,6 @@ var Rooms = {
             //res.json(rooms);
             res.render('index', {
                 title: 'Bataille Navale',
-                returnParty: true,
                 session: req.session,
                 room: rooms,
                 message: msg
@@ -82,7 +81,7 @@ var Rooms = {
             Room.findOne({_id: req.query.id}, function (err, room) {
                 if (err) throw err;
                 if (room) {
-                    res.render('lobby', {title: "Lobby: " + room.name, session: req.session, tRoom: room});
+                    res.render('lobby', {title: "Lobby: " + room.name, noReturnParty: true, session: req.session, tRoom: room});
                 }
                 else
                     res.redirect('/?error=noroom');

@@ -44,12 +44,16 @@ a {
   border: solid 1px #FFF;
 }
 
+.pointer {
+  cursor: pointer;
+}
+/*
 .tab-att {
   .cell {
     cursor: pointer;
   }
 }
-
+*/
 .cell-touche {
   position: relative;
   animation: touche 0.5s linear;
@@ -188,11 +192,20 @@ $lobbyHeight: 400px;
   overflow-y: auto;
   border: solid 1px #CCC;
   border-bottom: 0;
-  -webkit-box-shadow: inset 0 0 5px #AAA;
-  -moz-box-shadow: inset 0 0 5px #AAA;
-  box-shadow: inset 0 0 5px #CCC;
+  -webkit-box-shadow: inset 0 0 5px #CCC;
+     -moz-box-shadow: inset 0 0 5px #CCC;
+          box-shadow: inset 0 0 5px #CCC;
   table {
     margin: 0;
+  }
+}
+
+.play {
+  #chatMessages {
+    color: #333;
+    background-color: #FFF;
+  }
+  .chat {
   }
 }
 
