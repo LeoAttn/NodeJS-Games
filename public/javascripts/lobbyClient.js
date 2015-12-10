@@ -85,15 +85,17 @@ function sendLogin() {
     if (name === undefined || name == null || name == "")
         name = 'Anonyme';
     sess.username = name;
-    socket.emit('joinLobby', sess);
     $('#loginName').val('');
     $('.loginLobby').remove();
+    socket.emit('joinLobby', sess);
     if(sess.username != 'Anonyme')
         joinChat();
 }
 
 socket.on('hey', function () {
     socket.emit('joinLobby', sess);
+    if(sess.username != 'Anonyme')
+        joinChat();
 });
 
 socket.on('askUsername', function(){

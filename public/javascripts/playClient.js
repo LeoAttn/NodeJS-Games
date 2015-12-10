@@ -172,6 +172,7 @@ socket.on('message', function (msg) {
 socket.on('hey', function () {
     console.log('test');
     socket.emit('joinGame', sess);
+    joinChat();
 });
 
 socket.on('nbBat', function (nbBat) {

@@ -52,11 +52,6 @@ chat.on('chatMessage', function (msgObj) {
     newChatMessage(msgObj);
 });
 
-chat.on('hey', function(){
-    if(sess.username != 'Anonyme')
-        chat.emit('joinChat', sess);
-});
-
 chat.on('loadMessages', function(msgObjs){
     console.log("HISTORIQUE : " + JSON.stringify(msgObjs));
     for (k in msgObjs) {
