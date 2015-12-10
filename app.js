@@ -26,7 +26,7 @@ app.use(cookieParser("secret"));
 app.use(session({
     secret: 'secret',
     resave: false,
-    saveUninitialized:true
+    saveUninitialized: true
 }));
 
 //Lie le css avec le module sass
@@ -39,7 +39,7 @@ app.use('/stylesheets', sass({
 
 // init body parser
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 // init le dossier public comme dossier static
 app.use(express.static(path.join(__dirname, 'public')));
 //Insère la favicon
@@ -50,15 +50,13 @@ app.use('/play', play);
 app.use('/api', api);
 
 //A chaque fois qu'une requête est effectué
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
     var name = req.session.name;
     var user = req.session.USER;
-    if(!user)
-    {
+    if (!user) {
         user = req.session.USER = null;
     }
-    if(!name)
-    {
+    if (!name) {
         name = req.session.name = "";
     }
     next();
@@ -68,7 +66,7 @@ app.use(function(req, res, next){
 // error handlers
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -76,7 +74,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -86,7 +84,7 @@ if (app.get('env') === 'development') {
 }
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
@@ -95,8 +93,10 @@ app.use(function(err, req, res, next) {
 });
 
 // Connection a la base mongoDb
-mongoose.connect('mongodb://localhost/NodeJS-Games', function(err) {
-    if (err) { throw err; }
+mongoose.connect('mongodb://localhost/NodeJS-Games', function (err) {
+    if (err) {
+        throw err;
+    }
     // Pour supprimer la base de donnée
     mongoose.connection.db.dropDatabase();
 });

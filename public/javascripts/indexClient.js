@@ -1,19 +1,18 @@
 //var socket = io.connect('http://localhost');
-function updateRoomList()
-{
+function updateRoomList() {
     $.ajax({
         type: 'get',
         url: '/api/'
     })
-    .done(function(data) {
+        .done(function (data) {
 
-    })
-    .fail(function(request,status,error) {
-        console.log('ERROR !');
-    })
+        })
+        .fail(function (request, status, error) {
+            console.log('ERROR !');
+        })
 
 }
 
-$(function() {
+$(function () {
     setInterval(updateRoomList, 6000);
 });
