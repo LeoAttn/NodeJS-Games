@@ -14,7 +14,6 @@ var IO = {
 
         //on appelle cette function à chaque connection d'un nouvel utilisateur
 
-
         this.connection(function (socket) {
             // Toutes les fonctions que l'on va rajouter devront être ici
 
@@ -30,14 +29,14 @@ var IO = {
         return io;
     },
     connection: function (callback) {//Appellé lors de la connexion du socket
-        chat.on('connection', function(s){
-            console.log('CHAT CONNECTED !! ');
-            s.emit('hey');
-            callback(s);
-        });
         io.on('connection', function (s) {
             console.log("Client Connected ");
             s.emit('hey');///Récupère la session passé en paramètre
+            callback(s);
+        });
+        chat.on('connection', function(s){
+            console.log('CHAT CONNECTED !! ');
+            s.emit('hey');
             callback(s);
         });
     },
@@ -89,13 +88,20 @@ var IO = {
     chat: function (s) {
         s.on('joinChat', function (data){
             s.session = data;
+            s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID)
-            s.emit('chatMessage', {
-                from: 'server',
-                type: 'info',
-                msg: "Bienvenue dans la room !",
-                date: Date.now
-            });
+            if(room[s.session.roomID].messagesObjs === undefined){
+                room[s.session.roomID].messagesObjs = {};
+                s.emit('chatMessage', {
+                    from: 'server',
+                    type: 'info',
+                    msg: "Bienvenue dans la room !",
+                    date: Date.now
+                });
+            }
+            else{
+                loadMessages(s);
+            }
         });
         s.on('chatMessage', function (msag) {
             s.broadcast.to(s.session.roomID).emit('chatMessage', {
@@ -104,7 +110,12 @@ var IO = {
                 username: s.session.username,
                 date: Date.now
             });
-            s.emit('chatMessage', {from: 'user', msg: msag, username: s.session.username, date: Date.now});
+            s.emit('chatMessage', {
+                from: 'user',
+                msg: msag,
+                username: s.session.username,
+                date: Date.now
+            });
             room[s.session.roomID].messagesObjs.push({from : 'user', msg: msag, username : s.session.username, date : Date.now});
         });
     },
@@ -255,10 +266,14 @@ function initLobby(s) {
 function loadLobby(s) {
     s.session.username = room[s.session.roomID].players[s.session.playerID].username;
     if (room[s.session.roomID].messagesObjs !== undefined) {
-        s.emit('loadMessages', room[s.session.roomID].messagesObjs);
+
     }
     s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username});
     s.emit('addUser', {username: s.session.username});
+}
+
+function loadMessages(s){
+    s.emit('loadMessages', room[s.session.roomID].messagesObjs);
 }
 
 function initGame(s) {

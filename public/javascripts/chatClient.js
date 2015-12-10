@@ -50,5 +50,13 @@ chat.on('chatMessage', function (msgObj) {
 
 chat.on('hey', function(){
     chat.emit('joinChat', sess);
-})
+});
+
+chat.on('loadMessages', function(msgObjs){
+    console.log("HISTORIQUE : " + JSON.stringify(msgObjs));
+    for (k in msgObjs) {
+        console.log("MSG : " + JSON.stringify(k));
+        newChatMessage(msgObjs[k]);
+    }
+});
 
