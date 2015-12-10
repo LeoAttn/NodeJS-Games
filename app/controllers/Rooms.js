@@ -49,11 +49,7 @@ var Rooms = {
             res.redirect('/?error=alreadyInGame');
     },
     joinLobby: function (req, res) {
-        var roomId;
-        if(req.query.roomID)
-            roomId = req.query.roomID;
-        else
-            roomId = req.body.id;
+        var roomId = (req.query.roomID) ? req.query.roomID : req.body.id;
         Room.findOne({_id: roomId}, function (err, room) {
             if (err) throw err;
             //res.json(room);

@@ -143,13 +143,9 @@ var IO = {
                     {
                         s.broadcast.emit('start');
                         s.emit('start');
-                        var rand = (Math.round(Math.random()*2));
-                        var name;
-                        console.log(rand);
-                        if(rand == 0)
-                            name = "creator";
-                        else
-                            name = "player2";
+                        var rand = (Math.round(Math.random()));
+                        console.log('rand = '+rand);
+                        var name = (rand == 0) ? "creator" : "player2";
                         if(name == s.session.playerID)
                         {
                             s.emit('newState', {state : 'myTurn'});
@@ -174,12 +170,9 @@ var IO = {
 		/////====================================================================
 		s.on('tirClient', function (x, y) {
             if (room[s.session.roomID].players[s.session.playerID].state == "myTurn") {
-                var type, playerID;
+                var type;
                 console.log("position tir : (" + x + ", " + y + ")");
-                if (s.session.playerID == 'creator')
-                    playerID = 'player2';
-                else
-                    playerID = 'creator';
+                var playerID = (s.session.playerID == 'creator') ? 'player2' : 'creator';
 
                 // vide = 0, bat = 1, touche = 2, dansleau = 3
                 if(room[s.session.roomID].players[playerID].batTab[x][y] >= 2) {
@@ -265,10 +258,7 @@ function loadGame(s)
     var batTab = room[s.session.roomID].players[s.session.playerID].batTab;
     var stateP = room[s.session.roomID].players[s.session.playerID].state;
     var playerID, tirTab =  [[], [], [], [], [], [], [], [], [], []];
-    if (s.session.playerID == 'creator')
-        playerID = 'player2';
-    else
-        playerID = 'creator';
+    playerID = (s.session.playerID == 'creator') ? 'player2' : 'creator';
     for (var y = 0; y < 10; y++) {
         for (var x = 0; x < 10; x++) {
             if (room[s.session.roomID].players[playerID].batTab[x][y] <= 1) {

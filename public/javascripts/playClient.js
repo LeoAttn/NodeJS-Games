@@ -191,4 +191,4 @@ socket.on('uRturn', function(){
 
 socket.on('redirect', function(where){
     window.location.replace("http://"+document.location.host+ where);
-})
+});
