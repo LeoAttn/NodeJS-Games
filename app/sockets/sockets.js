@@ -1,5 +1,6 @@
 var io;
 var chat;
+var http = require('http');
 var RoomsC = require('../controllers/Rooms');
 var isValid = false;
 var room = [];
@@ -54,6 +55,7 @@ var IO = {
     lobby: function (s) {
         s.on('joinLobby', function (data) {
             s.session = data;
+            s.socketID = "lobby";
             if (room[s.session.roomID] === undefined) {
                 room[s.session.roomID] = {};
                 room[s.session.roomID].validationCptr = 0;
@@ -67,6 +69,8 @@ var IO = {
                 initLobby(s);
             }
             else {
+                if(room[s.session.roomID].clients < 2)
+                    room[s.session.roomID].clients ++;
                 loadLobby(s);
             }
             if (room[s.session.roomID].clients == 2) {
@@ -95,6 +99,7 @@ var IO = {
     },
     chat: function (s) {
         s.on('joinChat', function (data){
+            s.socketID = "chat";
             s.session = data;
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID)
@@ -130,6 +135,7 @@ var IO = {
     game: function (s) {
         s.on('joinGame', function (data) {//Appelé en réponse au message handshake, set la session et rejoins la room
             s.session = data;
+            s.socketID = "game";
             console.log('roomID: ' + s.session.roomID);
 
             if (room[s.session.roomID] === undefined) {
@@ -258,6 +264,27 @@ var IO = {
     },
     disconnect: function (s) {
         s.on('disconnect', function () {
+            if(s.socketID == "chat")
+            {
+                s.broadcast.to(s.session.roomID).emit('chatMessage', {
+                    from: 'server',
+                    type: 'info',
+                    msg: s.session.username + " à quitté la partie",
+                    date: Date.now
+                });
+            }
+            if(s.socketID == "lobby" || s.socketID == "game")
+            {
+                room[s.session.roomID].clients --;
+                if(room[s.session.roomID].clients <= 0)
+                {
+                    var req = http.request({host: 'localhost', port: 80, path: '/api/delete', method: 'DELETE'}, function(res) {
+                        console.log('STATUS: ' + res.statusCode);
+                    });
+                    req.end();
+                    //RoomsC.delete();
+                }
+            }
             console.log("Client Disconnected");
             //quitGame(s);
         });
@@ -349,7 +376,7 @@ function quitGame(s){
     }
     else
     {
-        s.broadcast.to(s.session.roomID).emit('userLeft', s.session.username);
+        s.broadcast.to(s.session.roomID).emit('userQuit', s.session.username);
         s.broadcast.to(s.session.roomID).emit('chatMessage', {from: 'server', type: 'info', msg: s.session.username + " à quitté la partie", date: Date.now});
     }
     s.leave();
@@ -425,7 +452,6 @@ function changeState(s, playerID, newState){
     }
 
 }
-
 
 
 module.exports = IO;
