@@ -2,6 +2,29 @@ var NB_BAT;
 var clic = 0;
 var socket = io.connect('http://' + document.location.host);
 
+function aQuiLeTour(state) {
+    switch (state) {
+        case 'myTurn':
+            console.log("azerty");
+            $('#aQuiLeTour').html("<strong>C'est à votre tour !</strong>")
+                .addClass('success-bg')
+                .removeClass('error-bg');
+            break;
+
+        case 'wait':
+            $('#aQuiLeTour').html("<strong>C'est au tour de votre adversaire</strong>")
+                .addClass('error-bg')
+                .removeClass('success-bg');
+            break;
+
+        default:
+            $('#aQuiLeTour').html('')
+                .removeClass('error-bg')
+                .removeClass('success-bg');
+            break;
+    }
+}
+
 function newMessage(classes, msg) {
     var elem = $('.' + classes);
     var testMsg = true;
@@ -26,7 +49,7 @@ function newMessage(classes, msg) {
     var remove = function () {
         div.remove();
     };
-    setTimeout(remove, 2000);
+    setTimeout(remove, 5000);
 
 }
 
@@ -41,13 +64,6 @@ function testLog() {
 }
 
 function clicButValid() {
-    /*var batPos = {
-     "Bat1": $('#Bat1').last().parent().prop('id'),
-     "Bat2": $('#Bat2').last().parent().prop('id'),
-     "Bat3": $('#Bat3').last().parent().prop('id'),
-     "Bat4": $('#Bat4').last().parent().prop('id'),
-     "Bat5": $('#Bat5').last().parent().prop('id')
-     };*/
     var batPos = {};
     for (var i = 1; i <= NB_BAT; i++) {
         batPos['Bat' + i] = $('#Bat' + i).last().parent().prop('id');
@@ -58,12 +74,10 @@ function clicButValid() {
 
 function clicTabAtt(x, y) {
     console.log("Le joueur a clique sur la case x=" + x + " et y=" + y + ".");
-    //$(".cell-att").removeClass("cell-click");
-    //$(".cell-att."+x+"-"+y).addClass("cell-click");
     socket.emit('tirClient', x, y);
 }
 
-// Fonction pour gÃ©rer le drag n' drop
+// Fonctions pour gÃ©rer le drag n' drop
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -122,6 +136,7 @@ socket.on('updateState', function (stateObj) {
             }
             break;
     }
+    aQuiLeTour(stateObj.state);
 });
 
 socket.on('me', function (username) {
@@ -170,6 +185,14 @@ socket.on('message', function (msg) {
     console.log(msg);
 });
 
+socket.on('endParty', function (obj) {
+    if (obj.res = 'win') {
+        var div = $('<div>', {
+            class: 'endParty'
+        }).appendTo('body');
+    }
+});
+
 socket.on('hey', function () {
     console.log('test');
     socket.emit('joinGame', sess);
@@ -186,4 +209,9 @@ socket.on('uRturn', function () {
 
 socket.on('redirect', function (where) {
     window.location.replace("http://" + document.location.host + where);
+});
+
+
+socket.on('chatMessage', function (msgObj) {
+    newChatMessage(msgObj);
 });

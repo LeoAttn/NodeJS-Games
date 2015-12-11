@@ -1,5 +1,6 @@
 
 var chat = io.connect('/chat');
+//var chat = io.connect('/');
 
 $('#messageInput').keydown(function (event) {
     if (event.which == 13) sendMessage();
@@ -37,7 +38,7 @@ function newChatMessage(msgObj) {
                 class: classes + ' ' + classes + '-bg'
             }).appendTo('#chatMessages table');
             $('<td>', {
-                html: '<strong>' + msgObj.username + ' : </strong>' + msgObj.msg
+                html: '<strong>' + $('<div/>').text(msgObj.username).html() + ' : </strong>' + $('<div/>').text(msgObj.msg).html()
             }).appendTo(div);
         }
         $('#chatMessages').animate({scrollTop: $('#chatMessages').prop('scrollHeight')}, 50);

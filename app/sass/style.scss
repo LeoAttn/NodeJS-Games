@@ -49,9 +49,10 @@ a {
   .bateau {
     display: flex;
   }
-  .aQuiLeTour {
+  .listPlayer {
     height: 50px;
     width: auto;
+    margin: 0;
     td {
       vertical-align: middle;
       border-top: solid 1px #FFF;
@@ -67,6 +68,9 @@ a {
     #myName, #opponentName {
       border-right: solid 1px #FFF;
     }
+  }
+  #aQuiLeTour {
+
   }
 }
 
@@ -124,9 +128,20 @@ a {
 }
 
 .error-bg {
-  //background-color: crimson;
-  background: #d00000; /* Old browsers */
-  background: linear-gradient(#d00000, #9b0000); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: #D9534F; /* Old browsers */
+  background: linear-gradient(#D9534F, #C9302C); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  height: 50px;
+    border-radius: 10px;
+  color: white;
+  width: 50%;
+  margin: auto;
+  line-height: 50px;
+  text-align: center;
+}
+
+.success-bg {
+  background: #5CB85C; /* Old browsers */
+  background: linear-gradient(#5CB85C, #377836); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   height: 50px;
     border-radius: 10px;
   color: white;
