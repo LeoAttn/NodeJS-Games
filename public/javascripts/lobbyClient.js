@@ -98,6 +98,7 @@ socket.on('hey', function () {
         joinChat();
 });
 
+
 socket.on('askUsername', function(){
     var div = $('<div>', {
         class: 'loginLobby'

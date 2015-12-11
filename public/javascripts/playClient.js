@@ -80,6 +80,10 @@ function drop(ev) {
 
 // Gestion des Ã©vÃ¨nemment emit par le serveu
 
+socket.on('countdown', function(countdown){
+   $("#countdown").text(countdown);
+});
+
 socket.on('batPosValid', function () {
     $(".bat").attr('draggable', 'false').css('cursor', 'default');
     $("#validBat").remove();

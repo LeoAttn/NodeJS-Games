@@ -1,27 +1,26 @@
 var io;
 var chat;
 var RoomsC = require('../controllers/Rooms');
-
 var isValid = false;
-
 var room = [];
-
+var timerFunction;
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
         io = IO;
         chat = io.of('/chat');
         var $this = this; // On enregistre le contexte actuel dans une variable
 
+
         //on appelle cette function à chaque connection d'un nouvel utilisateur
 
         this.connection(function (socket) {
             // Toutes les fonctions que l'on va rajouter devront être ici
-
             $this.lobby(socket);
             $this.chat(socket);
             $this.game(socket);
             $this.handshake(socket);
             $this.disconnect(socket);
+            $this.timer(socket);
         });
 
     },
@@ -172,6 +171,8 @@ var IO = {
                 }
                 if (nbBat == room[s.session.roomID].nbBat) {
                     changeState(s, s.session.playerID, 'batPosValid');
+                    stopCountdown(s, s.session.playerID);
+                    resetCountdown(s, s.session.playerID);
                     room[s.session.roomID].players[s.session.playerID].batTab = batPos;
                     room[s.session.roomID].players[s.session.playerID].batCoule = 0;
                     s.emit('batPosValid');
@@ -186,6 +187,7 @@ var IO = {
                         var secondPlayerID = (firstPlayerID == "creator") ? "player2" : "creator";
                         changeState(s, firstPlayerID, 'myTurn');
                         changeState(s, secondPlayerID, 'wait');
+                        startCountdown(s, firstPlayerID);
                     }
                     else {
                         s.broadcast.to(s.session.roomID).emit('notifs', {
@@ -209,6 +211,8 @@ var IO = {
                 if (room[s.session.roomID].players[opponentID].batTab[x][y] >= 2) {
                     s.emit('notifs', {type: 'error', msg: "Vous avez déja tiré à cette emplacement !"})
                 } else {
+                    stopCountdown(s, s.session.playerID);
+                    resetCountdown(s, s.session.playerID);
                     if (room[s.session.roomID].players[opponentID].batTab[x][y] == 1) {
                         type = "touche";
                         room[s.session.roomID].players[opponentID].batTab[x][y] = 2;
@@ -220,10 +224,11 @@ var IO = {
                     console.log(type);
                     s.emit('tirServ', {tab: 'att', type: type, x: x, y: y});
                     s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y: y});
-                    changeState(s,s.session.playerID, 'wait');
-                    changeState(s,opponentID, 'myTurn');
+                    nextTurn(s, opponentID);
+                    startCountdown(s, opponentID);
 
                     if (room[s.session.roomID].players[opponentID].batCoule == room[s.session.roomID].nbBat) {
+                        stopCountdown(s, opponentID);
                         changeState(s, s.session.playerID, 'win');
                         changeState(s, opponentID, 'loose')
                         s.emit('notifs', {type: 'info', msg: "Vous avez gagné !"});
@@ -231,8 +236,6 @@ var IO = {
                     }
                 }
             }
-            //for (var k in varRoom)
-            //    console.log(varRoom[k])
         });
         s.on('hello', function () {
             sendHello(s);
@@ -258,6 +261,9 @@ var IO = {
             console.log("Client Disconnected");
             //quitGame(s);
         });
+    },
+    timer : function(s){
+
     }
 };
 
@@ -295,11 +301,18 @@ function loadMessages(s){
     s.emit('loadMessages', room[s.session.roomID].messagesObjs);
 }
 
+function sendHello(s) {
+    s.emit('me', s.session.username);
+    s.broadcast.to(s.session.roomID).emit('opponent', s.session.username);
+}
+
 function initGame(s) {
     sendHello(s);
     room[s.session.roomID].players[s.session.playerID].state = "";
     changeState(s,s.session.playerID, 'batPos');
     room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
+    resetCountdown(s, s.session.playerID);
+    startCountdown(s, s.session.playerID);
 }
 
 function loadGame(s) {
@@ -323,9 +336,9 @@ function loadGame(s) {
     sendHello(s);
 }
 
-function sendHello(s) {
-    s.emit('me', s.session.username);
-    s.broadcast.to(s.session.roomID).emit('opponent', s.session.username);
+function nextTurn(s, opponentID){
+    changeState(s,s.session.playerID, 'wait');
+    changeState(s,opponentID, 'myTurn');
 }
 
 function quitGame(s){
@@ -342,6 +355,55 @@ function quitGame(s){
     s.leave();
 }
 
+function stopCountdown(s, playerID)
+{
+    clearInterval(room[s.session.roomID].players[playerID].timerFunction);
+    s.emit("countdown", "x");
+}
+
+function resetCountdown(s, playerID){
+    room[s.session.roomID].players[playerID].timer = 60;
+}
+
+function startCountdown(s, playerID){
+    console.log("Started Countdown for " + playerID + "(" + room[s.session.roomID].players[playerID].username + ")");
+    room[s.session.roomID].players[playerID].timerFunction = setInterval(function(){
+        room[s.session.roomID].players[playerID].timer--;
+        if(room[s.session.roomID].players[playerID].timer >=0)
+            if(playerID == s.session.playerID)
+                s.emit('countdown', room[s.session.roomID].players[playerID].timer);
+            else
+                s.broadcast.to(s.session.roomID).emit('countdown', room[s.session.roomID].players[playerID].timer)
+        else{
+            if(playerID == s.session.playerID)
+                s.emit('notifs', {type : 'info', msg : "Temps Ecoulé"});
+            else
+                s.broadcast.to(s.session.roomID).emit('info', {type : 'info', msg : "Temps Ecoulé"})
+
+            if(room[s.session.roomID].players[playerID].state == "batPos")
+            {
+                ///FUNCTION RANDOM POSITION DES BATEAUX
+            }
+            else /// You loose
+            {
+                var opponentID = (playerID == "creator") ? "player2" : "creator";
+                changeState(s, playerID, 'loose');
+                changeState(s, opponentID, 'win');
+                if(playerID == s.session.playerID){
+                    s.broadcast.to(s.session.roomID).emit('notifs', {type: 'info', msg: "Vous avez gagné !"});
+                    s.emit('notifs', {type: 'info', msg: "Vous avez perdu !"});
+                }
+                else{
+                    s.broadcast.to(s.session.roomID).emit('notifs', {type: 'info', msg: "Vous avez perdu !"});
+                    s.emit('notifs', {type: 'info', msg: "Vous avez gagné !"});
+                }
+            }
+            stopCountdown(s, playerID);
+            resetCountdown(s, playerID);
+        }
+    }, 1000)
+}
+
 function rematch(s){
     delete room[s.session.roomID].players[s.session.playerID].hasJoined
 }
@@ -349,6 +411,7 @@ function rematch(s){
 function cleanRoom(s){
     delete room[s.session.roomID];
 }
+
 
 function changeState(s, playerID, newState){
     room[s.session.roomID].players[playerID].state = newState;
@@ -362,5 +425,7 @@ function changeState(s, playerID, newState){
     }
 
 }
+
+
 
 module.exports = IO;
