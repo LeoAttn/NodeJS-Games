@@ -279,6 +279,7 @@ var IO = {
         });
         s.on('quitGame', function () {
             s.emit('redirect', '/flush-session');
+            s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
         });
         s.on('askRematch', function () {
             changeState(s, s.session.playerID, 'askRematch');
