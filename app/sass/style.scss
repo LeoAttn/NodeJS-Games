@@ -42,6 +42,8 @@ a {
 }
 
 .top-container {
+  display: flex;
+  flex-wrap: wrap;
   min-height: 50px;
   width: 100%;
   margin-top: 10px;
@@ -286,31 +288,123 @@ $lobbyHeight: 400px;
     margin: 0 8px;
   }
 }
+.endParty {
+  div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -50px -250px;
+    width: 500px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    font-size: 2em;
+    font-style: bold;
+    border-radius: 5px;
+    z-index: 100;
+  }
+  .win {
+    -webkit-box-shadow:  0 0 20px #7ad77a;
+    -moz-box-shadow:  0 0 20px #7ad77a;
+    box-shadow:  0 0 20px #7ad77a;
+    background: #5CB85C; /* Old browsers */
+  }
+  .loose {
+    -webkit-box-shadow:  0 0 20px #f35652;
+    -moz-box-shadow:  0 0 20px #f35652;
+    box-shadow:  0 0 20px #f35652;
+    background: #D9534F; /* Old browsers */
+  }
+    .animation {
+        -webkit-animation-name: bounceIn;
+        animation-name: bounceIn;
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation-iteration-count: 1;
+        animation-iteration-count: 1;
+    }
+    .win-anim {
+        animation: win 1s linear infinite;
+    }
+    .loose-anim {
+        animation: loose 1s linear infinite;
+    }
+
+}
 
 
 @keyframes touche {
-  0% {
-    background-color: transparent;
-  }
-  20% {
-    background-color: #ff827b;
-  }
-  100% {
-    background-color: transparent;
-  }
+  0% {  background-color: transparent;  }
+  20% {  background-color: #ff827b;  }
+  100% {  background-color: transparent;  }
 }
 
 @keyframes dansleau {
+  0% {  background-color: transparent;  }
+  20% {  background-color: #BBB;  }
+  100% {  background-color: transparent;  }
+}
+/*
+@keyframes win {
+  0% {  color: white;  }
+  50% {  color: black;  }
+  100% {  color: white;  }
+}*/
+
+@keyframes win {
+  0% {  background: #5CB85C;  }
+  50% {  background: #377836;  }
+  100% {  background: #5CB85C;  }
+}
+
+@keyframes loose {
+  0% {  background: #D9534F;  }
+  50% {  background: #a42f2c;  }
+  100% {  background: #D9534F;  }
+}
+
+@keyframes bounceIn {
+  from, 20%, 40%, 60%, 80%, to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+
   0% {
-    background-color: transparent;
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
   }
+
   20% {
-    background-color: #BBB;
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
   }
-  100% {
-    background-color: transparent;
+
+  40% {
+    -webkit-transform: scale3d(.9, .9, .9);
+    transform: scale3d(.9, .9, .9);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+
+  80% {
+    -webkit-transform: scale3d(.97, .97, .97);
+    transform: scale3d(.97, .97, .97);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
   }
 }
+
 
 .switch-form {
   padding-top: 4px !important;

@@ -99,6 +99,26 @@ socket.on('updateState', function (stateObj) {
             $(".bat").attr('draggable', 'false').css('cursor', 'default');
             $("#validBat").remove();
             break;
+        case 'win':
+            var div = $('<div>', {
+                class: 'endParty',
+                html: '<div class="win">Bravo, vous avez gagné !</div>'
+            }).appendTo('body');
+            $('.win').addClass('animation');
+            setTimeout(function() {
+                $('.win').addClass('win-anim');
+            }, 700);
+            break;
+        case 'loose':
+            var div = $('<div>', {
+                class: 'endParty',
+                html: '<div class="loose">Vous avez perdu !</div>'
+            }).appendTo('body');
+            $('.loose').addClass('animation');
+            setTimeout(function() {
+                $('.loose').addClass('loose-anim');
+            }, 700);
+            break;
     }
     aQuiLeTour(stateObj.state);
 });
@@ -143,14 +163,6 @@ socket.on('playerReady', function () {
 
 socket.on('message', function (msg) {
     console.log(msg);
-});
-
-socket.on('endParty', function (obj) {
-    if (obj.res = 'win') {
-        var div = $('<div>', {
-            class: 'endParty'
-        }).appendTo('body');
-    }
 });
 
 socket.on('hey', function () {

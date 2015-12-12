@@ -253,9 +253,6 @@ var IO = {
                         stopCountdown(s, opponentID);
                         changeState(s, s.session.playerID, 'win');
                         changeState(s, opponentID, 'loose');
-                        endParty(s, true);
-                        //s.emit('notifs', {type: 'info', msg: "Vous avez gagné !"});
-                        //s.broadcast.to(s.session.roomID).emit('notifs', {type: 'info', msg: "Vous avez perdu !"});
                     }
                 }
             }
@@ -346,7 +343,6 @@ function loadLobby(s) {
 }
 
 function loadMessages(s){
-    console.log(room[s.session.roomID].players[s.session.playerID].messagesObjs);
     s.emit('loadMessages', room[s.session.roomID].players[s.session.playerID].messagesObjs);
 }
 
@@ -440,14 +436,6 @@ function startCountdown(s, playerID){
                 var opponentID = (playerID == "creator") ? "player2" : "creator";
                 changeState(s, playerID, 'loose');
                 changeState(s, opponentID, 'win');
-                if(playerID == s.session.playerID){
-                    s.broadcast.to(s.session.roomID).emit('notifs', {type: 'info', msg: "Vous avez gagné !"});
-                    s.emit('notifs', {type: 'info', msg: "Vous avez perdu !"});
-                }
-                else{
-                    s.broadcast.to(s.session.roomID).emit('notifs', {type: 'info', msg: "Vous avez perdu !"});
-                    s.emit('notifs', {type: 'info', msg: "Vous avez gagné !"});
-                }
             }
             stopCountdown(s, playerID);
             resetCountdown(s, playerID);
@@ -506,13 +494,6 @@ function servMessage(s, type, msg, broadcast) {
             date: Date.now
         });
     }
-}
-
-function endParty(s, hasWin) {
-    var player = hasWin ? 'win' : 'loose';
-    var opponent = !hasWin ? 'win' : 'loose';
-    s.emit('endParty', {res: player});
-    s.broadcast.to(s.session.roomID).emit('endParty', {res: opponent});
 }
 
 module.exports = IO;
