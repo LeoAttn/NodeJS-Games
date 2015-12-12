@@ -14,6 +14,18 @@ var Rooms = {
             var msg = "Aucune room selectionnée !";
         if (req.query.error == "alreadyInGame")
             var msg = "Vous avez déjà une partie en cours";
+        if(req.session.roomID)
+        {
+            Room.findOne({_id : req.session.roomID}, function (err, room){
+                if(err)throw err;
+                if(!room)
+                {
+                    console.log("SESSION ROOMID DELETED");
+                    delete req.session.roomID;
+                    delete req.session.playerID;
+                }
+            });
+        }
 
         Room.find({}, function (err, rooms) {
             if (err) throw err;
@@ -54,6 +66,18 @@ var Rooms = {
     },
     joinLobby: function (req, res) {
         var roomId = (req.query.roomID) ? req.query.roomID : req.body.id;
+        if(req.session.roomID)
+        {
+            Room.findOne({_id : req.session.roomID}, function (err, room){
+                if(err)throw err;
+                if(!room)
+                {
+                    console.log("SESSION ROOMID DELETED");
+                    delete req.session.roomID;
+                    delete req.session.playerID;
+                }
+            });
+        }
         Room.findOne({_id: roomId}, function (err, room) {
             if (err) throw err;
             //res.json(room);
@@ -121,21 +145,14 @@ var Rooms = {
             }
         });
     },
-    delete: function (req, res) {
-        Room.findOne({_id: req.params.id}, function (err, room) {
+    delete: function (id) {
+        Room.findOne({_id: id}, function (err, room) {
             if (err) throw err;
             if (room) {
                 if (!room.ready || room.playing) {
+                    console.log("ROOM DELETED");
                     room.remove();
-                    res.status(200).send('Success !');
-                    res.end();
                 }
-                res.status(300).send('Forbidden !');
-                res.end();
-            }
-            else {
-                res.status(204).send('No content !');
-                res.end();
             }
         });
     }

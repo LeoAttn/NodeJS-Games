@@ -23,6 +23,7 @@ var apiRooms = {
             if (err) throw err;
             if (room) {
                 room.ready = true;
+                room.playing = true;
                 room.save(function (err) {
                     if (err) throw err;
                     console.log('Room updated');

@@ -61,6 +61,7 @@ var IO = {
                 room[s.session.roomID].validationCptr = 0;
                 room[s.session.roomID].clients = 0;
                 room[s.session.roomID].players = [];
+                room[s.session.roomID].state = "lobby";
                 //room[s.session.roomID].messagesObjs = [];
                 room[s.session.roomID].nbBat = 5;
             }
@@ -93,6 +94,7 @@ var IO = {
             }
         });
         s.on('startGame', function () {
+            room[s.session.roomID].state = "transition";
             s.emit('startGame');
             s.broadcast.to(s.session.roomID).emit('startGame', {});
         });
@@ -155,6 +157,7 @@ var IO = {
             }
             s.emit('nbBat', room[s.session.roomID].nbBat);
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
+            room[s.session.roomID].state = "game";
             s.join(s.session.roomID);
             if (room[s.session.roomID].players[s.session.playerID].hasJoined === undefined) {
                 room[s.session.roomID].players[s.session.playerID].hasJoined = true;
@@ -294,18 +297,22 @@ var IO = {
             }
             if(s.socketID == "lobby" || s.socketID == "game")
             {
-                room[s.session.roomID].clients --;
-                if(room[s.session.roomID].clients <= 0)
+                console.log(room[s.session.roomID].state);
+                if(room[s.session.roomID].state != "transition")//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
                 {
-                    var req = http.request({host: 'localhost', port: 80, path: '/api/delete', method: 'DELETE'}, function(res) {
-                        console.log('STATUS: ' + res.statusCode);
-                    });
-                    req.end();
-                    //RoomsC.delete();
+                    room[s.session.roomID].clients --;
+                    if(s.session.playerID == "creator" && s.socketID == "lobby")
+                    {
+                        s.broadcast.to(s.session.roomID).emit('redirect', '/?error=OwnerQuit');
+                    }
+                    console.log("Clients : " + room[s.session.roomID].clients);
+                    if(room[s.session.roomID].clients <= 0)
+                    {
+                        RoomsC.delete(s.session.roomID);
+                    }
                 }
             }
             console.log("Client Disconnected");
-            //quitGame(s);
         });
     },
     timer : function(s){
