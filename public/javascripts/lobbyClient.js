@@ -1,5 +1,5 @@
 var lastNbBat = 5;
-var socket = io.connect('http://' + document.location.host);
+var socket = io.connect('/');
 
 $('#nbBat').change(function () {
     var nbBat = $('#nbBat').val();
@@ -137,7 +137,7 @@ socket.on('addUser', function (usernameObj , rank) {
 });
 
 socket.on('startGame', function () {
-    window.location.replace("http://" + document.location.host + "/play?id=" + sess.roomID);
+    window.location.replace("/play?id=" + sess.roomID);
 });
 
 socket.on('loadMessages', function (msgObjs) {
@@ -152,5 +152,5 @@ socket.on('loadMessages', function (msgObjs) {
 });
 
 socket.on('redirect', function (where) {
-    window.location.replace("http://" + document.location.host + where);
+    window.location.replace(where);
 })

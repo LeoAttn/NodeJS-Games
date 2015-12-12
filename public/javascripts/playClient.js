@@ -1,5 +1,5 @@
 var NB_BAT;
-var socket = io.connect('http://' + document.location.host);
+var socket = io.connect('/');
 
 //LOTO ...
 function aQuiLeTour(state) { ///HAHAHA
@@ -253,7 +253,7 @@ socket.on('uRturn', function () {
 });
 
 socket.on('redirect', function (where) {
-    window.location.replace("http://" + document.location.host + where);
+    window.location.replace(where);
 });
 
 
