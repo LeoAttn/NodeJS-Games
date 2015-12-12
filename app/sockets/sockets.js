@@ -58,7 +58,6 @@ var IO = {
             s.socketID = "lobby";
             if (room[s.session.roomID] === undefined) {
                 room[s.session.roomID] = {};
-                room[s.session.roomID].validationCptr = 0;
                 room[s.session.roomID].clients = 0;
                 room[s.session.roomID].players = [];
                 room[s.session.roomID].state = "lobby";
@@ -158,6 +157,8 @@ var IO = {
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             room[s.session.roomID].state = "game";
             s.join(s.session.roomID);
+            if(room[s.session.roomID].validationCptr === undefined)
+                room[s.session.roomID].validationCptr = 0;
             if (room[s.session.roomID].players[s.session.playerID].hasJoined === undefined) {
                 room[s.session.roomID].players[s.session.playerID].hasJoined = true;
                 initGame(s);
@@ -182,44 +183,60 @@ var IO = {
                     if (bat = pos[k].match(/[0-9]+/ig)) {
                         batPos[parseInt(bat[0])][parseInt(bat[1])] = 1;
                         nbBat++;
-                    } else {
-                        s.emit('Message', k + ' non defini !');
                     }
                 }
-                if (nbBat == room[s.session.roomID].nbBat) {
-                    changeState(s, s.session.playerID, 'batPosValid');
-                    stopCountdown(s, s.session.playerID);
-                    resetCountdown(s, s.session.playerID);
-                    room[s.session.roomID].players[s.session.playerID].batTab = batPos;
-                    room[s.session.roomID].players[s.session.playerID].batCoule = 0;
-                    servMessage(s, 'success', "La position des bateaux à été validée.");
-                    room[s.session.roomID].validationCptr += 1;
-                    if (room[s.session.roomID].validationCptr == 2) {
-                        s.broadcast.emit('start');
-                        s.emit('start');
-                        var rand = Math.round(Math.random());
-                        console.log('rand = ' + rand);
-                        var firstPlayerID = (rand == 0) ? "creator" : "player2";
-                        var secondPlayerID = (firstPlayerID == "creator") ? "player2" : "creator";
-
-                        var msgFirst = "C'est à vous de commencer la partie !";
-                        var msgSecond = "C'est votre adversaire qui commence la partie !";
-                        var msgPlayer = (s.session.playerID == firstPlayerID) ? msgFirst : msgSecond;
-                        var msgOpponent = (s.session.playerID == secondPlayerID) ? msgFirst : msgSecond;
-                        servMessage(s, 'info', msgPlayer);
-                        servMessage(s, 'info', msgOpponent, 'broadcast');
-
-                        changeState(s, firstPlayerID, 'myTurn');
-                        changeState(s, secondPlayerID, 'wait');
-                        startCountdown(s, firstPlayerID);
+                //randomPlaceBat(nbBat, batPos);
+                if(nbBat != room[s.session.roomID].nbBat)
+                {
+                    while(nbBat != room[s.session.roomID].nbBat)
+                    {
+                        var randX = Math.floor(Math.random() * 9)
+                        var randY = Math.floor(Math.random() * 9)
+                        if(batPos[randX][randY] != 1)
+                        {
+                            batPos[randX][randY] = 1;
+                            nbBat ++;
+                        }
                     }
-                    else {
-                        servMessage(s, 'info', "Veuillez attendre que votre adversaire place ses bateaux.");
-                        servMessage(s, 'info', "Votre adversaire est prêt !", 'broadcast');
+                    var tirTab = [[], [], [], [], [], [], [], [], [], []];
+                    for(var x =0; x < 10; x++){
+                        for(var y = 0; y <10; y ++){
+                            tirTab[x][y] = 0;
+                        }
                     }
+                    s.emit('removeBoatContainer');
+                    s.emit('placeBoat', batPos, tirTab);
                 }
-                else
-                    servMessage(s, 'danger', "Vous n'avez pas placé tous les bateaux !");
+                changeState(s, s.session.playerID, 'batPosValid');
+                stopCountdown(s, s.session.playerID);
+                resetCountdown(s, s.session.playerID);
+                room[s.session.roomID].players[s.session.playerID].batTab = batPos;
+                room[s.session.roomID].players[s.session.playerID].batCoule = 0;
+                servMessage(s, 'success', "La position des bateaux à été validée.");
+                room[s.session.roomID].validationCptr += 1;
+                if (room[s.session.roomID].validationCptr == 2) {
+                    s.broadcast.emit('start');
+                    s.emit('start');
+                    var rand = Math.round(Math.random());
+                    console.log('rand = ' + rand);
+                    var firstPlayerID = (rand == 0) ? "creator" : "player2";
+                    var secondPlayerID = (firstPlayerID == "creator") ? "player2" : "creator";
+
+                    var msgFirst = "C'est à vous de commencer la partie !";
+                    var msgSecond = "C'est votre adversaire qui commence la partie !";
+                    var msgPlayer = (s.session.playerID == firstPlayerID) ? msgFirst : msgSecond;
+                    var msgOpponent = (s.session.playerID == secondPlayerID) ? msgFirst : msgSecond;
+                    servMessage(s, 'info', msgPlayer);
+                    servMessage(s, 'info', msgOpponent, 'broadcast');
+
+                    changeState(s, firstPlayerID, 'myTurn');
+                    changeState(s, secondPlayerID, 'wait');
+                    startCountdown(s, firstPlayerID);
+                }
+                else {
+                    servMessage(s, 'info', "Veuillez attendre que votre adversaire place ses bateaux.");
+                    servMessage(s, 'info', "Votre adversaire est prêt !", 'broadcast');
+                }
             }
         });
         /////====================================================================
@@ -260,20 +277,34 @@ var IO = {
         s.on('hello', function () {
             sendHello(s);
         });
-        s.on('quit', function () {
-            quitGame(s);
+        s.on('quitGame', function () {
             s.emit('redirect', '/flush-session');
         });
         s.on('askRematch', function () {
-            room[s.session.roomID].players[s.session.playerID].state = 'askRmtch';
+            changeState(s, s.session.playerID, 'askRematch');
             s.broadcast.to(s.session.roomID).emit('askRematch');
         });
         s.on('acceptRematch', function () {
+            rematch(s);
             s.emit('rematch');
             s.broadcast.to(s.session.roomID).emit('rematch');
         });
+        s.on('refuseRematch', function (){
+            s.emit('redirect', '/flush-session');
+            s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
+        });
         s.on('rematch', function() {
-            rematch(s);
+            console.log(room[s.session.roomID].clients);
+            if(room[s.session.roomID].clients == 2)
+            {
+                console.log("REMATCH! ");
+                s.emit('redirect', '/play?id='+ s.session.roomID);
+                s.broadcast.to(s.session.roomID).emit('redirect', '/play?id=' + s.session.roomID);
+            }
+            else
+            {
+                s.emit('redirect', '/flush-session');
+            }
         });
     },
     disconnect: function (s) {
@@ -385,20 +416,6 @@ function nextTurn(s, opponentID){
     changeState(s,opponentID, 'myTurn');
 }
 
-function quitGame(s){
-    room[s.session.roomID].clients --;
-    if(room[s.session.roomID].clients == 0)
-    {
-        RoomsC.delete(socket.request, socket.response);
-    }
-    else
-    {
-        s.broadcast.to(s.session.roomID).emit('userLeft', s.session.username);
-        servMessage(s, 'info', s.session.username + " à quitté la partie", 'broadcast');
-    }
-    s.leave();
-}
-
 function stopCountdown(s, playerID)
 {
     clearInterval(room[s.session.roomID].players[playerID].timerFunction);
@@ -444,7 +461,11 @@ function startCountdown(s, playerID){
 }
 
 function rematch(s){
+    room[s.session.roomID].state = "transition";
+    var otherPlayerID = (s.session.playerID == "creator") ? "player2" : "creator";
+    delete room[s.session.roomID].players[otherPlayerID].hasJoined
     delete room[s.session.roomID].players[s.session.playerID].hasJoined
+    delete room[s.session.roomID].validationCptr;
 }
 
 function cleanRoom(s){
