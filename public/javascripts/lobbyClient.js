@@ -63,6 +63,7 @@ function newUser(usernameJO, rank) {
 
 function unlockButton() {
     $('#startButton').removeAttr('disabled');
+    $('#startButton').addClass('startButton');
 }
 
 function startGame() {

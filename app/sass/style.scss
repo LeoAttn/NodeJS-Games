@@ -221,8 +221,8 @@ $lobbyHeight: 400px;
   padding: 0 20px;
   width: 50%;
   height: $lobbyHeight;
-  .button {
-
+  .startButton {
+      animation: win 1s linear infinite;
   }
 }
 
