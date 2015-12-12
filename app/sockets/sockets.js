@@ -62,7 +62,6 @@ var IO = {
                 room[s.session.roomID].clients = 0;
                 room[s.session.roomID].players = [];
                 room[s.session.roomID].state = "lobby";
-                //room[s.session.roomID].messagesObjs = [];
                 room[s.session.roomID].nbBat = 5;
             }
             if (room[s.session.roomID].clients < 2 && room[s.session.roomID].players[s.session.playerID] === undefined) {
@@ -163,12 +162,9 @@ var IO = {
                 room[s.session.roomID].players[s.session.playerID].hasJoined = true;
                 initGame(s);
             }
-            else if (room[s.session.roomID].players[s.session.playerID].state == "batPos") {
-                servMessage(s, 'info', "Veuillez placer les bateaux.");
-                changeState(s, s.session.playerID, 'batPos');
-                sendHello(s);
-            }
             else {
+                if(room[s.session.roomID].clients < 2)
+                    room[s.session.roomID].clients ++;
                 loadGame(s);
             }
         });
@@ -196,7 +192,6 @@ var IO = {
                     resetCountdown(s, s.session.playerID);
                     room[s.session.roomID].players[s.session.playerID].batTab = batPos;
                     room[s.session.roomID].players[s.session.playerID].batCoule = 0;
-                    s.emit('batPosValid');
                     servMessage(s, 'success', "La position des bateaux à été validée.");
                     room[s.session.roomID].validationCptr += 1;
                     if (room[s.session.roomID].validationCptr == 2) {
@@ -386,7 +381,6 @@ function loadGame(s) {
 
     s.emit('updateState', {state: stateP});
     s.emit('placeBoat', batTab, tirTab);
-    s.emit('batPosValid');
     sendHello(s);
 }
 

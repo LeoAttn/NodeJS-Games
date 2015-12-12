@@ -1,8 +1,8 @@
 var NB_BAT;
-var clic = 0;
 var socket = io.connect('http://' + document.location.host);
 
-function aQuiLeTour(state) {
+//LOTO ...
+function aQuiLeTour(state) { ///HAHAHA
     switch (state) {
         case 'myTurn':
             console.log("azerty");
@@ -25,50 +25,11 @@ function aQuiLeTour(state) {
     }
 }
 
-function newMessage(classes, msg) {
-    var elem = $('.' + classes);
-    var testMsg = true;
-    //On vÃ©rifie qu'une div avec le meme message n'existe pas.
-    $('.' + classes + ' p').each(function () {
-        var text = $(this).html();
-        if (text == msg)
-            testMsg = false;
-    });
-    //On crÃ©er la div si un message identique n'existe pas.
-    var div;
-    if (testMsg) {
-        div = $('<div>', {
-            id: msg,
-            class: classes + ' ' + classes + '-bg' + ' notifs'
-        }).appendTo('#msges');
-        $('<p>', {
-            text: msg
-        }).appendTo(div);
-    }
-
-    var remove = function () {
-        div.remove();
-    };
-    setTimeout(remove, 5000);
-
-}
-
-function cleanMessages() {
-    console.log($('#msges').html);
-    $('#msges').html = "";
-}
-
-function testLog() {
-    clic++;
-    console.log("TEST - " + clic);
-}
-
 function clicButValid() {
     var batPos = {};
     for (var i = 1; i <= NB_BAT; i++) {
         batPos['Bat' + i] = $('#Bat' + i).last().parent().prop('id');
     }
-    cleanMessages();
     socket.emit('batPos', batPos);
 }
 
@@ -99,8 +60,7 @@ socket.on('countdown', function(countdown){
 });
 
 socket.on('batPosValid', function () {
-    $(".bat").attr('draggable', 'false').css('cursor', 'default');
-    $("#validBat").remove();
+
 });
 
 socket.on('tirServ', function (obj) {
@@ -134,6 +94,10 @@ socket.on('updateState', function (stateObj) {
                     ondragstart: "drag(event)"
                 }).appendTo('.bat-container')
             }
+            break;
+        case 'batPosValid':
+            $(".bat").attr('draggable', 'false').css('cursor', 'default');
+            $("#validBat").remove();
             break;
     }
     aQuiLeTour(stateObj.state);
@@ -171,10 +135,6 @@ socket.on('placeBoat', function (batTab, tirTab) {
             }
         }
     }
-});
-
-socket.on('notifs', function (msgObj) {
-    newMessage(msgObj.type, msgObj.msg);
 });
 
 socket.on('playerReady', function () {
