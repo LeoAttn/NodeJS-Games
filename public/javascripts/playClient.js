@@ -64,14 +64,16 @@ function drop(ev) {
 
 function displayEndGameButton()
 {
+    $('#quitButton').html('');
+    $('#rematchButton').html('');
     $('<button>', {
-        class: 'btn btn-default',
+        class: 'btn btn-danger btn-lg',
         id: 'quitBtn',
         onClick: 'quitGame()',
         text: 'Quitter la partie'
     }).appendTo('#quitButton');
     $('<button>', {
-        class: 'btn btn-default',
+        class: 'btn btn-info btn-lg',
         id: 'rematchBtn',
         onClick: 'askRematch()',
         text: 'Rejouer'
@@ -84,7 +86,7 @@ function quitGame(){
 
 function askRematch(){
     socket.emit("askRematch");
-    $("#rematchBtn").text("En attente ...");
+    //$("#rematchBtn").removeAttr("onclick").text("En attente de l'adversaire...");
 }
 
 function acceptRematch(){
@@ -101,10 +103,6 @@ function refuseRematch(){
 
 socket.on('countdown', function(countdown){
    $("#countdown").text(countdown);
-});
-
-socket.on('batPosValid', function () {
-
 });
 
 socket.on('tirServ', function (obj) {
@@ -159,21 +157,29 @@ socket.on('updateState', function (stateObj) {
             }, 700);
             displayEndGameButton();
             break;
+        case 'askRematch':
+            displayEndGameButton();
+            $("#rematchBtn").removeAttr("onclick").text("En attente de l'adversaire...");
+            break;
     }
     aQuiLeTour(stateObj.state);
 });
 
 socket.on("askRematch", function (){
     $("#rematchBtn").remove();
-    $("rematchButton").text($("#opponentName").text() + " veut rejouer")
+    //$("rematchButton").text($("#opponentName").text() + " veut rejouer")
+    $('<div>', {
+        class: '',
+        text: $("#opponentName").text() + " demande à rejouer."
+    }).appendTo('#rematchButton');
     $('<button>', {
-        class: 'btn btn-default',
+        class: 'btn btn-success',
         id: 'acceptRematch',
         onClick: 'acceptRematch()',
         text: 'Accepter'
     }).appendTo('#rematchButton');
     $('<button>', {
-        class: 'btn btn-default',
+        class: 'btn btn-danger',
         id: 'refuseRematch',
         onClick: 'refuseRematch()',
         text: 'Refuser'
