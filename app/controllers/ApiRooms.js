@@ -7,10 +7,10 @@ var mongoose = require("mongoose"),
 
 
 var apiRooms = {
-    create: function (req, res) {
+    create: function (req, res) {//Post Request
 
     },
-    index: function (req, res) {
+    index: function (req, res) {//Get Request
         Room.find({}, function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
@@ -18,7 +18,7 @@ var apiRooms = {
             res.end();
         });
     },
-    update : function (req, res) {
+    update : function (req, res) {//PUT Request
         Room.findOne({_id: req.params.id}, function (err, room) {
             if (err) throw err;
             if (room) {
@@ -39,7 +39,7 @@ var apiRooms = {
             }
         });
     },
-    delete: function (req, res) {
+    delete: function (req, res) {//Delete Request
         Room.findOne({_id: req.params.id}, function (err, room) {
             if (err) throw err;
             if (room) {

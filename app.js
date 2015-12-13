@@ -6,11 +6,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
 var sass = require('node-sass-middleware');
 var mongoose = require('mongoose');
 
 var routes = require('./app/routes/index');
 var play = require('./app/routes/play');
+var user = require('./app/routes/user');
 var api = require('./app/routes/api');
 
 var app = express();
@@ -40,6 +42,7 @@ app.use('/stylesheets', sass({
 // init body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
 // init le dossier public comme dossier static
 app.use(express.static(path.join(__dirname, 'public')));
 //Insère la favicon
@@ -48,16 +51,14 @@ app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
 app.use('/', routes);
 app.use('/play', play);
 app.use('/api', api);
+app.use('/user', user);
 
 //A chaque fois qu'une requête est effectué
 app.use(function (req, res, next) {
-    var name = req.session.name;
-    var user = req.session.USER;
-    if (!user) {
-        user = req.session.USER = null;
-    }
-    if (!name) {
-        name = req.session.name = "";
+    var isAuthenticated = req.session.isAuthenticated;
+    if (!isAuthenticated){
+        isAuthenticated = req.session.isAuthenticated = false;
+        req.session.avatarLink = "/images/default.png";
     }
     next();
 });
@@ -98,7 +99,7 @@ mongoose.connect('mongodb://localhost/NodeJS-Games', function (err) {
         throw err;
     }
     // Pour supprimer la base de donnée
-    mongoose.connection.db.dropDatabase();
+    //mongoose.connection.db.dropDatabase();
 });
 
 

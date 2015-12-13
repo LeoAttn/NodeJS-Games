@@ -27,7 +27,7 @@ var Rooms = {
             });
         }
 
-        Room.find({}, function (err, rooms) {
+        Room.find({},"name creator isPlaying ready", function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
             res.render('index', {

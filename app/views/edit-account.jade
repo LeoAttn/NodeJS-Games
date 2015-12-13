@@ -1,0 +1,27 @@
+extends layout
+
+block content
+
+    img(class = "avatar big" src = user.avatarLink)
+    form(action = "/user/update" method = "post")
+        div.form-group
+            label.control-label(for = "pseudo") Nom d'utilisateur
+            input.form-control(type = "text" name = "pseudo" value=user.pseudo)
+        div.form-group
+            label.control-label(for = "first_name") Prénom
+            input.form-control(type = "text" name = "first_name" value=user.first_name)
+        div.form-group
+            label.control-label(for = "last_name") Nom
+            input.form-control(type = "text" name = "last_name" value=user.last_name)
+        div.form-group
+            label.control-label(for = "email") Email
+            input.form-control(type = "mail" name = "email" value=user.email)
+
+         div.form-group
+                button.btn.btn-primary(name = "submit") Editer
+block script
+    script(src="/javascripts/account.js")
+
+        //div.form-group
+            label.control-label(for = "avatar") Avatar
+            input.form-control(type="file" name="avatar")

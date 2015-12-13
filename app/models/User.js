@@ -7,6 +7,8 @@ var schema = new Schema({
     pseudo: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
+    avatarLink :{type : String, required : false},
+    wins :{type : Number, default : 0},
     createdOn: {type: Date, default: Date.now}
 });
 

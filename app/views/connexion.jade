@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    if message
+        div.error-bg
+            p #{message}
+
+    h3 Connexion :
+    form(action = "/sign-in" method ="POST")
+        div.form-group
+            label.control-label(name ="pseudo") Nom d'utilisateur
+            input.form-control(type = "text" name = "pseudo" id = "Uname" maxlength=20 required="required" )
+        div.form-group
+            label.control-label(name ="password") Mot de passe
+            input.form-control(type = "password" name = "password" id = "pass" required="required" )
+        div.form-group
+                button.btn.btn-primary(name = "submit") Se connecter
+
+block script
+    script(src="/javascripts/connexion.js")
