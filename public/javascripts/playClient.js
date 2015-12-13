@@ -138,7 +138,7 @@ socket.on('updateState', function (stateObj) {
             $("#validBat").remove();
             break;
         case 'win':
-            var div = $('<div>', {
+            $('<div>', {
                 class: 'endParty',
                 html: '<div class="win">Bravo, vous avez gagné !</div>'
             }).appendTo('body');
@@ -149,7 +149,7 @@ socket.on('updateState', function (stateObj) {
             displayEndGameButton();
             break;
         case 'loose':
-            var div = $('<div>', {
+            $('<div>', {
                 class: 'endParty',
                 html: '<div class="loose">Vous avez perdu !</div>'
             }).appendTo('body');
