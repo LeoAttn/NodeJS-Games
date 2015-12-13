@@ -40,16 +40,19 @@ var Rooms = {
     },
     create: function (req, res) {
         if (!req.session.roomID) {
-            if (req.body.username.length > 20)
-                req.body.username = req.body.username.substr(0, 20);
-            req.session.username = req.body.username;
+            if(req.session.username === undefined)
+            {
+                if (req.body.username.length > 20)
+                    req.body.username = req.body.username.substr(0, 20);
+                req.session.username = req.body.username;
+            }
             if (!(req.body.roomName))
                 req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
             else if (req.body.roomName.length > 20)
                 req.body.roomName = req.body.roomName.substr(0, 20);
             req.body.private = (req.body.private == "on");
             var r = new Room({
-                creator: req.body.username,
+                creator: req.session.username,
                 name: req.body.roomName,
                 private: req.body.private
             });
