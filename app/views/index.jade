@@ -37,7 +37,7 @@ block content
                     th.center IsPrivate
                     th.center Rejoindre
                 - for (var k in room)
-                    tr(id=room[k]._id)
+                    tr(class = "room" id=room[k]._id)
                         td=room[k].name
                         td=room[k].creator
                         td=room[k].playing

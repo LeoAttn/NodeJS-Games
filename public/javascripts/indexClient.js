@@ -1,4 +1,3 @@
-//var socket = io.connect('http://localhost');
 function updateRoomList() {
     $.ajax({
         type: 'get',
@@ -15,32 +14,12 @@ function updateRoomList() {
 
 function displayRoomList(rooms)
 {
-    $("thead").find("tr").remove();
-    var trHead = $("<tr>").appendTo("thead");
-    $("<th>", {
-        class : "center",
-        text : "Nom de la partie"
-    }).appendTo(trHead);
-    $("<th>", {
-        class : "center",
-        text : "Créateur"
-    }).appendTo(trHead);
-    $("<th>", {
-        class : "center",
-        text : "IsPlaying"
-    }).appendTo(trHead);
-    $("<th>", {
-        class : "center",
-        text : "IsPrivate"
-    }).appendTo(trHead);
-    $("<th>", {
-        class : "center",
-        text : "Rejoindre"
-    }).appendTo(trHead);
+    $("thead").find("tr.room").remove();
     for(var k in rooms)
     {
         var tr = $('<tr>', {
             id: rooms[k]._id,
+            class : "room"
         }).appendTo('thead');
         $('<td>',{
             text : rooms[k].name
