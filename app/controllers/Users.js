@@ -124,6 +124,13 @@ var Users = {
                 res.end();
             }
         });
+    },
+    addWin : function (username){
+        User.findOne({pseudo : username}, "win", function (err, user){
+            if(err) throw err;
+            user.win +=1;
+            user.save();
+        })
     }
 };
 

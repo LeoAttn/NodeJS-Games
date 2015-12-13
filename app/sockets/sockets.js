@@ -2,6 +2,7 @@ var io;
 var chat;
 var http = require('http');
 var RoomsC = require('../controllers/Rooms');
+var UsersC = require('../controllers/Users');
 var isValid = false;
 var room = [];
 var timerFunction;
@@ -268,6 +269,7 @@ var IO = {
 
                     if (room[s.session.roomID].players[opponentID].batCoule == room[s.session.roomID].nbBat) {
                         stopCountdown(s, opponentID);
+                        UsersC.addWin(s.session.username);
                         changeState(s, s.session.playerID, 'win');
                         changeState(s, opponentID, 'loose');
                     }
