@@ -305,25 +305,25 @@ $lobbyHeight: 400px;
   }
   .win {
     -webkit-box-shadow:  0 0 20px #7ad77a;
-    -moz-box-shadow:  0 0 20px #7ad77a;
-    box-shadow:  0 0 20px #7ad77a;
+       -moz-box-shadow:  0 0 20px #7ad77a;
+            box-shadow:  0 0 20px #7ad77a;
     background: #5CB85C; /* Old browsers */
   }
   .loose {
     -webkit-box-shadow:  0 0 20px #f35652;
-    -moz-box-shadow:  0 0 20px #f35652;
-    box-shadow:  0 0 20px #f35652;
+       -moz-box-shadow:  0 0 20px #f35652;
+            box-shadow:  0 0 20px #f35652;
     background: #D9534F; /* Old browsers */
   }
     .animation {
         -webkit-animation-name: bounceIn;
-        animation-name: bounceIn;
+                animation-name: bounceIn;
         -webkit-animation-duration: 1s;
-        animation-duration: 1s;
+                animation-duration: 1s;
         -webkit-animation-fill-mode: both;
-        animation-fill-mode: both;
+                animation-fill-mode: both;
         -webkit-animation-iteration-count: 1;
-        animation-iteration-count: 1;
+                animation-iteration-count: 1;
     }
     .win-anim {
         animation: win 1s linear infinite;
@@ -346,12 +346,6 @@ $lobbyHeight: 400px;
   20% {  background-color: #BBB;  }
   100% {  background-color: transparent;  }
 }
-/*
-@keyframes win {
-  0% {  color: white;  }
-  50% {  color: black;  }
-  100% {  color: white;  }
-}*/
 
 @keyframes win {
   0% {  background: #5CB85C;  }
