@@ -87,7 +87,7 @@ var Rooms = {
             //res.json(room);
             if (!req.session.roomID) {
                 if (room.player2 === undefined) {
-                    if(req.session.username === undefined)
+                    if(req.session.isAuthenticated == false)
                     {
                         req.session.username = ""
                         room.player2 = "Anonyme"
