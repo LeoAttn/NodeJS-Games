@@ -20,7 +20,7 @@ router.get('/sign-in', function(req, res){
     }
     else
     {
-        res.render('connexion', {title : "Connexion", session : req.session});
+        res.render('connexion', {title : "Connexion", active: 'Connexion', session : req.session});
     }
 });
 router.post('/sign-in', user.sign_in);
@@ -31,7 +31,7 @@ router.get('/sign-up', function (req, res){
     }
     else
     {
-        res.render('inscription', {title : "S'inscription", session : req.session});
+        res.render('inscription', {title : "S'inscription", active: 'S\'inscrire', session : req.session});
     }
 });
 router.get('/sign-out', function(req, res){
