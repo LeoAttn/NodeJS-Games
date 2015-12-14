@@ -5,7 +5,7 @@ block content
         div.accountLeftBlock
             img(class = "avatar big" src = user.avatarLink)
         div.accountRightBlock
-            form(action = "/user/update" method = "post")
+            form(action = "/user/update" enctype="multipart/form-data" method = "post")
                 div.form-group
                     label.control-label(for = "pseudo") Nom d'utilisateur
                     input.form-control(type = "text" name = "pseudo" value=user.pseudo)
@@ -18,12 +18,12 @@ block content
                 div.form-group
                     label.control-label(for = "email") Email
                     input.form-control(type = "mail" name = "email" value=user.email)
-
+                div.form-group
+                    label.control-label(for = "avatar") Avatar
+                    input.form-control(type="file" name="avatar")
                  div.form-group
                         button.btn.btn-primary(name = "submit") Editer
 block script
     script(src="/javascripts/account.js")
 
-        //div.form-group
-            label.control-label(for = "avatar") Avatar
-            input.form-control(type="file" name="avatar")
+        //

@@ -1,7 +1,9 @@
 require('../models/User');
-
 var mongoose = require("mongoose"),
-    User = mongoose.model('User');
+    User = mongoose.model('User'),
+    formidable = require('formidable'),
+    path = require('path'),
+    fs = require('fs');
 
 
 var Users = {
@@ -83,28 +85,55 @@ var Users = {
         });
     },
     update : function (req, res){//POST Request
+        console.log("UPDATE USER FUnCt !");
         User.findOne({pseudo : req.session.username}, function(err, user){
             if(err) throw err;
             if(user)
             {
-                console.log(JSON.stringify(req.body));
-                var last_name = user.last_name;
-                var first_name = user.first_name;
-                var pseudo = user.pseudo;
-                var email = user.email;
-                var avatarLink = user.avatarLink;
-                if(req.body.last_name !== undefined)
-                    user.last_name = req.body.last_name;
-                if(req.body.first_name !== undefined)
-                    user.first_name = req.body.first_name;
-                if(req.body.pseudo !== undefined)
-                    user.pseudo = req.body.pseudo;
-                if(req.body.email !== undefined)
-                    user.email = req.body.email;
-                if(req.body.avatarLink !== undefined)
-                    user.avatarLink = req.body.avatarLink;
-                user.save();
-                res.redirect("/user/account?username="+ req.session.username);
+                console.log("USER EXIST");
+                var form = new formidable.IncomingForm();
+                console.log("FORM var assigned");
+                form.parse(req, function(err, fields, files){
+                    console.log("Fields : " + JSON.stringify(fields));
+                    console.log("Files : " + JSON.stringify(files));
+                    if(err) throw err;
+                    if(files.avatar.size >0)
+                    {
+                        var old_path = files.avatar.path,
+                        file_size = files.avatar.size,
+                        file_ext = files.avatar.name.split('.').pop(),
+                        index = old_path.lastIndexOf('\\') + 1,
+                        file_name = old_path.substr(index),
+                        new_path = '/uploads/avatars/'+  file_name + '.' + file_ext;
+                        fs.readFile(old_path, function(err, data) {
+                            fs.writeFile(new_path, data, function(err) {
+                                fs.unlink(old_path, function(err) {
+                                    if (err) {
+                                        res.status(500);
+                                        res.json({'success': false});
+                                    }
+                                });
+                            });
+                        });
+                    }
+                    var last_name = user.last_name;
+                    var first_name = user.first_name;
+                    var pseudo = user.pseudo;
+                    var email = user.email;
+                    var avatarLink = user.avatarLink;
+                    if(fields.last_name !="")
+                        user.last_name = fields.last_name;
+                    if(fields.first_name != "")
+                        user.first_name = fields.first_name;
+                    if(fields.pseudo != "")
+                        user.pseudo = fields.pseudo;
+                    if(fields.email != "")
+                        user.email = fields.email;
+                    if(files.avatar.size > 0)
+                        user.avatarLink = new_path;
+                    user.save();
+                    res.redirect("/user/account?username="+ req.session.username);
+                });
             }
             else
             {
