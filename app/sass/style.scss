@@ -50,10 +50,10 @@ a {
   justify-content: space-between;
   .bateau {
     display: flex;
+    align-items: center;
   }
   #endGame {
     display: flex;
-    align-items: center;
     button {
       margin-right: 20px;
     }
@@ -244,12 +244,16 @@ $lobbyHeight: 400px;
 }
 
 .accountRightBlock{
-    float : right;
-    display:flex;
-    width: 50%;
-    height: 400px;
-    flex-direction: column;
-    justify-content: space-between;
+  float: right;
+  display: flex;
+  width: 50%;
+  height: 400px;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 20px;
+  div {
+    margin-bottom: 20px;
+  }
 }
 
 .avatar{

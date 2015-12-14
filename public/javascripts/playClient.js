@@ -57,7 +57,9 @@ function drop(ev) {
         ev.target.appendChild(document.getElementById(data));
         if($('.bat-container').is(':empty'))
         {
-            $("#validBat").text("Valider les positions");
+            $("#validBat").text("Valider les positions")
+                .addClass('btn-success btn-lg')
+                .removeClass('btn-info');
         }
     }
 }
@@ -117,7 +119,7 @@ socket.on('updateState', function (stateObj) {
     switch (stateObj.state) {
         case 'batPos':
             $('<button>', {
-                class: 'btn btn-default',
+                class: 'btn btn-info',
                 id: 'validBat',
                 onClick: 'clicButValid()',
                 text: 'Placer aléatoirement'

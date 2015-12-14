@@ -448,7 +448,7 @@ function startCountdown(s, playerID){
             if(playerID == s.session.playerID)
                 s.emit('countdown', room[s.session.roomID].players[playerID].timer);
             else
-                s.broadcast.to(s.session.roomID).emit('countdown', room[s.session.roomID].players[playerID].timer)
+                s.broadcast.to(s.session.roomID).emit('countdown', room[s.session.roomID].players[playerID].timer);
         else{
             if(playerID == s.session.playerID)
                 s.emit('notifs', {type : 'info', msg : "Temps Ecoulé"});
@@ -524,8 +524,8 @@ function startCountdown(s, playerID){
 function rematch(s){
     room[s.session.roomID].state = "transition";
     var otherPlayerID = (s.session.playerID == "creator") ? "player2" : "creator";
-    delete room[s.session.roomID].players[otherPlayerID].hasJoined
-    delete room[s.session.roomID].players[s.session.playerID].hasJoined
+    delete room[s.session.roomID].players[otherPlayerID].hasJoined;
+    delete room[s.session.roomID].players[s.session.playerID].hasJoined;
     delete room[s.session.roomID].validationCptr;
 }
 
