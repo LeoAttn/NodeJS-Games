@@ -72,6 +72,7 @@ var Users = {
                     console.log('User inserted');
                 });
                 req.session.isAuthenticated = true;
+                req.session.username = u.pseudo;
                 res.redirect('/user/account?username=' + u.pseudo);
             }
             else
@@ -112,11 +113,17 @@ var Users = {
         });
     },
     delete : function (req, res){//Post Request
-        User.findOne({_id : req.body.id, pseudo : req.session.username}, function (err, user){
+        User.findOne({pseudo : req.session.username}, function (err, user){
             if(err)throw err;
             if(user)
             {
+                delete req.session.isAuthenticated;
+                delete req.session.roomID;
+                delete req.session.username;
+                delete req.session.playerID;
+                console.log("USER REMOVED");
                 user.remove();
+                res.redirect('/');
             }
             else
             {

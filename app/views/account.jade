@@ -10,6 +10,7 @@ block content
     p=user.email
     p="Nombre de Victoires " + user.wins
     a(href ="/user/account?username="+ (user.pseudo) +"&edit=true") Editer
-    //a(href ="/user/account?username=&?edit") Editer
+    form(action = "/user/delete" method ="post")
+        button Supprimer votre compte
 block script
     script(src="/javascripts/account.js")
