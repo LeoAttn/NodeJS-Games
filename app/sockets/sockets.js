@@ -355,7 +355,7 @@ function initLobby(s) {
         room[s.session.roomID].players[s.session.playerID] = {
                 username: s.session.username
         };
-        s.emit("addUser", {username : s.session.username});
+        s.emit("addUser", {username : s.session.username, avatar : s.session.avatarLink});
         s.broadcast.to(s.session.roomID).emit("addUser", {username:s.session.username});
         room[s.session.roomID].clients += 1;
     }

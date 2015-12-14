@@ -234,6 +234,41 @@ $lobbyHeight: 400px;
   }
 }
 
+.accountLeftBlock{
+    float: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+    height : 400px;
+}
+
+.accountRightBlock{
+    float : right;
+    display:flex;
+    width: 50%;
+    height: 400px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.avatar{
+    border : 1px solid grey;
+    border-radius: 5px;
+    height:auto;
+    overflow:hidden;
+}
+
+.big{
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.little{
+    max-width : 50px;
+    max-height: 50px;
+}
+
 #playerList {
   //height: $lobbyHeight - 42px;
   li {

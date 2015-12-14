@@ -1,16 +1,19 @@
 extends layout
 
 block content
-    img(class = "avatar big" src = user.avatarLink)
-    p=user.pseudo
-    if user.first_name != ''
-        p=user.first_name
-    if user.last_name != ''
-        p=user.last_name
-    p=user.email
-    p="Nombre de Victoires " + user.wins
-    a(href ="/user/account?username="+ (user.pseudo) +"&edit=true") Editer
+    div
+        div.accountLeftBlock
+            img(class = "avatar big" src = user.avatarLink)
+        div.accountRightBlock
+            p.center=user.pseudo
+            if user.first_name != ''
+                p.center=user.first_name
+            if user.last_name != ''
+                p.center=user.last_name
+            p.center=user.email
+            p.center="Nombre de Victoires " + user.wins
+    a.center(href ="/user/account?username="+ (user.pseudo) +"&edit=true") Editer
     form(action = "/user/delete" method ="post")
-        button Supprimer votre compte
+        button.btn Supprimer votre compte
 block script
     script(src="/javascripts/account.js")

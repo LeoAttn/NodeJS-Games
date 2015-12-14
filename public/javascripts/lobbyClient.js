@@ -54,6 +54,12 @@ function newUser(usernameJO, rank) {
         var div = $('<li>', {
             class: 'user ' + rank + ' ' + rank + '-bg'
         }).appendTo('#playerList');
+        console.log(JSON.stringify(usernameJO));
+        $('<img>',{
+            src: usernameJO.avatar,
+            alt: "avatar",
+            class : "avatar little"
+        }).appendTo(div);
         $('<p>', {
             text: username
         }).appendTo(div);

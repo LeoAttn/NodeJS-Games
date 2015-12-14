@@ -73,6 +73,7 @@ var Users = {
                 });
                 req.session.isAuthenticated = true;
                 req.session.username = u.pseudo;
+                req.session.avatarLink
                 res.redirect('/user/account?username=' + u.pseudo);
             }
             else
