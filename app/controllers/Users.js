@@ -126,9 +126,9 @@ var Users = {
         });
     },
     addWin : function (username){
-        User.findOne({pseudo : username}, "win", function (err, user){
+        User.findOne({pseudo : username}, "wins", function (err, user){
             if(err) throw err;
-            user.win +=1;
+            user.wins +=1;
             user.save();
         })
     }
