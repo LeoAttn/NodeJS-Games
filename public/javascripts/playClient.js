@@ -266,3 +266,8 @@ socket.on('redirect', function (where) {
 socket.on('chatMessage', function (msgObj) {
     newChatMessage(msgObj);
 });
+
+socket.on('cleanTab', function () {
+    console.log('plp');
+    $('.cell-def').html('');
+});

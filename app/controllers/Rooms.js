@@ -109,7 +109,7 @@ var Rooms = {
             Room.findOne({_id: req.query.id}, function (err, room) {
                 if (err) throw err;
                 if (room) {
-                    res.render('lobby', {title: "Lobby: " + room.name, active:'Partie en cours', session: req.session, tRoom: room});
+                    res.render('lobby', {title: "Lobby: " + room.name, active:'Partie en cours', noReturnParty: true, session: req.session, tRoom: room});
                 }
                 else
                     res.redirect('/?error=noroom');

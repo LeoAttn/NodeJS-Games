@@ -48,8 +48,8 @@ var IO = {
                 username = username.substr(0, 20);
             s.session.username = username;
             room[s.session.roomID].players[s.session.playerID].username = username;
-            s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username});
-            s.emit('addUser', {username: s.session.username});
+            s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username, avatar : s.session.avatarLink});
+            s.emit('addUser', {username: s.session.username, avatar : s.session.avatarLink});
         });
         ////////=====================================================================
     },
@@ -83,8 +83,8 @@ var IO = {
         });
         s.on('sendUsername', function (username){
             //if(username != "Anonyme" || username != "" || username != )
-            s.emit("addUser", {username : s.session.username});
-            s.broadcast.to(s.session.roomID).emit("addUser", {bypass : false, username:s.session.username});
+            s.emit("addUser", {username : s.session.username, avatar : s.session.avatarLink});
+            s.broadcast.to(s.session.roomID).emit("addUser", {bypass : false, username:s.session.username, avatar : s.session.avatarLink});
         });
         s.on('changeNbBat', function (nb) {
             nb = parseInt(nb);
@@ -191,8 +191,8 @@ var IO = {
                 {
                     while(nbBat != room[s.session.roomID].nbBat)
                     {
-                        var randX = Math.floor(Math.random() * 9)
-                        var randY = Math.floor(Math.random() * 9)
+                        var randX = Math.floor(Math.random() * 9);
+                        var randY = Math.floor(Math.random() * 9);
                         if(batPos[randX][randY] != 1)
                         {
                             batPos[randX][randY] = 1;
@@ -359,7 +359,7 @@ function initLobby(s) {
                 username: s.session.username
         };
         s.emit("addUser", {username : s.session.username, avatar : s.session.avatarLink});
-        s.broadcast.to(s.session.roomID).emit("addUser", {username:s.session.username});
+        s.broadcast.to(s.session.roomID).emit("addUser", {username:s.session.username, avatar : s.session.avatarLink});
         room[s.session.roomID].clients += 1;
     }
     s.join(s.session.roomID);
@@ -370,8 +370,8 @@ function loadLobby(s) {
         s.emit("updateUsername", room[s.session.roomID].players[s.session.playerID].username);
     s.session.username = room[s.session.roomID].players[s.session.playerID].username;
     s.join(s.session.roomID);
-    s.broadcast.to(s.session.roomID).emit('addUser', {bypass : true ,username: s.session.username});
-    s.emit('addUser', {bypass : false, username: s.session.username});
+    s.broadcast.to(s.session.roomID).emit('addUser', {bypass : true ,username: s.session.username, avatar : s.session.avatarLink});
+    s.emit('addUser', {bypass : false, username: s.session.username, avatar : s.session.avatarLink});
     if (room[s.session.roomID].clients == 2) {
         if(s.session.playerID == "creator")
             s.emit('ready', {});
@@ -396,6 +396,10 @@ function initGame(s) {
     room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
     resetCountdown(s, s.session.playerID);
     startCountdown(s, s.session.playerID);
+    setTimeout(function() {
+        servMessage(s, 'info', "Veuillez placer les bateaux sur votre plateau.");
+
+    }, 200);
 }
 
 function loadGame(s) {
@@ -430,12 +434,12 @@ function stopCountdown(s, playerID)
 }
 
 function resetCountdown(s, playerID){
-    room[s.session.roomID].players[playerID].timer = 60;
+    room[s.session.roomID].players[playerID].timer = 10;
 }
 
 function startCountdown(s, playerID){
     // Pour bloquer le compteur :
-    return 0;
+    //return 0;
     // --------------------------
     console.log("Started Countdown for " + playerID + "(" + room[s.session.roomID].players[playerID].username + ")");
     room[s.session.roomID].players[playerID].timerFunction = setInterval(function(){
@@ -453,11 +457,61 @@ function startCountdown(s, playerID){
 
             if(room[s.session.roomID].players[playerID].state == "batPos")
             {
+                s.emit('cleanTab');
+                var batPos = [[], [], [], [], [], [], [], [], [], []];
+                var nbBat = 0;
                 ///FUNCTION RANDOM POSITION DES BATEAUX
+                while(nbBat != room[s.session.roomID].nbBat)
+                {
+                    var randX = Math.floor(Math.random() * 9);
+                    var randY = Math.floor(Math.random() * 9);
+                    if(batPos[randX][randY] != 1)
+                    {
+                        batPos[randX][randY] = 1;
+                        nbBat ++;
+                    }
+                }
+                var tirTab = [[], [], [], [], [], [], [], [], [], []];
+                for(var x =0; x < 10; x++){
+                    for(var y = 0; y <10; y ++){
+                        tirTab[x][y] = 0;
+                    }
+                }
+                s.emit('removeBoatContainer');
+                s.emit('placeBoat', batPos, tirTab);
+                changeState(s, s.session.playerID, 'batPosValid');
+                stopCountdown(s, s.session.playerID);
+                resetCountdown(s, s.session.playerID);
+                room[s.session.roomID].players[s.session.playerID].batTab = batPos;
+                room[s.session.roomID].players[s.session.playerID].batCoule = 0;
+                servMessage(s, 'warning', "La position des bateaux à été choisi aléatoirement car vous avez depassé le temps imparti.");
+
+                room[s.session.roomID].validationCptr += 1;
+                if (room[s.session.roomID].validationCptr == 2) {
+                    s.broadcast.emit('start');
+                    s.emit('start');
+                    var rand = Math.round(Math.random());
+                    console.log('rand = ' + rand);
+                    var firstPlayerID = (rand == 0) ? "creator" : "player2";
+                    var secondPlayerID = (firstPlayerID == "creator") ? "player2" : "creator";
+
+                    var msgFirst = "C'est à vous de commencer la partie !";
+                    var msgSecond = "C'est votre adversaire qui commence la partie !";
+                    var msgPlayer = (s.session.playerID == firstPlayerID) ? msgFirst : msgSecond;
+                    var msgOpponent = (s.session.playerID == secondPlayerID) ? msgFirst : msgSecond;
+                    servMessage(s, 'info', msgPlayer);
+                    servMessage(s, 'info', msgOpponent, 'broadcast');
+
+                    changeState(s, firstPlayerID, 'myTurn');
+                    changeState(s, secondPlayerID, 'wait');
+                    startCountdown(s, firstPlayerID);
+                }
+
             }
             else /// You loose
             {
                 var opponentID = (playerID == "creator") ? "player2" : "creator";
+                servMessage(s, 'danger', "Vous n'avez pas joué dans le temps imparti", 'broadcast');
                 changeState(s, playerID, 'loose');
                 changeState(s, opponentID, 'win');
             }

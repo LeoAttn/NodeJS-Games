@@ -272,7 +272,13 @@ $lobbyHeight: 400px;
 #playerList {
   //height: $lobbyHeight - 42px;
   li {
-    margin-left: 30px;
+    margin-bottom: 5px;
+    p {
+      padding-left: 5px;
+      margin: 0;
+      display: inline-block;
+      max-width: 200px;
+    }
   }
 }
 

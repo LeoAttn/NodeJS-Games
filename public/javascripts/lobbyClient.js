@@ -51,18 +51,19 @@ function newUser(usernameJO, rank) {
     });
     //On crÃ©er la div si un message identique n'existe pas.
     if (testMsg) {
-        var div = $('<li>', {
+        var li = $('<li>', {
             class: 'user ' + rank + ' ' + rank + '-bg'
-        }).appendTo('#playerList');
+        }).appendTo('#playerList ul');
         console.log(JSON.stringify(usernameJO));
-        $('<img>',{
-            src: usernameJO.avatar,
-            alt: "avatar",
-            class : "avatar little"
-        }).appendTo(div);
+        if (usernameJO.avatar)
+            $('<img>',{
+                src: usernameJO.avatar,
+                alt: "avatar",
+                class : "avatar little"
+            }).appendTo(li);
         $('<p>', {
             text: username
-        }).appendTo(div);
+        }).appendTo(li);
     }
     return testMsg;
 }
