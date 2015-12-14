@@ -351,7 +351,7 @@ var IO = {
 
 function initLobby(s) {
     var opponentID = (s.session.playerID == "creator") ? "player2" : "creator";
-    if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null || s.session.username == 'Anonyme'){
+    if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null){
         s.emit("askUsername");
     }
     else{

@@ -95,14 +95,17 @@ function sendLogin() {
     $('#loginName').val('');
     $('.loginLobby').remove();
     socket.emit('joinLobby', sess);
-    if(sess.username != 'Anonyme')
+    if(sess.username !== undefined && sess.username != "" && sess.username != " ")
         joinChat();
 }
 
 socket.on('hey', function () {
     socket.emit('joinLobby', sess);
-    if(sess.username != 'Anonyme')
+    console.log(JSON.stringify(sess));
+    if(sess.username !== undefined && sess.username != "" && sess.username != " "){
+        console.log("JOIN CHAT ! ");
         joinChat();
+    }
 });
 
 
