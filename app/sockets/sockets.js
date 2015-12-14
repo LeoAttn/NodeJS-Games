@@ -323,18 +323,21 @@ var IO = {
             }
             if(s.socketID == "lobby" || s.socketID == "game")
             {
-                console.log(room[s.session.roomID].state);
-                if(room[s.session.roomID].state != "transition")//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
-                {
-                    room[s.session.roomID].clients --;
-                    if(s.session.playerID == "creator" && s.socketID == "lobby")
+                if ((room[s.session.roomID])) {
+
+                    console.log('state='+room[s.session.roomID].state);
+                    if(room[s.session.roomID].state != "transition")//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
                     {
-                        s.broadcast.to(s.session.roomID).emit('redirect', '/?error=OwnerQuit');
-                    }
-                    console.log("Clients : " + room[s.session.roomID].clients);
-                    if(room[s.session.roomID].clients <= 0)
-                    {
-                        RoomsC.delete(s.session.roomID);
+                        room[s.session.roomID].clients --;
+                        if(s.session.playerID == "creator" && s.socketID == "lobby")
+                        {
+                            s.broadcast.to(s.session.roomID).emit('redirect', '/?error=OwnerQuit');
+                        }
+                        console.log("Clients : " + room[s.session.roomID].clients);
+                        if(room[s.session.roomID].clients <= 0)
+                        {
+                            RoomsC.delete(s.session.roomID);
+                        }
                     }
                 }
             }

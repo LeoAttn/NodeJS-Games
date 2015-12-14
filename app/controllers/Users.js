@@ -39,10 +39,10 @@ var Users = {
             if(userData)
             {
                 if(req.query.edit && req.session.username == req.query.username){
-                    res.render('edit-account',{title : "Edition du profil", session: req.session, user : userData})
+                    res.render('edit-account',{title : "Edition du profil", active: 'Mon Compte', session: req.session, user : userData})
                 }
                 else{
-                    res.render('account', {title : "Profil " + userData.pseudo, session : req.session, user : userData});
+                    res.render('account', {title : "Profil " + userData.pseudo, active: 'Mon Compte', session : req.session, user : userData});
                 }
             }
             else

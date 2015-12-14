@@ -1,3 +1,11 @@
+mixin tabs(url, name)
+    if (name == active)
+        li.active(role='presentation')
+            a(href=url)= name
+    else
+        li(role='presentation')
+            a(href=url)= name
+
 doctype html
 html
     head
@@ -14,25 +22,20 @@ html
             div.header.clearfix
                 nav
                     ul.nav.nav-pills.pull-right
-                        if session && session.roomID && !noReturnParty
-                            li(role='presentation')
-                                a(href='/play?id='+(session.roomID)) Partie en cours
+                        if session && session.roomID
+                            +tabs('/play?id='+(session.roomID), 'Partie en cours')
                         if session && session.isAuthenticated
-                            li(role='presentation')
-                                a(href='/user/account?username='+(session.username)) Mon compte
-                            li(role='presentation')
-                                a(href='/sign-out') Déconnexion
+                            +tabs('/user/account?username='+(session.username), 'Mon Compte')
+                            +tabs('/sign-out', 'Déconnexion')
                         else
-                            li(role='presentation')
-                                a(href='/sign-in') Connexion
-                            li(role='presentation')
-                                a(href='/sign-up') S'inscrire
-                        li.active(role='presentation')
-                            a(href='/') Home
-                        li(role='presentation')
-                            a(href='#') Highscores
-                    h3.text-muted= title
+                            +tabs('/sign-in', 'Connexion')
+                            +tabs('/sign-up', 'S\'inscrire')
+                        +tabs('/', 'Home')
+                        +tabs('#', 'Highscores')
+                    h3.text-muted Bataille Navale
+
             block content
+
 
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
         script(src="https://cdn.socket.io/socket.io-1.3.7.js")

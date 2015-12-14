@@ -41,7 +41,7 @@ function newChatMessage(msgObj) {
                 html: '<strong>' + $('<div/>').text(msgObj.username).html() + ' : </strong>' + $('<div/>').text(msgObj.msg).html()
             }).appendTo(div);
         }
-        $('#chatMessages').animate({scrollTop: $('#chatMessages').prop('scrollHeight')}, 50);
+        $('#chatMessages').animate({scrollTop: $('#chatMessages').prop('scrollHeight')}, 100);
     }
 }
 

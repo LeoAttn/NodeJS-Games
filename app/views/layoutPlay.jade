@@ -1,3 +1,11 @@
+mixin tabs(url, name)
+    if (name == active)
+        li.active(role='presentation')
+            a(href=url)= name
+    else
+        li(role='presentation')
+            a(href=url)= name
+
 doctype html
 html
     head
@@ -14,11 +22,17 @@ html
             div.header.clearfix
                 nav
                     ul.nav.nav-pills.pull-right
-                        li.active(role='presentation')
-                            a(href='/') Home
-                        li(role='presentation')
-                            a(href='#') Highscores
-                    h3= title
+                        if session && session.roomID
+                            +tabs('/play?id='+(session.roomID), 'Partie en cours')
+                        if session && session.isAuthenticated
+                            +tabs('/user/account?username='+(session.username), 'Mon Compte')
+                            +tabs('/sign-out', 'Déconnexion')
+                        else
+                            +tabs('/sign-in', 'Connexion')
+                            +tabs('/sign-up', 'S\'inscrire')
+                        +tabs('/', 'Home')
+                        +tabs('#', 'Highscores')
+                    h3 Bataille Navale
 
             block content
 

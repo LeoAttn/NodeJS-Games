@@ -32,6 +32,7 @@ var Rooms = {
             //res.json(rooms);
             res.render('index', {
                 title: 'Bataille Navale',
+                active: 'Home',
                 session: req.session,
                 room: rooms,
                 message: msg
@@ -108,7 +109,7 @@ var Rooms = {
             Room.findOne({_id: req.query.id}, function (err, room) {
                 if (err) throw err;
                 if (room) {
-                    res.render('lobby', {title: "Lobby: " + room.name, noReturnParty: true, session: req.session, tRoom: room});
+                    res.render('lobby', {title: "Lobby: " + room.name, active:'Partie en cours', session: req.session, tRoom: room});
                 }
                 else
                     res.redirect('/?error=noroom');
@@ -127,7 +128,7 @@ var Rooms = {
                         room.playing = true;
                         req.session.roomID = room._id;
                         req.cookies.roomID = room._id;
-                        res.render('play', {title: "Battaille Navale en cours", session: req.session});
+                        res.render('play', {title: "Battaille Navale en cours", active: 'Partie en cours', session: req.session});
                     }
                     else {
                         res.redirect('/lobby?id=' + room._id);
