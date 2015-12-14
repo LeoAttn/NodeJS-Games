@@ -87,9 +87,15 @@ var Rooms = {
             //res.json(room);
             if (!req.session.roomID) {
                 if (room.player2 === undefined) {
-                    req.session.username = "Anonyme"
+                    if(req.session.username === undefined)
+                    {
+                        req.session.username = ""
+                        room.player2 = "Anonyme"
+                    }
+                    else
+                        room.player2 = req.session.username;
                     req.session.roomID = room._id;
-                    room.player2 = req.session.username;
+
                     room.save(function (err) {
                         if (err) throw err;
                         console.log('User enter in Room');
