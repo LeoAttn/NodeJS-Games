@@ -63,6 +63,8 @@ function drop(ev) {
 }
 
 function displayEndGameButton() {
+    $('#validationButton').html('');
+    $('.bat-container').html('');
     $('#quitButton').html('');
     $('#rematchButton').html('');
     $('<button>', {
