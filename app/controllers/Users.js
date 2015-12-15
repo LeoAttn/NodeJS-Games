@@ -135,7 +135,7 @@ var Users = {
 					/* The file name of the uploaded file */
 					var file_name = this.openedFiles[0].name;
 					/* Location where we want to copy the uploaded file */
-					var new_location = path.join(path.dirname('../app'), 'public/images/uploads/');
+					var new_location = path.join(path.dirname(), 'public/images/uploads/');
 					fs.copy(temp_path, new_location + file_name, function (err) {
 						if (err) {
 							console.error(err);
