@@ -86,25 +86,29 @@ var Rooms = {
             if (err) throw err;
             //res.json(room);
             if (!req.session.roomID) {
-                if (room.player2 === undefined) {
-                    if(req.session.isAuthenticated == false)
-                    {
-                        req.session.username = ""
-                        room.player2 = "Anonyme"
+                if(room){
+                    if (room.player2 === undefined) {
+                        if(req.session.isAuthenticated == false)
+                        {
+                            req.session.username = ""
+                            room.player2 = "Anonyme"
+                        }
+                        else
+                            room.player2 = req.session.username;
+                        req.session.roomID = room._id;
+
+                        room.save(function (err) {
+                            if (err) throw err;
+                            console.log('User enter in Room');
+                        });
+                        req.session.playerID = 'player2';
+                        res.redirect('/lobby?id=' + room._id);
                     }
                     else
-                        room.player2 = req.session.username;
-                    req.session.roomID = room._id;
-
-                    room.save(function (err) {
-                        if (err) throw err;
-                        console.log('User enter in Room');
-                    });
-                    req.session.playerID = 'player2';
-                    res.redirect('/lobby?id=' + room._id);
+                        res.redirect('/?error=full');
                 }
                 else
-                    res.redirect('/?error=full');
+                    res.redirect('/?error=noroom');
             }
             else
                 res.redirect('/?error=alreadyInGame');
