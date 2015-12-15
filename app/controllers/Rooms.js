@@ -24,6 +24,9 @@ var Rooms = {
             case 'OwnerQuit':
                 var msg = "Le créateur à quitté la room.";
                 break;
+            case 'improper':
+                var msg = "Ce pseudo/email n'est pas conforme !";
+                break;
         }
         if (req.session.roomID) {
             Room.findOne({_id: req.session.roomID}, function (err, room) {
