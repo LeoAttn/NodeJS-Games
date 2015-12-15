@@ -8,12 +8,20 @@ var mongoose = require("mongoose"),
 
 var Rooms = {
     index: function (req, res) {
-        if (req.query.error == "full")
-            var msg = "La partie est pleine ! Désolé...";
-        if (req.query.error == "noroom")
-            var msg = "Aucune room selectionnée !";
-        if (req.query.error == "alreadyInGame")
-            var msg = "Vous avez déjà une partie en cours";
+        switch (req.query.error) {
+            case 'full':
+                var msg = "La partie est pleine ! Désolé...";
+                break;
+            case 'noroom':
+                var msg = "Aucune room selectionnée !";
+                break;
+            case 'alreadyInGame':
+                var msg = "Vous avez déjà une partie en cours.";
+                break;
+            case 'notAllowed':
+                var msg = "Vous n'avez pas accès à cette room.";
+                break;
+        }
         if(req.session.roomID)
         {
             Room.findOne({_id : req.session.roomID}, function (err, room){

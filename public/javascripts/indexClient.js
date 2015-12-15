@@ -15,13 +15,13 @@ function updateRoomList() {
 function displayRoomList(rooms)
 {
     $("tbody").find("tr.room").remove();
-    $("thead").find("tr.room").remove();
+    //$("thead").find("tr.room").remove();
     for(var k in rooms)
     {
         var tr = $('<tr>', {
             id: rooms[k]._id,
             class : "room"
-        }).appendTo('thead');
+        }).appendTo('table');
         $('<td>',{
             text : rooms[k].name
         }).appendTo(tr);

@@ -136,7 +136,7 @@ var IO = {
                 room[s.session.roomID].players[opponentID].messagesObjs.push({
                     from: 'user',
                     msg: msag,
-                    username: room[s.session.roomID].players[opponentID].username,
+                    username: s.session.username,
                     date: Date.now
                 });
             }
