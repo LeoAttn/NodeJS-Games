@@ -77,8 +77,11 @@ var IO = {
             if (room[s.session.roomID].clients == 2) {
                 if (s.session.playerID == "creator")
                     s.emit('ready', {});
-                else
+                else {
                     s.broadcast.to(s.session.roomID).emit('ready', {});
+                    s.emit("updateNbBat", {nbBat: room[s.session.roomID].nbBat});
+                    s.emit("updateTimeTimer", {time: room[s.session.roomID].timeTimer});
+                }
             }
         });
         s.on('sendUsername', function (username) {//Appelé lors de l'envoi du pseudo au serveur
@@ -93,15 +96,21 @@ var IO = {
             });
         });
         s.on('changeNbBat', function (nb) {//Appelé lorsque l'on change le nombre de bateaux via le formulaire
-            nb = parseInt(nb);
-            if (nb >= 1 && nb <= 10) {
-                room[s.session.roomID].nbBat = nb;
+            if (s.session.playerID == "creator") {
+                nb = parseInt(nb);
+                if (nb >= 1 && nb <= 10) {
+                    room[s.session.roomID].nbBat = nb;
+                    s.broadcast.to(s.session.roomID).emit("updateNbBat", {nbBat: nb});
+                }
             }
         });
         s.on('changeTimeTimer', function (nb) {//Appelé lorsque l'on change le temps du timer via le formulaire
-            nb = parseInt(nb);
-            if (nb >= 10 && nb <= 600) {
-                room[s.session.roomID].timeTimer = nb;
+            if (s.session.playerID == "creator") {
+                nb = parseInt(nb);
+                if (nb >= 10 && nb <= 600) {
+                    room[s.session.roomID].timeTimer = nb;
+                    s.broadcast.to(s.session.roomID).emit("updateTimeTimer", {time: nb});
+                }
             }
         });
         s.on('startGame', function () {//Appelé lorsque l'on lance la partie (via le boutton Lancer la partie)

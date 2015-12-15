@@ -147,12 +147,19 @@ socket.on('ready', function () {
     unlockButton();
 });
 
+socket.on('updateNbBat', function (obj) {
+    $('#nbBat').text(obj.nbBat);
+});
+socket.on('updateTimeTimer', function (obj) {
+    $('#timeTimer').text(obj.time);
+});
+
 socket.on('updateUsername', function (username) {
     tmpUsername = sess.username;
     sess.username = username;
     if (tmpUsername == 'Anonyme')
         joinChat();
-})
+});
 
 socket.on('addUser', function (usernameObj, rank) {
     var notExist = newUser(usernameObj, rank);
