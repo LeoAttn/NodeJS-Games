@@ -281,15 +281,25 @@ var IO = {
             }
         });
         s.on('traiteCmd', function (msg) {
-            if (msg.substr(0, 1) == '/') {
-                switch (msg) {
-                    case '/abandon':
-                        s.emit('redirect', '/flush-session');
-                        s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
-                        break;
-                    default :
-                        servMessage(s, 'warning', 'La commande est invalide !');
-                        break;
+            if (room[s.session.roomID].state == 'lobby') {
+                servMessage(s, 'warning', 'Les commandes ne fonctionnent pas dans le lobby !');
+            } else {
+                if (msg.substr(0, 1) == '/') {
+                    switch (msg) {
+                        case '/abandon':
+                            var playerID = s.session.playerID;
+                            var opponentID = (playerID == "creator") ? "player2" : "creator";
+                            stopCountdown(s, playerID);
+                            stopCountdown(s, opponentID);
+                            servMessage(s, 'warning', "Vous avez abandonné la partie.");
+                            servMessage(s, 'info', "Votre adversaire a abandonné la partie.", 'broadcast');
+                            changeState(s, playerID, 'loose');
+                            changeState(s, opponentID, 'win');
+                            break;
+                        default :
+                            servMessage(s, 'warning', 'La commande est invalide !');
+                            break;
+                    }
                 }
             }
         });
