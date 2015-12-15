@@ -128,7 +128,6 @@ var IO = {
             if (room[s.session.roomID].players[s.session.playerID].messagesObjs === undefined) {
                 room[s.session.roomID].players[s.session.playerID].messagesObjs = [];
                 servMessage(s, 'info', "Bienvenue dans la room !");
-                servMessage(s, 'info', "Entrez \"/abandon\" pour quitter à tout moment.");
             } else {
                 loadMessages(s);
             }
@@ -400,6 +399,7 @@ function initGame(s) {
     launchCheckTimeUp(s, s.session.playerID);
     startCountdown(s, s.session.playerID);
     setTimeout(function () {
+        servMessage(s, 'info', "Entrez \"/abandon\" pour abandonné à tout moment.");
         servMessage(s, 'info', "Veuillez placer les bateaux sur votre plateau.");
 
     }, 200);
