@@ -38,7 +38,6 @@ var IO = {
     },
     handshake: function (s) {
         s.on('hey', function (username) {
-            console.log("taille username : " + username.length);
             if (username.length > 20)
                 username = username.substr(0, 20);
             s.session.username = username;
@@ -320,8 +319,6 @@ var IO = {
             }
             if (s.socketID == "lobby" || s.socketID == "game") {
                 if ((room[s.session.roomID])) {
-
-                    console.log('state=' + room[s.session.roomID].state);
                     if (room[s.session.roomID].state != "transition" && room[s.session.roomID].state == s.socketID) {//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
                         room[s.session.roomID].clients--;
                         if (s.session.playerID == "creator" && s.socketID == "lobby") {
@@ -526,7 +523,6 @@ function checkPlayersAreReady(s) {
         s.broadcast.emit('start');
         s.emit('start');
         var rand = Math.round(Math.random());
-        console.log('rand = ' + rand);
         var firstPlayerID = (rand == 0) ? "creator" : "player2";
         var secondPlayerID = (firstPlayerID == "creator") ? "player2" : "creator";
 
