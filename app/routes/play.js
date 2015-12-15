@@ -3,6 +3,6 @@ var router = express.Router();
 var room = require('../controllers/Rooms');
 
 
-router.get('/', room.play);
+router.get('/:id', room.play);
 
 module.exports = router;

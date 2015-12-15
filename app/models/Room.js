@@ -11,4 +11,4 @@ var schema = new Schema({
     createdOn: {type: Date, default: Date.now}
 });
 
-exports.model = mongoose.model('Room', schema);
+exports.model = mongoose.model('Room', schema, 'Rooms');

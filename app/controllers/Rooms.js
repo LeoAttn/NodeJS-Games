@@ -63,13 +63,13 @@ var Rooms = {
             });
             req.session.roomID = r._id;
             req.session.playerID = 'creator';
-            res.redirect('/lobby?id=' + r._id);
+            res.redirect('/lobby/' + r._id);
         }
         else
             res.redirect('/?error=alreadyInGame');
     },
     joinLobby: function (req, res) {
-        var roomId = (req.query.roomID) ? req.query.roomID : req.body.id;
+        var roomId = (req.params.id) ? req.params.id : req.body.id;
         if(req.session.roomID)
         {
             Room.findOne({_id : req.session.roomID}, function (err, room){
@@ -102,7 +102,7 @@ var Rooms = {
                             console.log('User enter in Room');
                         });
                         req.session.playerID = 'player2';
-                        res.redirect('/lobby?id=' + room._id);
+                        res.redirect('/lobby/' + room._id);
                     }
                     else
                         res.redirect('/?error=full');
@@ -115,8 +115,8 @@ var Rooms = {
         });
     },
     lobby: function (req, res) {
-        if (req.session.roomID == req.query.id) {
-            Room.findOne({_id: req.query.id}, function (err, room) {
+        if (req.session.roomID == req.params.id) {
+            Room.findOne({_id: req.params.id}, function (err, room) {
                 if (err) throw err;
                 if (room) {
                     res.render('lobby', {title: "Lobby: " + room.name, active:'Partie en cours', noReturnParty: true, session: req.session, tRoom: room});
@@ -130,7 +130,7 @@ var Rooms = {
         }
     },
     play: function (req, res) {
-        Room.findOne({_id: req.query.id}, function (err, room) {
+        Room.findOne({_id: req.params.id}, function (err, room) {
             if (err) throw err;
             if (room) {
                 if (req.session.roomID == room._id) {
@@ -141,7 +141,7 @@ var Rooms = {
                         res.render('play', {title: "Battaille Navale en cours", active: 'Partie en cours', session: req.session});
                     }
                     else {
-                        res.redirect('/lobby?id=' + room._id);
+                        res.redirect('/lobby/' + room._id);
                     }
                 }
                 else if (room._id != req.session.roomID) {

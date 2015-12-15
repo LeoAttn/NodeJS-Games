@@ -23,9 +23,9 @@ html
                 nav
                     ul.nav.nav-pills.pull-right
                         if session && session.roomID && !noReturnParty
-                            +tabs('/play?id='+(session.roomID), 'Partie en cours')
+                            +tabs('/play/'+(session.roomID), 'Partie en cours')
                         if session && session.isAuthenticated
-                            +tabs('/user/account?username='+(session.username), 'Mon Compte')
+                            +tabs('/user/account/'+(session.username), 'Mon Compte')
                             +tabs('/sign-out', 'Déconnexion')
                         else
                             +tabs('/sign-in', 'Connexion')
