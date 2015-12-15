@@ -35,7 +35,7 @@ var Rooms = {
             });
         }
 
-        Room.find({},"name creator isPlaying ready", function (err, rooms) {
+        Room.find({'private': false, 'playing': false},"name creator playing ready", function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
             res.render('index', {
