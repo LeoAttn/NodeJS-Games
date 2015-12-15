@@ -1,11 +1,11 @@
-var io;
-var chat;
-var http = require('http');
-var RoomsC = require('../controllers/Rooms');
-var UsersC = require('../controllers/Users');
-var isValid = false;
-var room = [];
-var timerFunction = [];
+var RoomsC = require('../controllers/Rooms'),
+    UsersC = require('../controllers/Users');
+
+var io,
+    chat,
+    room = [],
+    timerFunction = [];
+
 var IO = {
     set: function (IO) { // Cette fonction sera appelé dans le fichier app.js et valorisera la variable io
         io = IO;
@@ -50,10 +50,9 @@ var IO = {
             s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username, avatar : s.session.avatarLink});
             s.emit('addUser', {username: s.session.username, avatar : s.session.avatarLink});
         });
-        ////////=====================================================================
     },
     lobby: function (s) {
-        s.on('joinLobby', function (data){
+        s.on('joinLobby', function (data){//Appelé lorsque l'on rejoins le lobby au chargement de la page
             s.session = data;
             s.socketID = "lobby";
             if (room[s.session.roomID] === undefined){
@@ -79,25 +78,24 @@ var IO = {
                     s.broadcast.to(s.session.roomID).emit('ready', {});
             }
         });
-        s.on('sendUsername', function (username){
-            //if(username != "Anonyme" || username != "" || username != )
+        s.on('sendUsername', function (username){//Appelé lors de l'envoi du pseudo au serveur
             s.emit("addUser", {username : s.session.username, avatar : s.session.avatarLink});
             s.broadcast.to(s.session.roomID).emit("addUser", {bypass : false, username:s.session.username, avatar : s.session.avatarLink});
         });
-        s.on('changeNbBat', function (nb){
+        s.on('changeNbBat', function (nb){//Appelé lorsque l'on change le nombre de bateaux via le formulaire
             nb = parseInt(nb);
             if (nb >= 1 && nb <= 10) {
                 room[s.session.roomID].nbBat = nb;
             }
         });
-        s.on('startGame', function () {
+        s.on('startGame', function () {//Appelé lorsque l'on lance la partie (via le boutton Lancer la partie)
             room[s.session.roomID].state = "transition";
             s.emit('startGame');
             s.broadcast.to(s.session.roomID).emit('startGame', {});
         });
     },
     chat: function (s) {
-        s.on('joinChat', function (data){
+        s.on('joinChat', function (data){//Appelé lorsque l'on rejoins le chat
             s.socketID = "chat";
             s.session = data;
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
@@ -109,7 +107,7 @@ var IO = {
                 loadMessages(s);
             }
         });
-        s.on('chatMessage', function (msag) {
+        s.on('chatMessage', function (msag) {//Appelé lors de l'envoi d'un message
             s.broadcast.to(s.session.roomID).emit('chatMessage', {
                 from: 'user',
                 msg: msag,
@@ -129,10 +127,8 @@ var IO = {
                 date: Date.now
             });
             var opponentID = (s.session.playerID == "creator") ? "player2" : "creator";
-            if(room[s.session.roomID].players[opponentID] === undefined ||
-                room[s.session.roomID].players[opponentID].messagesObjs === undefined) {
-                // vide
-            } else {
+            if(room[s.session.roomID].players[opponentID] !== undefined &&
+                room[s.session.roomID].players[opponentID].messagesObjs !== undefined) {
                 room[s.session.roomID].players[opponentID].messagesObjs.push({
                     from: 'user',
                     msg: msag,
@@ -143,7 +139,7 @@ var IO = {
         });
     },
     game: function (s) {
-        s.on('joinGame', function (data){//Appelé en réponse au message handshake, set la session et rejoins la room
+        s.on('joinGame', function (data){//Appelé en réponse au message hey, set la session et rejoins la room
             s.session = data;
             s.socketID = "game";
             console.log('roomID: ' + s.session.roomID);
@@ -168,8 +164,7 @@ var IO = {
                 loadGame(s);
              }
         });
-        ///////====================================================
-        s.on('batPos', function (pos){
+        s.on('batPos', function (pos){//Appelé lorsque que l'on valide la position des bateaux (via le boutton Valider les position)
             console.log(pos);
             console.log('Room ID: ' + s.session.roomID)
             if (room[s.session.roomID].players[s.session.playerID].state == "batPos"){
@@ -227,29 +222,29 @@ var IO = {
                 }
             }
         });
-        s.on('hello', function () {
+        s.on('hello', function () {//Appelé lorsque
             sendHello(s);
         });
-        s.on('quitGame', function () {
+        s.on('quitGame', function () {//Appelé lorsque l'on quitte la partie (via le boutton Quitter la partie)
             s.emit('redirect', '/flush-session');
             s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
         });
-        s.on('askRematch', function () {
+        s.on('askRematch', function () {//Appelé lorsque l'on propose de rejouer
             changeState(s, s.session.playerID, 'askRematch');
             s.broadcast.to(s.session.roomID).emit('askRematch');
         });
-        s.on('acceptRematch', function () {
+        s.on('acceptRematch', function () {//Appelé lorsque l'on accepte de rejouer
             rematch(s);
             s.emit('rematch');
             s.broadcast.to(s.session.roomID).emit('rematch');
         });
-        s.on('refuseRematch', function (){
+        s.on('refuseRematch', function (){//Appelé lorsque que l'on refuse de rejouer
             s.emit('redirect', '/flush-session');
             s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
         });
-        s.on('rematch', function() {
+        s.on('rematch', function() {//Appelé lorsque l'on accepte de rejouer
             console.log(room[s.session.roomID].clients);
-            if(room[s.session.roomID].clients == 2){
+            if(room[s.session.roomID].clients == 2){//Vérifie que les deux joueur sont toujours présents
                 console.log("REMATCH! ");
                 s.emit('redirect', '/play/'+ s.session.roomID);
                 s.broadcast.to(s.session.roomID).emit('redirect', '/play/' + s.session.roomID);
@@ -260,14 +255,18 @@ var IO = {
         });
     },
     disconnect: function (s) {
-        s.on('disconnect', function () {
+        s.on('disconnect', function () {//Appelé lors de la déconnexion d'un socket
+            //Test la page ou est le socket et effectue l'action appropriée
             if(s.socketID == "chat"){
-                s.broadcast.to(s.session.roomID).emit('chatMessage', {
-                    from: 'server',
-                    type: 'info',
-                    msg: s.session.username + " à quitté la partie",
-                    date: Date.now
-                });
+                if(room[s.session.roomID].state != "transition")
+                {
+                    s.broadcast.to(s.session.roomID).emit('chatMessage', {
+                        from: 'server',
+                        type: 'info',
+                        msg: s.session.username + " à quitté la partie",
+                        date: Date.now
+                    });
+                }
             }
             if(s.socketID == "lobby" || s.socketID == "game"){
                 if ((room[s.session.roomID])) {
@@ -289,11 +288,17 @@ var IO = {
         });
     }
 };
-
+/*===========================
+    Chat functions
+==============================*/
+//Charge les messages lors que l'on passe d'une page à une autre
 function loadMessages(s){
     s.emit('loadMessages', room[s.session.roomID].players[s.session.playerID].messagesObjs);
 }
-
+/**===========================
+    Lobby functions
+==============================**/
+//Initialise le lobby (lorsqu'un joueur rejoint pour la premiere fois une partie)
 function initLobby(s) {
     var opponentID = (s.session.playerID == "creator") ? "player2" : "creator";
     if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null){
@@ -309,7 +314,7 @@ function initLobby(s) {
     }
     s.join(s.session.roomID);
 }
-
+//Charge le lobby (lorsqu'un joueur a déja rejoint la partie mais recharge la page)
 function loadLobby(s) {
     if(s.session.username == "Anonyme")
         s.emit("updateUsername", room[s.session.roomID].players[s.session.playerID].username);
@@ -324,12 +329,15 @@ function loadLobby(s) {
             s.broadcast.to(s.session.roomID).emit('ready', {});
     }
 }
-
+/*===========================
+    Game functions
+==============================*/
+//Envoi les pseudos lorsque la partie commence
 function sendHello(s) {
     s.emit('me', s.session.username);
     s.broadcast.to(s.session.roomID).emit('opponent', s.session.username);
 }
-
+//Initialise la partie lorsque le joueur rejoint pour la premiere fois
 function initGame(s) {
     sendHello(s);
     room[s.session.roomID].players[s.session.playerID].state = "";
@@ -343,7 +351,7 @@ function initGame(s) {
 
     }, 200);
 }
-
+//Charge la partie si un joueur à déja rejoint et qu'il recharge la page
 function loadGame(s) {
     var batTab = room[s.session.roomID].players[s.session.playerID].batTab;
     var stateP = room[s.session.roomID].players[s.session.playerID].state;
@@ -363,22 +371,22 @@ function loadGame(s) {
     s.emit('placeBoat', batTab, tirTab);
     sendHello(s);
 }
-
+//Change le tour
 function nextTurn(s, opponentID){
     changeState(s,s.session.playerID, 'wait');
     changeState(s,opponentID, 'myTurn');
 }
-
+//Arrete le compte à rebours
 function stopCountdown(s, playerID){
     clearInterval(timerFunction[playerID]);
     //s.emit("countdown", "x");
 }
-
+//Reset le compte à rebours
 function resetCountdown(s, playerID){
     room[s.session.roomID].players[playerID].timer = 20;
     room[s.session.roomID].players[playerID].timesUp = false;
 }
-
+//Démarre le compte à rebours sur le serveur
 function startCountdown(s, playerID){
     console.log("Started Countdown for " + playerID + "(" + room[s.session.roomID].players[playerID].username + ")");
     timerFunction[playerID] = setInterval(function(){
@@ -388,8 +396,8 @@ function startCountdown(s, playerID){
         }
     },1000);
 }
-function launchCheckTimeUp(s, playerID)
-{
+//Démare une fonction appellé a interval de 1 sec, (lié au socket) pour vérifier si le temps est écoulé
+function launchCheckTimeUp(s, playerID){
     if(room[s.session.roomID].players[playerID].timerFunction !== undefined)
         clearInterval(room[s.session.roomID].players[playerID].timerFunction);
     room[s.session.roomID].players[playerID].timerFunction = setInterval(function(){
@@ -424,8 +432,7 @@ function launchCheckTimeUp(s, playerID)
         }
     }, 1000)
 }
-
-
+//Place aléatoirement les bateaux
 function randomBoatPlacement(s, batPos, nbBat){
     if(nbBat != room[s.session.roomID].nbBat){
         while(nbBat != room[s.session.roomID].nbBat){
@@ -451,7 +458,7 @@ function randomBoatPlacement(s, batPos, nbBat){
     room[s.session.roomID].players[s.session.playerID].batTab = batPos;
     room[s.session.roomID].players[s.session.playerID].batCoule = 0;
 }
-
+//Vérifie que les joueurs sont pret, (que leur bateaux ont été validé)
 function checkPlayersAreReady(s){
     if (room[s.session.roomID].validationCptr == 2) {
         s.broadcast.emit('start');
@@ -477,7 +484,7 @@ function checkPlayersAreReady(s){
         servMessage(s, 'info', "Votre adversaire est prêt !", 'broadcast');
     }
 }
-
+//Prépare la partie pour rejouer
 function rematch(s){
     room[s.session.roomID].state = "transition";
     var otherPlayerID = (s.session.playerID == "creator") ? "player2" : "creator";
@@ -485,12 +492,11 @@ function rematch(s){
     delete room[s.session.roomID].players[s.session.playerID].hasJoined;
     delete room[s.session.roomID].validationCptr;
 }
-
+//Nettoie la room
 function cleanRoom(s){
     delete room[s.session.roomID];
 }
-
-
+//Change l'état d'un joueur et met à jour l'état coté client
 function changeState(s, playerID, newState){
     room[s.session.roomID].players[playerID].state = newState;
     if(playerID == s.session.playerID){
@@ -501,7 +507,7 @@ function changeState(s, playerID, newState){
     }
 
 }
-
+//Envoi un message chat via le serveur
 function servMessage(s, type, msg, broadcast) {
     if (broadcast == 'broadcast') {
         s.broadcast.to(s.session.roomID).emit('chatMessage', {
