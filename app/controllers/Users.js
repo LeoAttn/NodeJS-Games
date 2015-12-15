@@ -14,15 +14,24 @@ var Users = {
         });
     },
     sign_in : function(req, res){//POST Request
-        User.findOne({pseudo : req.body.pseudo, password : req.body.password}, function (err, user){
-            if(err) throw (err)
+        User.findOne({pseudo : req.body.pseudo}, function (err, user){
+            if(err) throw (err);
             if(user){
-                req.session.isAuthenticated = true;
-                req.session.username = user.pseudo;
-                req.session.avatarLink = user.avatarLink;
-                res.redirect('/user/account/'+ user.pseudo);
+                user.comparePassword(req.body.password, function(err, isMatch) {
+                    if (err) throw err;
+                    console.log('compare = '+isMatch);
+                    if (isMatch) {
+                        req.session.isAuthenticated = true;
+                        req.session.username = user.pseudo;
+                        req.session.avatarLink = user.avatarLink;
+                        res.redirect('/');
+                    } else {
+                        res.redirect('/sign-in?error=nouser');
+                    }
+                });
             }
             else{
+                console.log('nouser')
                 res.redirect('/sign-in?error=nouser');
             }
         });
@@ -60,7 +69,7 @@ var Users = {
     },
     create: function (req, res) {//Post Request
         console.log(JSON.stringify(req.body));
-        User.findOne({pseudo : req.body.pseudo}, function(err, user){
+        User.findOne({ $or:[ {'pseudo' : req.body.pseudo}, {'email': req.body.email} ]}, function(err, user){
             if(!user)
             {
                 var u = new User({
@@ -79,7 +88,7 @@ var Users = {
                 res.redirect('/user/account/' + u.pseudo);
             }
             else
-                res.redirect('/sign-in?error=exist');
+                res.redirect('/sign-up?error=exist');
 
 
         });
