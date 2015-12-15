@@ -11,14 +11,14 @@
 
 - Partie de Bataille Navale
 - Chat entre les 2 joueurs
-- Gestion de comptes utilisateurs (lecompte est facultatif pour pouvoir jouer)
+- Gestion de comptes utilisateurs (le compte est facultatif pour pouvoir jouer)
 - Timer pour éviter les parties infinies
 
 ##Tâches non effectuées :
 
 - Gestion des Highscores
 
-##Pour lancer le serveur :
+##Pour acceder au site :
 
 1. executer mongodb
 2. executer la commande 'npm start' à la racine du projet
