@@ -75,8 +75,14 @@ a {
       border-left: solid 1px #FFF;
       text-align: right;
     }
-    #myName, #opponentName {
+    #myName, #opponentName, #countdownName, #countdown {
       border-right: solid 1px #FFF;
+    }
+    #countdownName {
+      border-bottom: none;
+    }
+    #countdown {
+      border-top: none;
     }
   }
   #aQuiLeTour {
