@@ -11,12 +11,8 @@ var IO = {
         io = IO;
         chat = io.of('/chat');
         var $this = this; // On enregistre le contexte actuel dans une variable
-
-
         //on appelle cette function à chaque connection d'un nouvel utilisateur
-
         this.connection(function (socket) {
-            // Toutes les fonctions que l'on va rajouter devront être ici
             $this.lobby(socket);
             $this.chat(socket);
             $this.game(socket);

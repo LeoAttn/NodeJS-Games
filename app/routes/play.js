@@ -1,8 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var room = require('../controllers/Rooms');
+var express = require('express'),
+    router = express.Router(),
+    room = require('../controllers/Rooms');
 
-
+/**================================
+        ROUTES PARTIES
+===================================**/
 router.get('/:id', room.play);
 
 module.exports = router;

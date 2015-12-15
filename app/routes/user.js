@@ -1,12 +1,14 @@
-var express = require('express');
-var router = express.Router();
-var users = require('../controllers/Users');
+var express = require('express'),
+    router = express.Router(),
+    users = require('../controllers/Users');
 
-
-router.get('/account/:username', users.account);
-router.post('/create', users.create);
-router.post('/update', users.update);
-router.post('/delete', users.delete);
+/**================================
+        USERS ROUTES
+===================================**/
+router.get('/account/:username', users.account);//Affiche la vue du compte utilisateur
+router.post('/create', users.create);//Créer l'utilisateur
+router.post('/update', users.update);//Met à jour l'utilisateur'
+router.post('/delete', users.delete);//Supprime l'utilisateur
 
 
 module.exports = router;

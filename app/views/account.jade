@@ -9,9 +9,11 @@ block content
                 span!= '<strong>Pseudo :&nbsp;&nbsp;</strong>'
                 span=user.pseudo
             if user.first_name != ''
-                p.center=user.first_name
+                span!= '<strong>Prénom :&nbsp;&nbsp;</strong>'
+                span=user.first_name
             if user.last_name != ''
-                p.center=user.last_name
+                span!= '<strong>Nom :&nbsp;&nbsp;</strong>'
+                span=user.last_name
             div.center
                 span!= '<strong>Email :&nbsp;&nbsp;</strong>'
                 span=user.email
