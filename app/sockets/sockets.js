@@ -250,8 +250,8 @@ var IO = {
             console.log(room[s.session.roomID].clients);
             if(room[s.session.roomID].clients == 2){
                 console.log("REMATCH! ");
-                s.emit('redirect', '/play?id='+ s.session.roomID);
-                s.broadcast.to(s.session.roomID).emit('redirect', '/play?id=' + s.session.roomID);
+                s.emit('redirect', '/play/'+ s.session.roomID);
+                s.broadcast.to(s.session.roomID).emit('redirect', '/play/' + s.session.roomID);
             }
             else{
                 s.emit('redirect', '/flush-session');

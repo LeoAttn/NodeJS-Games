@@ -10,13 +10,13 @@ var user = require('../controllers/Users');
 router.get('/', room.index);//Affiche la liste des room
 router.post('/create', room.create);//Crée une room,
 router.post('/join', room.joinLobby);//Rejoins une room via un boutton(form),
-router.get('/join', room.joinLobby);//Rejoins une room via un lien
-router.get('/lobby', room.lobby);
+router.get('/join/:id', room.joinLobby);//Rejoins une room via un lien
+router.get('/lobby/:id', room.lobby);
 
 router.get('/sign-in', function(req, res){
     if(req.session.isAuthenticated)
     {
-        res.redirect('/user/account?username=' + req.session.username);
+        res.redirect('/user/account/' + req.session.username);
     }
     else
     {
@@ -27,7 +27,7 @@ router.post('/sign-in', user.sign_in);
 router.get('/sign-up', function (req, res){
     if(req.session.isAuthenticated)
     {
-        res.redirect('/user/account?username=' + req.session.username);
+        res.redirect('/user/account/' + req.session.username);
     }
     else
     {

@@ -16,7 +16,7 @@ $('#nbBat').change(function () {
 });
 
 function promptLink() {
-    prompt("Lien :", document.location.host + "/join?roomID=" + sess.roomID);
+    prompt("Lien :", document.location.host + "/join/" + sess.roomID);
 }
 
 function newMessage(classes, msg) {
@@ -147,7 +147,7 @@ socket.on('addUser', function (usernameObj , rank) {
 });
 
 socket.on('startGame', function () {
-    window.location.replace("/play?id=" + sess.roomID);
+    window.location.replace("/play/" + sess.roomID);
 });
 
 socket.on('loadMessages', function (msgObjs) {

@@ -19,7 +19,7 @@ block content
                 span!= '<strong>Statistiques :&nbsp;&nbsp;</strong>'
                 span="Nombre de Victoires " + user.wins
             div.center
-                a.btn.btn-info.btn-lg(href ="/user/account?username="+ (user.pseudo) +"&edit=true") Editer
+                a.btn.btn-info.btn-lg(href ="/user/account/"+ (user.pseudo) +"?edit=true") Editer
             div.center
                 form(action = "/user/delete" method ="post")
                     button.btn.btn-danger.btn-lg Supprimer votre compte

@@ -20,7 +20,7 @@ var Users = {
                 req.session.isAuthenticated = true;
                 req.session.username = user.pseudo;
                 req.session.avatarLink = user.avatarLink;
-                res.redirect('/user/account?username='+ user.pseudo);
+                res.redirect('/user/account/'+ user.pseudo);
             }
             else{
                 res.redirect('/sign-in?error=nouser');
@@ -33,14 +33,14 @@ var Users = {
         delete req.session.avatarLink;
     },
     account : function (req, res){
-        console.log(req.query.username);
+        console.log(req.params.username);
         console.log(JSON.stringify(req.session));
         if(req.session.isAuthenticated == true){
-            User.findOne({pseudo: req.query.username}, "email last_name first_name pseudo avatarLink wins", function(err, userData){
+            User.findOne({pseudo: req.params.username}, "email last_name first_name pseudo avatarLink wins", function(err, userData){
             if(err) throw err;
             if(userData)
             {
-                if(req.query.edit && req.session.username == req.query.username){
+                if(req.query.edit && req.session.username == req.params.username){
                     res.render('edit-account',{title : "Edition du profil", active: 'Mon Compte', session: req.session, user : userData})
                 }
                 else{
@@ -76,7 +76,7 @@ var Users = {
                 req.session.isAuthenticated = true;
                 req.session.username = u.pseudo;
                 req.session.avatarLink
-                res.redirect('/user/account?username=' + u.pseudo);
+                res.redirect('/user/account/' + u.pseudo);
             }
             else
                 res.redirect('/sign-in?error=exist');
@@ -132,7 +132,7 @@ var Users = {
                     if(files.avatar.size > 0)
                         user.avatarLink = new_path;
                     user.save();
-                    res.redirect("/user/account?username="+ req.session.username);
+                    res.redirect("/user/account/"+ req.session.username);
                 });
             }
             else

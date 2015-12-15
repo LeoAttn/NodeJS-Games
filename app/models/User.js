@@ -12,4 +12,4 @@ var schema = new Schema({
     createdOn: {type: Date, default: Date.now}
 });
 
-exports.model = mongoose.model('User', schema, 'users');
+exports.model = mongoose.model('User', schema, 'Users');
