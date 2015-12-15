@@ -77,23 +77,29 @@ var Users = {
     create: function (req, res) {//Post Request
         User.findOne({$or: [{'pseudo': req.body.pseudo}, {'email': req.body.email}]}, function (err, user) {
             if (!user) {
-                if (req.body.password == req.body.confirmPass) {
-                    var u = new User({
-                        pseudo: req.body.pseudo,
-                        password: req.body.password,
-                        email: req.body.email,
-                        avatarLink: "/images/default.png"
-                    });
-                    u.save(function (err) {
-                        if (err) throw err;
-                        console.log('User inserted');
-                    });
-                    req.session.isAuthenticated = true;
-                    req.session.username = u.pseudo;
-                    req.session.avatarLink = u.avatarLink;
-                    res.redirect('/user/account/' + u.pseudo);
+                var regexPseudo = /^[A-Za-z0-9_[\]-]+$/;
+                var regexEmail = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+                if (regexPseudo.test(req.body.pseudo) && regexEmail.test(req.body.email)) {
+
+                    if (req.body.password == req.body.confirmPass) {
+                        var u = new User({
+                            pseudo: req.body.pseudo,
+                            password: req.body.password,
+                            email: req.body.email,
+                            avatarLink: "/images/default.png"
+                        });
+                        u.save(function (err) {
+                            if (err) throw err;
+                            console.log('User inserted');
+                        });
+                        req.session.isAuthenticated = true;
+                        req.session.username = u.pseudo;
+                        req.session.avatarLink = u.avatarLink;
+                        res.redirect('/user/account/' + u.pseudo);
+                    } else
+                        res.redirect('/sign-up?error=pwdDifferent');
                 } else
-                    res.redirect('/sign-up?error=pwdDifferent');
+                    res.redirect('/sign-up?error=improper');
             } else
                 res.redirect('/sign-up?error=exist');
         });
@@ -103,22 +109,26 @@ var Users = {
             if (err) throw err;
             if (user) {
                 var form = new formidable.IncomingForm();
-				//form.uploadDir = "/images/upload/avatars/";
+				var error = false;
 				form.parse(req, function (err, fields, files){
-                    if (fields.last_name != "")
-						user.last_name = fields.last_name;
-					if (fields.first_name != "")
-						user.first_name = fields.first_name;
-					if (fields.pseudo != "")
-						user.pseudo = fields.pseudo;
-					if (fields.email != "")
-						user.email = fields.email;
+                    var regexPseudo = /^[A-Za-z0-9_[\]-]+$/;
+                    var regexEmail = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+                    if (regexPseudo.test(fields.pseudo) && regexEmail.test(fields.email)) {
+
+                        if (fields.last_name != "")
+                            user.last_name = fields.last_name;
+                        if (fields.first_name != "")
+                            user.first_name = fields.first_name;
+                        if (fields.pseudo != "")
+                            user.pseudo = fields.pseudo;
+                        if (fields.email != "")
+                            user.email = fields.email;
+                    }else{
+                        error = true;
+                        res.redirect("/user/account/" + req.session.username + "?error=improper");
+                    }
                 });
 
-				form.on('progress', function(bytesReceived, bytesExpected) {
-					var percent_complete = (bytesReceived / bytesExpected) * 100;
-					console.log(percent_complete.toFixed(2));
-				});
 				form.on('end', function (fields, files) {
 					/* Temporary location of our uploaded file */
 					var temp_path = this.openedFiles[0].path;
@@ -138,28 +148,8 @@ var Users = {
 						user.avatarLink = "/images/uploads/"+file_name;
 					user.save();
 				});
-                    /*console.log("Files : " + JSON.stringify(files));
-                    if (err) throw err;
-                    if (files.avatar.size > 0) {
-                        var old_path = files.avatar.path,
-                            file_size = files.avatar.size,
-                            file_ext = files.avatar.name.split('.').pop(),
-                            new_path = '/images/uploads/avatars/' + files.avatar.name;
-                        fs.readFile(old_path, function (err, data) {
-                            fs.writeFile(new_path, data, function (err) {
-								console.log(data);
-                                fs.unlink(old_path, function (err) {
-                                    if (err) {
-                                        res.status(500);
-                                        res.json({'success': false});
-                                    }
-                                });
-                            });
-                        });
-                    }
-				*/
-				res.redirect("/user/account/" + req.session.username);
-                //});
+                if(!error)
+				    res.redirect("/user/account/" + req.session.username);
             }
             else {
                 res.status(204).send('No content !');
