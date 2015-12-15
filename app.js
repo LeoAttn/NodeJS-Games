@@ -97,8 +97,9 @@ app.use(function (err, req, res, next) {
 mongoose.connect('mongodb://localhost/NodeJS-Games', function (err) {
     if (err)
         throw err;
-    // Pour supprimer la base de donnée
-    //mongoose.connection.db.dropDatabase();
+    // ----Pour supprimer la base de donnée----
+    // mongoose.connection.db.dropDatabase();
+    // ----------------------------------------
     mongoose.connection.db.dropCollection('Rooms', function(err, result) {
         if (result)
             console.log('Rooms dropped !');
