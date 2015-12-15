@@ -290,6 +290,8 @@ var IO = {
                             var opponentID = (playerID == "creator") ? "player2" : "creator";
                             stopCountdown(s, playerID);
                             stopCountdown(s, opponentID);
+                            if (room[s.session.roomID].players[opponentID].isAuthenticated == true)
+                                UsersC.addWin(room[s.session.roomID].players[opponentID].username);
                             servMessage(s, 'warning', "Vous avez abandonné la partie.");
                             servMessage(s, 'info', "Votre adversaire a abandonné la partie.", 'broadcast');
                             changeState(s, playerID, 'loose');
@@ -359,6 +361,9 @@ function initLobby(s) {
         s.emit("addUser", {username: s.session.username, avatar: s.session.avatarLink});
         s.broadcast.to(s.session.roomID).emit("addUser", {username: s.session.username, avatar: s.session.avatarLink});
         room[s.session.roomID].clients += 1;
+        if (s.session.isAuthenticated == true) {
+            room[s.session.roomID].players[s.session.playerID].isAuthenticated = true;
+        }
     }
     s.join(s.session.roomID);
 }
