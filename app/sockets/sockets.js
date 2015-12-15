@@ -442,7 +442,10 @@ function resetCountdown(s, playerID) {
 //Démarre le compte à rebours sur le serveur
 function startCountdown(s, playerID) {
     console.log("Started Countdown for " + playerID + "(" + room[s.session.roomID].players[playerID].username + ")");
+    if(timerFunction[playerID] !== undefined)
+        clearInterval(timerFunction[playerID]);
     timerFunction[playerID] = setInterval(function () {
+        console.log(room[s.session.roomID].players[playerID].timer)
         room[s.session.roomID].players[playerID].timer--;
         if (room[s.session.roomID].players[playerID].timer <= 0) {
             room[s.session.roomID].players[playerID].timesUp = true;
@@ -460,6 +463,8 @@ function launchCheckTimeUp(s, playerID) {
             else
                 s.broadcast.to(s.session.roomID).emit('countdown', room[s.session.roomID].players[playerID].timer);
         else {
+			stopCountdown(s, playerID);
+            resetCountdown(s, playerID);
             if (playerID == s.session.playerID)
                 s.emit('notifs', {type: 'info', msg: "Temps Ecoulé"});
             else
@@ -480,8 +485,6 @@ function launchCheckTimeUp(s, playerID) {
                 changeState(s, playerID, 'loose');
                 changeState(s, opponentID, 'win');
             }
-            stopCountdown(s, playerID);
-            resetCountdown(s, playerID);
         }
     }, 1000)
 }
@@ -514,6 +517,7 @@ function randomBoatPlacement(s, batPos, nbBat) {
 //Vérifie que les joueurs sont pret, (que leur bateaux ont été validé)
 function checkPlayersAreReady(s) {
     if (room[s.session.roomID].validationCptr == 2) {
+		console.log("LET'S START ! ")
         s.broadcast.emit('start');
         s.emit('start');
         var rand = Math.round(Math.random());
@@ -530,7 +534,10 @@ function checkPlayersAreReady(s) {
 
         changeState(s, firstPlayerID, 'myTurn');
         changeState(s, secondPlayerID, 'wait');
+		console.log("FIRST PLAYER : "+ firstPlayerID);
+		console.log("SECOND PLAYER : "+ secondPlayerID);
         startCountdown(s, firstPlayerID);
+
     }
     else {
         servMessage(s, 'info', "Veuillez attendre que votre adversaire place ses bateaux.");
