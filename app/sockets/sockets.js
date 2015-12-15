@@ -335,6 +335,7 @@ function initGame(s) {
     changeState(s,s.session.playerID, 'batPos');
     room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
     resetCountdown(s, s.session.playerID);
+    launchCheckTimeUp(s, s.session.playerID);
     startCountdown(s, s.session.playerID);
     setTimeout(function() {
         servMessage(s, 'info', "Veuillez placer les bateaux sur votre plateau.");
@@ -356,7 +357,7 @@ function loadGame(s) {
             }
         }
     }
-    room[s.session.roomID].players[s.session.playerID].timerFunction;
+    launchCheckTimeUp(s, s.session.playerID);
     s.emit('updateState', {state: stateP});
     s.emit('placeBoat', batTab, tirTab);
     sendHello(s);
@@ -368,13 +369,12 @@ function nextTurn(s, opponentID){
 }
 
 function stopCountdown(s, playerID){
-    clearInterval(room[s.session.roomID].players[playerID].timerFunction);
     clearInterval(timerFunction[playerID]);
-    s.emit("countdown", "x");
+    //s.emit("countdown", "x");
 }
 
 function resetCountdown(s, playerID){
-    room[s.session.roomID].players[playerID].timer = 10;
+    room[s.session.roomID].players[playerID].timer = 20;
     room[s.session.roomID].players[playerID].timesUp = false;
 }
 
@@ -386,6 +386,11 @@ function startCountdown(s, playerID){
             room[s.session.roomID].players[playerID].timesUp = true;
         }
     },1000);
+}
+function launchCheckTimeUp(s, playerID)
+{
+    if(room[s.session.roomID].players[playerID].timerFunction !== undefined)
+        clearInterval(room[s.session.roomID].players[playerID].timerFunction);
     room[s.session.roomID].players[playerID].timerFunction = setInterval(function(){
         if(room[s.session.roomID].players[playerID].timesUp == false)
             if(playerID == s.session.playerID)
