@@ -11,7 +11,7 @@ var apiRooms = {
 
     },
     index: function (req, res) {//Get Request
-        Room.find({}, function (err, rooms) {
+        Room.find({'private': false, 'playing': false}, function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
             res.status(200).json(rooms);
