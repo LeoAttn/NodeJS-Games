@@ -23,18 +23,12 @@ var server = http.createServer(app);
 
 
 var io = require('socket.io')(server);
-var ios = require('socket.io-express-session');
 
 /*io.use(ios(session, {
            "secret" : "Insane Battle",
            "autoSave": true
            }));*/
 // Nous créons une accès au socket
-io.use(ios(app.session({
-    secret: 'secret',
-    saveUninitialized : true,
-    resave : true
-})));
 require('../app/sockets/sockets').set(io);
 
 /**
