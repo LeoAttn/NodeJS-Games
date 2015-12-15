@@ -219,7 +219,8 @@ var IO = {
 
                     if (room[s.session.roomID].players[opponentID].batCoule == room[s.session.roomID].nbBat) {
                         stopCountdown(s, opponentID);
-                        UsersC.addWin(s.session.username);
+                        if(s.session.isAuthenticated == true)
+                            UsersC.addWin(s.session.username);
                         changeState(s, s.session.playerID, 'win');
                         changeState(s, opponentID, 'loose');
                     }
@@ -272,7 +273,7 @@ var IO = {
                 if ((room[s.session.roomID])) {
 
                     console.log('state='+room[s.session.roomID].state);
-                    if(room[s.session.roomID].state != "transition"){//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
+                    if(room[s.session.roomID].state != "transition" && room[s.session.roomID].state == s.socketID){//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
                         room[s.session.roomID].clients --;
                         if(s.session.playerID == "creator" && s.socketID == "lobby"){
                             s.broadcast.to(s.session.roomID).emit('redirect', '/?error=OwnerQuit');
