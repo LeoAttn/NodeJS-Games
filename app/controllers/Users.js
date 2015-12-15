@@ -3,7 +3,8 @@ var mongoose = require("mongoose"),
     User = mongoose.model('User'),
     formidable = require('formidable'),
     path = require('path'),
-    fs = require('fs');
+    fs = require('fs.extra');
+
 
 
 var Users = {
@@ -101,22 +102,52 @@ var Users = {
         User.findOne({pseudo: req.session.username}, function (err, user) {
             if (err) throw err;
             if (user) {
-                console.log("USER EXIST");
                 var form = new formidable.IncomingForm();
-                console.log("FORM var assigned");
-                form.parse(req, function (err, fields, files) {
-                    console.log("Fields : " + JSON.stringify(fields));
-                    console.log("Files : " + JSON.stringify(files));
+				//form.uploadDir = "/images/upload/avatars/";
+				form.parse(req, function (err, fields, files){
+                    if (fields.last_name != "")
+						user.last_name = fields.last_name;
+					if (fields.first_name != "")
+						user.first_name = fields.first_name;
+					if (fields.pseudo != "")
+						user.pseudo = fields.pseudo;
+					if (fields.email != "")
+						user.email = fields.email;
+                });
+
+				form.on('progress', function(bytesReceived, bytesExpected) {
+					var percent_complete = (bytesReceived / bytesExpected) * 100;
+					console.log(percent_complete.toFixed(2));
+				});
+				form.on('end', function (fields, files) {
+					/* Temporary location of our uploaded file */
+					var temp_path = this.openedFiles[0].path;
+					/* The file name of the uploaded file */
+					var file_name = this.openedFiles[0].name;
+					/* Location where we want to copy the uploaded file */
+					var new_location = path.join(path.dirname('../app'), 'public/images/uploads/');
+					fs.copy(temp_path, new_location + file_name, function (err) {
+						if (err) {
+							console.error(err);
+						} else {
+							console.log("success!")
+						}
+					});
+
+					if (this.openedFiles[0].size > 0)
+						user.avatarLink = "/images/uploads/"+file_name;
+					user.save();
+				});
+                    /*console.log("Files : " + JSON.stringify(files));
                     if (err) throw err;
                     if (files.avatar.size > 0) {
                         var old_path = files.avatar.path,
                             file_size = files.avatar.size,
                             file_ext = files.avatar.name.split('.').pop(),
-                            index = old_path.lastIndexOf('\\') + 1,
-                            file_name = old_path.substr(index),
-                            new_path = '/uploads/avatars/' + file_name + '.' + file_ext;
+                            new_path = '/images/uploads/avatars/' + files.avatar.name;
                         fs.readFile(old_path, function (err, data) {
                             fs.writeFile(new_path, data, function (err) {
+								console.log(data);
                                 fs.unlink(old_path, function (err) {
                                     if (err) {
                                         res.status(500);
@@ -126,24 +157,9 @@ var Users = {
                             });
                         });
                     }
-                    var last_name = user.last_name;
-                    var first_name = user.first_name;
-                    var pseudo = user.pseudo;
-                    var email = user.email;
-                    var avatarLink = user.avatarLink;
-                    if (fields.last_name != "")
-                        user.last_name = fields.last_name;
-                    if (fields.first_name != "")
-                        user.first_name = fields.first_name;
-                    if (fields.pseudo != "")
-                        user.pseudo = fields.pseudo;
-                    if (fields.email != "")
-                        user.email = fields.email;
-                    if (files.avatar.size > 0)
-                        user.avatarLink = new_path;
-                    user.save();
-                    res.redirect("/user/account/" + req.session.username);
-                });
+				*/
+				res.redirect("/user/account/" + req.session.username);
+                //});
             }
             else {
                 res.status(204).send('No content !');
