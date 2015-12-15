@@ -14,10 +14,10 @@ var schema = new Schema({
     createdOn: {type: Date, default: Date.now}
 });
 
+//Appelé avant d'effectuer la sauvegarde d'un utilisateur
 schema.pre('save', function(next) {
     var user = this;
-
-    // si le mot de passe est modifier ou creer
+    // si le mot de passe est modifié ou crée
     if (!user.isModified('password')) return next();
     bcrypt.genSalt(SALT, function(err, salt) {
         if (err) return next(err);
