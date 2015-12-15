@@ -2,12 +2,11 @@ var express = require('express');
 var router = express.Router();
 var apiRoom = require('../controllers/ApiRooms');
 
-/* GET home page. */
-//router.get('/', function (req, res, next) {
-//    res.render('index', {title: 'Bataille Navale', room: room});
-//});
-router.get('/', apiRoom.index);//Récupère la liste des room
-router.put('/set-ready/:id', apiRoom.update);
-router.delete('/delete/:id', apiRoom.delete);
+/**====================================
+            API ROUTES
+=======================================**/
+router.get('/', apiRoom.index);//Récupère la liste des rooms
+router.put('/set-ready/:id', apiRoom.update);//Met à jour la room
+router.delete('/delete/:id', apiRoom.delete);//Supprime la room
 
 module.exports = router;
