@@ -98,6 +98,10 @@ function refuseRematch() {
     $("#rematchButton").remove();
 }
 
+function traiteCmd(msg) {
+    socket.emit('traiteCmd', msg);
+}
+
 // Gestion des Ã©vÃ¨nemment emit par le serveu
 
 socket.on('countdown', function (countdown) {

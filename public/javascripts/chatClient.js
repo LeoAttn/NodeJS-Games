@@ -8,7 +8,10 @@ $('#messageInput').keydown(function (event) {
 function sendMessage() {
     var msg = $('#messageInput').val();
     if (msg != '') {
-        chat.emit('chatMessage', msg);
+        if (msg.substr(0, 1) == '/')
+            traiteCmd(msg);
+        else
+            chat.emit('chatMessage', msg);
         $('#messageInput').val('');
     }
 }
