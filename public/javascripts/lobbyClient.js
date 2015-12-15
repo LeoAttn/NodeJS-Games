@@ -111,6 +111,10 @@ function sendLogin() {
         joinChat();
 }
 
+function traiteCmd(msg) {
+    socket.emit('traiteCmd', msg);
+}
+
 socket.on('hey', function () {
     socket.emit('joinLobby', sess);
     console.log(JSON.stringify(sess));
@@ -170,6 +174,10 @@ socket.on('loadMessages', function (msgObjs) {
             html: '<strong>' + msgObj.username + ' : </strong>' + msgObj.msg
         }).appendTo(div);
     }
+});
+
+socket.on('chatMessage', function (msgObj) {
+    newChatMessage(msgObj);
 });
 
 socket.on('redirect', function (where) {

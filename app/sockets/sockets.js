@@ -119,6 +119,7 @@ var IO = {
             if (room[s.session.roomID].players[s.session.playerID].messagesObjs === undefined) {
                 room[s.session.roomID].players[s.session.playerID].messagesObjs = [];
                 servMessage(s, 'info', "Bienvenue dans la room !");
+                servMessage(s, 'info', "Entrez \"/abandon\" pour quitter à tout moment.");
             } else {
                 loadMessages(s);
             }
@@ -152,6 +153,7 @@ var IO = {
                     date: Date.now
                 });
             }
+
         });
     },
     game: function (s) {
@@ -267,6 +269,19 @@ var IO = {
             }
             else {
                 s.emit('redirect', '/flush-session');
+            }
+        });
+        s.on('traiteCmd', function (msg) {
+            if (msg.substr(0, 1) == '/') {
+                switch (msg) {
+                    case '/abandon':
+                        s.emit('redirect', '/flush-session');
+                        s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
+                        break;
+                    default :
+                        servMessage(s, 'warning', 'La commande est invalide !');
+                        break;
+                }
             }
         });
     },
