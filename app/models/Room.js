@@ -6,7 +6,7 @@ var schema = new Schema({
     creator: {type: String, required: true},
     player2: {type: String, required: false},
     playing: {type: Boolean, default: false},
-    ready : {type : Boolean, default: false},
+    ready: {type: Boolean, default: false},
     private: {type: Boolean, required: true},
     createdOn: {type: Date, default: Date.now}
 });

@@ -56,7 +56,7 @@ app.use('/user', user);
 //A chaque fois qu'une requête est effectué
 app.use(function (req, res, next) {
     var isAuthenticated = req.session.isAuthenticated;
-    if (!isAuthenticated){
+    if (!isAuthenticated) {
         isAuthenticated = req.session.isAuthenticated = false;
         req.session.avatarLink = "/images/default.png";
     }
@@ -98,12 +98,11 @@ mongoose.connect('mongodb://localhost/NodeJS-Games', function (err) {
     if (err)
         throw err;
     // Pour supprimer les rooms de la base de données à chaque redémarage du serveur
-    mongoose.connection.db.dropCollection('Rooms', function(err, result) {
+    mongoose.connection.db.dropCollection('Rooms', function (err, result) {
         if (result)
             console.log('Rooms dropped !');
     });
 });
-
 
 
 app.session = session;

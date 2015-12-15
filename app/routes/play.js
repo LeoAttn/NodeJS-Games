@@ -4,7 +4,7 @@ var express = require('express'),
 
 /**================================
         ROUTES PARTIES
-===================================**/
+ ===================================**/
 router.get('/:id', room.play);
 
 module.exports = router;

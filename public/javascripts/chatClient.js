@@ -1,4 +1,3 @@
-
 var chat = io.connect('/chat');
 //var chat = io.connect('/');
 
@@ -45,7 +44,7 @@ function newChatMessage(msgObj) {
     }
 }
 
-function joinChat(){
+function joinChat() {
     chat.emit('joinChat', sess);
 }
 
@@ -53,7 +52,7 @@ chat.on('chatMessage', function (msgObj) {
     newChatMessage(msgObj);
 });
 
-chat.on('loadMessages', function(msgObjs){
+chat.on('loadMessages', function (msgObjs) {
     console.log("HISTORIQUE : " + JSON.stringify(msgObjs));
     for (k in msgObjs) {
         console.log("MSG : " + JSON.stringify(k));

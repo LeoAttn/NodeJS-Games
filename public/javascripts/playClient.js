@@ -51,12 +51,10 @@ function drag(ev) {
 
 function drop(ev) {
     ev.preventDefault();
-    if(ev.target.childElementCount == 0 && ev.target.className != "bat")
-    {
+    if (ev.target.childElementCount == 0 && ev.target.className != "bat") {
         var data = ev.dataTransfer.getData("bateau");
         ev.target.appendChild(document.getElementById(data));
-        if($('.bat-container').is(':empty'))
-        {
+        if ($('.bat-container').is(':empty')) {
             $("#validBat").text("Valider les positions")
                 .addClass('btn-success btn-lg')
                 .removeClass('btn-info');
@@ -64,8 +62,7 @@ function drop(ev) {
     }
 }
 
-function displayEndGameButton()
-{
+function displayEndGameButton() {
     $('#quitButton').html('');
     $('#rematchButton').html('');
     $('<button>', {
@@ -82,29 +79,29 @@ function displayEndGameButton()
     }).appendTo('#rematchButton');
 }
 
-function quitGame(){
+function quitGame() {
     socket.emit("quitGame");
 }
 
-function askRematch(){
+function askRematch() {
     socket.emit("askRematch");
     //$("#rematchBtn").removeAttr("onclick").text("En attente de l'adversaire...");
 }
 
-function acceptRematch(){
+function acceptRematch() {
     socket.emit("acceptRematch");
     $("#rematchButton").remove();
 }
 
-function refuseRematch(){
+function refuseRematch() {
     socket.emit("refuseRematch");
     $("#rematchButton").remove();
 }
 
 // Gestion des Ã©vÃ¨nemment emit par le serveu
 
-socket.on('countdown', function(countdown){
-   $("#countdown").text(countdown);
+socket.on('countdown', function (countdown) {
+    $("#countdown").text(countdown);
 });
 
 socket.on('tirServ', function (obj) {
@@ -143,7 +140,7 @@ socket.on('updateState', function (stateObj) {
                 html: '<div class="win">Bravo, vous avez gagné !</div>'
             }).appendTo('body');
             $('.win').addClass('animation');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.win').addClass('win-anim');
             }, 700);
             displayEndGameButton();
@@ -154,7 +151,7 @@ socket.on('updateState', function (stateObj) {
                 html: '<div class="loose">Vous avez perdu !</div>'
             }).appendTo('body');
             $('.loose').addClass('animation');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.loose').addClass('loose-anim');
             }, 700);
             displayEndGameButton();
@@ -167,7 +164,7 @@ socket.on('updateState', function (stateObj) {
     aQuiLeTour(stateObj.state);
 });
 
-socket.on("askRematch", function (){
+socket.on("askRematch", function () {
     $("#rematchBtn").remove();
     //$("rematchButton").text($("#opponentName").text() + " veut rejouer")
     $('<div>', {
@@ -188,7 +185,7 @@ socket.on("askRematch", function (){
     }).appendTo('#rematchButton');
 });
 
-socket.on("rematch", function(){
+socket.on("rematch", function () {
     $("#quitButton").remove();
     $("#rematchButton").remove();
     $("#endGame").addClass('endParty').text("La partie va démarrer !");
@@ -204,7 +201,7 @@ socket.on('opponent', function (username) {
     socket.emit('hello');
 });
 
-socket.on('removeBoatContainer', function (){
+socket.on('removeBoatContainer', function () {
     $(".bat-container").remove();
 });
 
@@ -213,8 +210,7 @@ socket.on('placeBoat', function (batTab, tirTab) {
     for (var y = 0; y < 10; y++) {
         for (var x = 0; x < 10; x++) {
             if (batTab[x][y] == 1 || batTab[x][y] == 2) {
-                if($('#id-' +x + '-' + y).is(':empty'))
-                {
+                if ($('#id-' + x + '-' + y).is(':empty')) {
                     $('<div>', {
                         id: "Bat" + nbBat,
                         class: "bat"
@@ -235,7 +231,6 @@ socket.on('placeBoat', function (batTab, tirTab) {
         }
     }
 });
-
 
 
 socket.on('playerReady', function () {

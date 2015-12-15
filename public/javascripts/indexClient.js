@@ -12,36 +12,33 @@ function updateRoomList() {
         })
 }
 
-function displayRoomList(rooms)
-{
+function displayRoomList(rooms) {
     $("tbody").find("tr.room").remove();
-    //$("thead").find("tr.room").remove();
-    for(var k in rooms)
-    {
+    for (var k in rooms) {
         var tr = $('<tr>', {
             id: rooms[k]._id,
-            class : "room"
+            class: "room"
         }).appendTo('table');
-        $('<td>',{
-            text : rooms[k].name
+        $('<td>', {
+            text: rooms[k].name
         }).appendTo(tr);
-        $('<td>',{
-            text : rooms[k].creator
+        $('<td>', {
+            text: rooms[k].creator
         }).appendTo(tr);
-        $('<td>',{
-            text : rooms[k].playing
+        $('<td>', {
+            text: rooms[k].playing
         }).appendTo(tr);
-        $('<td>',{
-            text : rooms[k].private
+        $('<td>', {
+            text: rooms[k].private
         }).appendTo(tr);
-        var td = $('<td>',{
-            class : 'center'
+        var td = $('<td>', {
+            class: 'center'
         }).appendTo(tr);
         $('<button>', {
-            class : 'btn btn-primary',
-            name : 'id',
-            value : rooms[k]._id,
-            text : 'Rejoindre'
+            class: 'btn btn-primary',
+            name: 'id',
+            value: rooms[k]._id,
+            text: 'Rejoindre'
         }).appendTo(td);
     }
 }

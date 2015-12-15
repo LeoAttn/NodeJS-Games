@@ -9,7 +9,7 @@ block content
     form(action = "/user/create" method ="POST")
         div.form-group
             label.control-label(name ="pseudo") Nom d'utilisateur
-            input.form-control(type = "text" name = "pseudo" id = "Uname" maxlength=20 required="required" )
+            input.form-control(type = "text" name = "pseudo" id = "Uname" maxlength=20 required="required" autofocus="autofocus")
         div.form-group
             label.control-label(name ="email") Email
             input.form-control(type = "email" name = "email" id = "email" required="required" )
@@ -20,7 +20,7 @@ block content
             label.control-label(name ="confirmPass") Confirmation du mot de passe
             input.form-control(type = "password" name = "confirmPass" id = "confirmPass" required="required" )
         div.form-group
-                button.btn.btn-primary(name = "submit") S'inscrire
+                button.btn.btn-primary.btn-lg(name = "submit") S'inscrire
 
 block script
     script(src="/javascripts/inscription.js")

@@ -1,5 +1,4 @@
 extends layout
-//var room = require('../controllers/Rooms');
 
 block content
     if message
@@ -45,5 +44,6 @@ block content
                         td=room[k].private
                         td.center
                             button.btn.btn-primary(name="id" value=room[k]._id) Rejoindre
+
 block script
     script(src="/javascripts/indexClient.js")

@@ -4,10 +4,14 @@ block content
     div
         div.leftBlock
             div#playerList
-                h4 Personnes présentes dans le lobby
+                h4= tRoom.name
+                h5 Personnes présentes dans le lobby :
                 ul
             div.button
                 if session.playerID == 'creator'
+                    div.form-group
+                        label Temps entre chaque tour <small>(entre 10 et 600 sec)</small>
+                        input.form-control(type='number' value=60 step=1 min=10 max=600)#timeTimer
                     div.form-group
                         label Nombre de bateau <small>(entre 1 et 10)</small>
                         input.form-control(type='number' value=5 step=1 min=1 max=10)#nbBat

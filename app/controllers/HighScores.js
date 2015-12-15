@@ -10,7 +10,6 @@ var Highscores = {
         Highscore.find({}, function (err, users) {
 
         });
-
     },
     create: function (req, res) {
         var h = new Highscore({

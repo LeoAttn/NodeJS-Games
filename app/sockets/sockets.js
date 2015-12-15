@@ -30,7 +30,7 @@ var IO = {
             s.emit('hey');///Récupère la session passé en paramètre
             callback(s);
         });
-        chat.on('connection', function(s){
+        chat.on('connection', function (s) {
             console.log('CHAT CONNECTED !! ');
             s.emit('hey');
             callback(s);
@@ -43,45 +43,65 @@ var IO = {
                 username = username.substr(0, 20);
             s.session.username = username;
             room[s.session.roomID].players[s.session.playerID].username = username;
-            s.broadcast.to(s.session.roomID).emit('addUser', {username: s.session.username, avatar : s.session.avatarLink});
-            s.emit('addUser', {username: s.session.username, avatar : s.session.avatarLink});
+            s.broadcast.to(s.session.roomID).emit('addUser', {
+                username: s.session.username,
+                avatar: s.session.avatarLink
+            });
+            s.emit('addUser', {
+                username: s.session.username,
+                avatar: s.session.avatarLink
+            });
         });
     },
     lobby: function (s) {
-        s.on('joinLobby', function (data){//Appelé lorsque l'on rejoins le lobby au chargement de la page
+        s.on('joinLobby', function (data) {//Appelé lorsque l'on rejoins le lobby au chargement de la page
             s.session = data;
             s.socketID = "lobby";
-            if (room[s.session.roomID] === undefined){
+            if (room[s.session.roomID] === undefined) {
                 room[s.session.roomID] = {};
                 room[s.session.roomID].clients = 0;
                 room[s.session.roomID].players = [];
                 room[s.session.roomID].state = "lobby";
                 room[s.session.roomID].nbBat = 5;
+                room[s.session.roomID].timeTimer = 60;
             }
             if (room[s.session.roomID].clients < 2 && room[s.session.roomID].players[s.session.playerID] === undefined) {
                 console.log("INIT LOBBY");
                 initLobby(s);
             }
             else {
-                if(room[s.session.roomID].clients < 2)
-                    room[s.session.roomID].clients ++;
+                if (room[s.session.roomID].clients < 2)
+                    room[s.session.roomID].clients++;
                 loadLobby(s);
             }
             if (room[s.session.roomID].clients == 2) {
-                if(s.session.playerID == "creator")
+                if (s.session.playerID == "creator")
                     s.emit('ready', {});
                 else
                     s.broadcast.to(s.session.roomID).emit('ready', {});
             }
         });
-        s.on('sendUsername', function (username){//Appelé lors de l'envoi du pseudo au serveur
-            s.emit("addUser", {username : s.session.username, avatar : s.session.avatarLink});
-            s.broadcast.to(s.session.roomID).emit("addUser", {bypass : false, username:s.session.username, avatar : s.session.avatarLink});
+        s.on('sendUsername', function (username) {//Appelé lors de l'envoi du pseudo au serveur
+            s.emit("addUser", {
+                username: s.session.username,
+                avatar: s.session.avatarLink
+            });
+            s.broadcast.to(s.session.roomID).emit("addUser", {
+                bypass: false,
+                username: s.session.username,
+                avatar: s.session.avatarLink
+            });
         });
-        s.on('changeNbBat', function (nb){//Appelé lorsque l'on change le nombre de bateaux via le formulaire
+        s.on('changeNbBat', function (nb) {//Appelé lorsque l'on change le nombre de bateaux via le formulaire
             nb = parseInt(nb);
             if (nb >= 1 && nb <= 10) {
                 room[s.session.roomID].nbBat = nb;
+            }
+        });
+        s.on('changeTimeTimer', function (nb) {//Appelé lorsque l'on change le temps du timer via le formulaire
+            nb = parseInt(nb);
+            if (nb >= 10 && nb <= 600) {
+                room[s.session.roomID].timeTimer = nb;
             }
         });
         s.on('startGame', function () {//Appelé lorsque l'on lance la partie (via le boutton Lancer la partie)
@@ -91,15 +111,15 @@ var IO = {
         });
     },
     chat: function (s) {
-        s.on('joinChat', function (data){//Appelé lorsque l'on rejoins le chat
+        s.on('joinChat', function (data) {//Appelé lorsque l'on rejoins le chat
             s.socketID = "chat";
             s.session = data;
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             s.join(s.session.roomID);
-            if(room[s.session.roomID].players[s.session.playerID].messagesObjs === undefined) {
+            if (room[s.session.roomID].players[s.session.playerID].messagesObjs === undefined) {
                 room[s.session.roomID].players[s.session.playerID].messagesObjs = [];
                 servMessage(s, 'info', "Bienvenue dans la room !");
-            }else{
+            } else {
                 loadMessages(s);
             }
         });
@@ -123,7 +143,7 @@ var IO = {
                 date: Date.now
             });
             var opponentID = (s.session.playerID == "creator") ? "player2" : "creator";
-            if(room[s.session.roomID].players[opponentID] !== undefined &&
+            if (room[s.session.roomID].players[opponentID] !== undefined &&
                 room[s.session.roomID].players[opponentID].messagesObjs !== undefined) {
                 room[s.session.roomID].players[opponentID].messagesObjs.push({
                     from: 'user',
@@ -135,12 +155,12 @@ var IO = {
         });
     },
     game: function (s) {
-        s.on('joinGame', function (data){//Appelé en réponse au message hey, set la session et rejoins la room
+        s.on('joinGame', function (data) {//Appelé en réponse au message hey, set la session et rejoins la room
             s.session = data;
             s.socketID = "game";
             console.log('roomID: ' + s.session.roomID);
 
-            if (room[s.session.roomID] === undefined){
+            if (room[s.session.roomID] === undefined) {
                 s.emit('redirect', '/');
                 return;
             }
@@ -148,22 +168,22 @@ var IO = {
             s.session.username = room[s.session.roomID].players[s.session.playerID].username;
             room[s.session.roomID].state = "game";
             s.join(s.session.roomID);
-            if(room[s.session.roomID].validationCptr === undefined)
+            if (room[s.session.roomID].validationCptr === undefined)
                 room[s.session.roomID].validationCptr = 0;
-            if (room[s.session.roomID].players[s.session.playerID].hasJoined === undefined){
+            if (room[s.session.roomID].players[s.session.playerID].hasJoined === undefined) {
                 room[s.session.roomID].players[s.session.playerID].hasJoined = true;
                 initGame(s);
             }
             else {
-                if(room[s.session.roomID].clients < 2)
-                    room[s.session.roomID].clients ++;
+                if (room[s.session.roomID].clients < 2)
+                    room[s.session.roomID].clients++;
                 loadGame(s);
-             }
+            }
         });
-        s.on('batPos', function (pos){//Appelé lorsque que l'on valide la position des bateaux (via le boutton Valider les position)
+        s.on('batPos', function (pos) {//Appelé lorsque que l'on valide la position des bateaux (via le boutton Valider les position)
             console.log(pos);
-            console.log('Room ID: ' + s.session.roomID)
-            if (room[s.session.roomID].players[s.session.playerID].state == "batPos"){
+            console.log('Room ID: ' + s.session.roomID);
+            if (room[s.session.roomID].players[s.session.playerID].state == "batPos") {
                 var batPos = [[], [], [], [], [], [], [], [], [], []];
                 for (var y = 0; y < 10; y++)
                     for (var x = 0; x < 10; x++)
@@ -210,7 +230,7 @@ var IO = {
 
                     if (room[s.session.roomID].players[opponentID].batCoule == room[s.session.roomID].nbBat) {
                         stopCountdown(s, opponentID);
-                        if(s.session.isAuthenticated == true)
+                        if (s.session.isAuthenticated == true)
                             UsersC.addWin(s.session.username);
                         changeState(s, s.session.playerID, 'win');
                         changeState(s, opponentID, 'loose');
@@ -234,18 +254,18 @@ var IO = {
             s.emit('rematch');
             s.broadcast.to(s.session.roomID).emit('rematch');
         });
-        s.on('refuseRematch', function (){//Appelé lorsque que l'on refuse de rejouer
+        s.on('refuseRematch', function () {//Appelé lorsque que l'on refuse de rejouer
             s.emit('redirect', '/flush-session');
             s.broadcast.to(s.session.roomID).emit('redirect', '/flush-session');
         });
-        s.on('rematch', function() {//Appelé lorsque l'on accepte de rejouer
+        s.on('rematch', function () {//Appelé lorsque l'on accepte de rejouer
             console.log(room[s.session.roomID].clients);
-            if(room[s.session.roomID].clients == 2){//Vérifie que les deux joueur sont toujours présents
+            if (room[s.session.roomID].clients == 2) {//Vérifie que les deux joueur sont toujours présents
                 console.log("REMATCH! ");
-                s.emit('redirect', '/play/'+ s.session.roomID);
+                s.emit('redirect', '/play/' + s.session.roomID);
                 s.broadcast.to(s.session.roomID).emit('redirect', '/play/' + s.session.roomID);
             }
-            else{
+            else {
                 s.emit('redirect', '/flush-session');
             }
         });
@@ -253,9 +273,8 @@ var IO = {
     disconnect: function (s) {
         s.on('disconnect', function () {//Appelé lors de la déconnexion d'un socket
             //Test la page ou est le socket et effectue l'action appropriée
-            if(s.socketID == "chat"){
-                if(room[s.session.roomID].state != "transition")
-                {
+            if (s.socketID == "chat") {
+                if (room[s.session.roomID].state != "transition") {
                     s.broadcast.to(s.session.roomID).emit('chatMessage', {
                         from: 'server',
                         type: 'info',
@@ -264,17 +283,17 @@ var IO = {
                     });
                 }
             }
-            if(s.socketID == "lobby" || s.socketID == "game"){
+            if (s.socketID == "lobby" || s.socketID == "game") {
                 if ((room[s.session.roomID])) {
 
-                    console.log('state='+room[s.session.roomID].state);
-                    if(room[s.session.roomID].state != "transition" && room[s.session.roomID].state == s.socketID){//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
-                        room[s.session.roomID].clients --;
-                        if(s.session.playerID == "creator" && s.socketID == "lobby"){
+                    console.log('state=' + room[s.session.roomID].state);
+                    if (room[s.session.roomID].state != "transition" && room[s.session.roomID].state == s.socketID) {//Permet d'ignorer la destruction de la partie lors de la transition lobby -> game
+                        room[s.session.roomID].clients--;
+                        if (s.session.playerID == "creator" && s.socketID == "lobby") {
                             s.broadcast.to(s.session.roomID).emit('redirect', '/?error=OwnerQuit');
                         }
                         console.log("Clients : " + room[s.session.roomID].clients);
-                        if(room[s.session.roomID].clients <= 0){
+                        if (room[s.session.roomID].clients <= 0) {
                             RoomsC.delete(s.session.roomID);
                         }
                     }
@@ -286,40 +305,44 @@ var IO = {
 };
 /*===========================
     Chat functions
-==============================*/
+ ==============================*/
 //Charge les messages lors que l'on passe d'une page à une autre
-function loadMessages(s){
+function loadMessages(s) {
     s.emit('loadMessages', room[s.session.roomID].players[s.session.playerID].messagesObjs);
 }
 /**===========================
     Lobby functions
-==============================**/
+ ==============================**/
 //Initialise le lobby (lorsqu'un joueur rejoint pour la premiere fois une partie)
 function initLobby(s) {
     var opponentID = (s.session.playerID == "creator") ? "player2" : "creator";
-    if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null){
+    if (s.session.username === undefined || s.session.username == '' || s.session.username == ' ' || s.session.username == null) {
         s.emit("askUsername");
     }
-    else{
+    else {
         room[s.session.roomID].players[s.session.playerID] = {
-                username: s.session.username
+            username: s.session.username
         };
-        s.emit("addUser", {username : s.session.username, avatar : s.session.avatarLink});
-        s.broadcast.to(s.session.roomID).emit("addUser", {username:s.session.username, avatar : s.session.avatarLink});
+        s.emit("addUser", {username: s.session.username, avatar: s.session.avatarLink});
+        s.broadcast.to(s.session.roomID).emit("addUser", {username: s.session.username, avatar: s.session.avatarLink});
         room[s.session.roomID].clients += 1;
     }
     s.join(s.session.roomID);
 }
 //Charge le lobby (lorsqu'un joueur a déja rejoint la partie mais recharge la page)
 function loadLobby(s) {
-    if(s.session.username == "Anonyme")
+    if (s.session.username == "Anonyme")
         s.emit("updateUsername", room[s.session.roomID].players[s.session.playerID].username);
     s.session.username = room[s.session.roomID].players[s.session.playerID].username;
     s.join(s.session.roomID);
-    s.broadcast.to(s.session.roomID).emit('addUser', {bypass : true ,username: s.session.username, avatar : s.session.avatarLink});
-    s.emit('addUser', {bypass : false, username: s.session.username, avatar : s.session.avatarLink});
+    s.broadcast.to(s.session.roomID).emit('addUser', {
+        bypass: true,
+        username: s.session.username,
+        avatar: s.session.avatarLink
+    });
+    s.emit('addUser', {bypass: false, username: s.session.username, avatar: s.session.avatarLink});
     if (room[s.session.roomID].clients == 2) {
-        if(s.session.playerID == "creator")
+        if (s.session.playerID == "creator")
             s.emit('ready', {});
         else
             s.broadcast.to(s.session.roomID).emit('ready', {});
@@ -327,7 +350,7 @@ function loadLobby(s) {
 }
 /*===========================
     Game functions
-==============================*/
+ ==============================*/
 //Envoi les pseudos lorsque la partie commence
 function sendHello(s) {
     s.emit('me', s.session.username);
@@ -337,12 +360,12 @@ function sendHello(s) {
 function initGame(s) {
     sendHello(s);
     room[s.session.roomID].players[s.session.playerID].state = "";
-    changeState(s,s.session.playerID, 'batPos');
+    changeState(s, s.session.playerID, 'batPos');
     room[s.session.roomID].players[s.session.playerID].batTab = [[], [], [], [], [], [], [], [], [], []];
     resetCountdown(s, s.session.playerID);
     launchCheckTimeUp(s, s.session.playerID);
     startCountdown(s, s.session.playerID);
-    setTimeout(function() {
+    setTimeout(function () {
         servMessage(s, 'info', "Veuillez placer les bateaux sur votre plateau.");
 
     }, 200);
@@ -368,47 +391,47 @@ function loadGame(s) {
     sendHello(s);
 }
 //Change le tour
-function nextTurn(s, opponentID){
-    changeState(s,s.session.playerID, 'wait');
-    changeState(s,opponentID, 'myTurn');
+function nextTurn(s, opponentID) {
+    changeState(s, s.session.playerID, 'wait');
+    changeState(s, opponentID, 'myTurn');
 }
 //Arrete le compte à rebours
-function stopCountdown(s, playerID){
+function stopCountdown(s, playerID) {
     clearInterval(timerFunction[playerID]);
     //s.emit("countdown", "x");
 }
 //Reset le compte à rebours
-function resetCountdown(s, playerID){
-    room[s.session.roomID].players[playerID].timer = 20;
+function resetCountdown(s, playerID) {
+    room[s.session.roomID].players[playerID].timer = room[s.session.roomID].timeTimer;
     room[s.session.roomID].players[playerID].timesUp = false;
 }
 //Démarre le compte à rebours sur le serveur
-function startCountdown(s, playerID){
+function startCountdown(s, playerID) {
     console.log("Started Countdown for " + playerID + "(" + room[s.session.roomID].players[playerID].username + ")");
-    timerFunction[playerID] = setInterval(function(){
+    timerFunction[playerID] = setInterval(function () {
         room[s.session.roomID].players[playerID].timer--;
-        if(room[s.session.roomID].players[playerID].timer <= 0){
+        if (room[s.session.roomID].players[playerID].timer <= 0) {
             room[s.session.roomID].players[playerID].timesUp = true;
         }
-    },1000);
+    }, 1000);
 }
 //Démare une fonction appellé a interval de 1 sec, (lié au socket) pour vérifier si le temps est écoulé
-function launchCheckTimeUp(s, playerID){
-    if(room[s.session.roomID].players[playerID].timerFunction !== undefined)
+function launchCheckTimeUp(s, playerID) {
+    if (room[s.session.roomID].players[playerID].timerFunction !== undefined)
         clearInterval(room[s.session.roomID].players[playerID].timerFunction);
-    room[s.session.roomID].players[playerID].timerFunction = setInterval(function(){
-        if(room[s.session.roomID].players[playerID].timesUp == false)
-            if(playerID == s.session.playerID)
+    room[s.session.roomID].players[playerID].timerFunction = setInterval(function () {
+        if (room[s.session.roomID].players[playerID].timesUp == false)
+            if (playerID == s.session.playerID)
                 s.emit('countdown', room[s.session.roomID].players[playerID].timer);
             else
                 s.broadcast.to(s.session.roomID).emit('countdown', room[s.session.roomID].players[playerID].timer);
-        else{
-            if(playerID == s.session.playerID)
-                s.emit('notifs', {type : 'info', msg : "Temps Ecoulé"});
+        else {
+            if (playerID == s.session.playerID)
+                s.emit('notifs', {type: 'info', msg: "Temps Ecoulé"});
             else
-                s.broadcast.to(s.session.roomID).emit('info', {type : 'info', msg : "Temps Ecoulé"})
+                s.broadcast.to(s.session.roomID).emit('info', {type: 'info', msg: "Temps Ecoulé"})
 
-            if(room[s.session.roomID].players[playerID].state == "batPos"){
+            if (room[s.session.roomID].players[playerID].state == "batPos") {
                 s.emit('cleanTab');
                 var batPos = [[], [], [], [], [], [], [], [], [], []];
                 var nbBat = 0;
@@ -417,9 +440,9 @@ function launchCheckTimeUp(s, playerID){
                 room[s.session.roomID].validationCptr += 1;
                 checkPlayersAreReady(s);
             }
-            else{
+            else {
                 var opponentID = (playerID == "creator") ? "player2" : "creator";
-                servMessage(s, 'danger', "Vous n'avez pas joué dans le temps imparti", 'broadcast');
+                servMessage(s, 'danger', "Vous n'avez pas joué dans le temps imparti");
                 changeState(s, playerID, 'loose');
                 changeState(s, opponentID, 'win');
             }
@@ -429,19 +452,19 @@ function launchCheckTimeUp(s, playerID){
     }, 1000)
 }
 //Place aléatoirement les bateaux
-function randomBoatPlacement(s, batPos, nbBat){
-    if(nbBat != room[s.session.roomID].nbBat){
-        while(nbBat != room[s.session.roomID].nbBat){
+function randomBoatPlacement(s, batPos, nbBat) {
+    if (nbBat != room[s.session.roomID].nbBat) {
+        while (nbBat != room[s.session.roomID].nbBat) {
             var randX = Math.floor(Math.random() * 9);
             var randY = Math.floor(Math.random() * 9);
-            if(batPos[randX][randY] != 1){
+            if (batPos[randX][randY] != 1) {
                 batPos[randX][randY] = 1;
-                nbBat ++;
+                nbBat++;
             }
         }
         var tirTab = [[], [], [], [], [], [], [], [], [], []];
-        for(var x =0; x < 10; x++){
-            for(var y = 0; y <10; y ++){
+        for (var x = 0; x < 10; x++) {
+            for (var y = 0; y < 10; y++) {
                 tirTab[x][y] = 0;
             }
         }
@@ -455,7 +478,7 @@ function randomBoatPlacement(s, batPos, nbBat){
     room[s.session.roomID].players[s.session.playerID].batCoule = 0;
 }
 //Vérifie que les joueurs sont pret, (que leur bateaux ont été validé)
-function checkPlayersAreReady(s){
+function checkPlayersAreReady(s) {
     if (room[s.session.roomID].validationCptr == 2) {
         s.broadcast.emit('start');
         s.emit('start');
@@ -481,7 +504,7 @@ function checkPlayersAreReady(s){
     }
 }
 //Prépare la partie pour rejouer
-function rematch(s){
+function rematch(s) {
     room[s.session.roomID].state = "transition";
     var otherPlayerID = (s.session.playerID == "creator") ? "player2" : "creator";
     delete room[s.session.roomID].players[otherPlayerID].hasJoined;
@@ -489,16 +512,16 @@ function rematch(s){
     delete room[s.session.roomID].validationCptr;
 }
 //Nettoie la room
-function cleanRoom(s){
+function cleanRoom(s) {
     delete room[s.session.roomID];
 }
 //Change l'état d'un joueur et met à jour l'état coté client
-function changeState(s, playerID, newState){
+function changeState(s, playerID, newState) {
     room[s.session.roomID].players[playerID].state = newState;
-    if(playerID == s.session.playerID){
+    if (playerID == s.session.playerID) {
         s.emit('updateState', {state: newState});
     }
-    else{
+    else {
         s.broadcast.to(s.session.roomID).emit('updateState', {state: newState});
     }
 

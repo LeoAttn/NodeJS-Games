@@ -4,7 +4,7 @@ var express = require('express'),
 
 /**================================
         USERS ROUTES
-===================================**/
+ ===================================**/
 router.get('/account/:username', users.account);//Affiche la vue du compte utilisateur
 router.post('/create', users.create);//Créer l'utilisateur
 router.post('/update', users.update);//Met à jour l'utilisateur'

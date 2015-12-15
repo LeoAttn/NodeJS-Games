@@ -22,12 +22,10 @@ var Rooms = {
                 var msg = "Vous n'avez pas accès à cette room.";
                 break;
         }
-        if(req.session.roomID)
-        {
-            Room.findOne({_id : req.session.roomID}, function (err, room){
-                if(err)throw err;
-                if(!room)
-                {
+        if (req.session.roomID) {
+            Room.findOne({_id: req.session.roomID}, function (err, room) {
+                if (err)throw err;
+                if (!room) {
                     console.log("SESSION ROOMID DELETED");
                     delete req.session.roomID;
                     delete req.session.playerID;
@@ -35,7 +33,7 @@ var Rooms = {
             });
         }
 
-        Room.find({'private': false, 'playing': false},"name creator playing ready", function (err, rooms) {
+        Room.find({'private': false, 'playing': false}, "name creator playing ready", function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
             res.render('index', {
@@ -49,8 +47,7 @@ var Rooms = {
     },
     create: function (req, res) {
         if (!req.session.roomID) {
-            if(req.session.username === undefined)
-            {
+            if (req.session.username === undefined) {
                 if (req.body.username.length > 20)
                     req.body.username = req.body.username.substr(0, 20);
                 req.session.username = req.body.username;
@@ -78,12 +75,10 @@ var Rooms = {
     },
     joinLobby: function (req, res) {
         var roomId = (req.params.id) ? req.params.id : req.body.id;
-        if(req.session.roomID)
-        {
-            Room.findOne({_id : req.session.roomID}, function (err, room){
-                if(err)throw err;
-                if(!room)
-                {
+        if (req.session.roomID) {
+            Room.findOne({_id: req.session.roomID}, function (err, room) {
+                if (err)throw err;
+                if (!room) {
                     console.log("SESSION ROOMID DELETED");
                     delete req.session.roomID;
                     delete req.session.playerID;
@@ -94,11 +89,10 @@ var Rooms = {
             if (err) throw err;
             //res.json(room);
             if (!req.session.roomID) {
-                if(room){
+                if (room) {
                     if (room.player2 === undefined) {
-                        if(req.session.isAuthenticated == false)
-                        {
-                            req.session.username = ""
+                        if (req.session.isAuthenticated == false) {
+                            req.session.username = "";
                             room.player2 = "Anonyme"
                         }
                         else
@@ -127,7 +121,13 @@ var Rooms = {
             Room.findOne({_id: req.params.id}, function (err, room) {
                 if (err) throw err;
                 if (room) {
-                    res.render('lobby', {title: "Lobby: " + room.name, active:'Partie en cours', noReturnParty: true, session: req.session, tRoom: room});
+                    res.render('lobby', {
+                        title: "Bataille Navale - Lobby: " + room.name,
+                        active: 'Partie en cours',
+                        noReturnParty: true,
+                        session: req.session,
+                        tRoom: room
+                    });
                 }
                 else
                     res.redirect('/?error=noroom');
@@ -146,7 +146,11 @@ var Rooms = {
                         room.playing = true;
                         req.session.roomID = room._id;
                         req.cookies.roomID = room._id;
-                        res.render('play', {title: "Battaille Navale en cours", active: 'Partie en cours', session: req.session});
+                        res.render('play', {
+                            title: "Battaille Navale - En cours: " + room.name,
+                            active: 'Partie en cours',
+                            session: req.session
+                        });
                     }
                     else {
                         res.redirect('/lobby/' + room._id);

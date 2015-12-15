@@ -18,7 +18,7 @@ var apiRooms = {
             res.end();
         });
     },
-    update : function (req, res) {//PUT Request
+    update: function (req, res) {//PUT Request
         Room.findOne({_id: req.params.id}, function (err, room) {
             if (err) throw err;
             if (room) {
@@ -27,13 +27,13 @@ var apiRooms = {
                 room.save(function (err) {
                     if (err) throw err;
                     console.log('Room updated');
-                    console.log("SUCCESS : STATUS 200")
+                    console.log("SUCCESS : STATUS 200");
                     res.status(200).send('success !');
                     res.end();
                 });
             }
             else {
-                console.log("ERROR : NO CONTENT STATUS 204")
+                console.log("ERROR : NO CONTENT STATUS 204");
                 res.status(204).send('No content !');
                 res.end();
             }
