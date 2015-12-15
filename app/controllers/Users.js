@@ -37,6 +37,7 @@ var Users = {
         delete req.session.isAuthenticated;
         delete req.session.username;
         delete req.session.avatarLink;
+        res.redirect('/');
     },
     account: function (req, res) {
         console.log(req.params.username);
@@ -73,32 +74,30 @@ var Users = {
         }
     },
     create: function (req, res) {//Post Request
-        console.log(JSON.stringify(req.body));
         User.findOne({$or: [{'pseudo': req.body.pseudo}, {'email': req.body.email}]}, function (err, user) {
             if (!user) {
-                var u = new User({
-                    pseudo: req.body.pseudo,
-                    password: req.body.password,
-                    email: req.body.email,
-                    avatarLink: "/images/default.png"
-                });
-                u.save(function (err) {
-                    if (err) throw err;
-                    console.log('User inserted');
-                });
-                req.session.isAuthenticated = true;
-                req.session.username = u.pseudo;
-                req.session.avatarLink = u.avatarLink;
-                res.redirect('/user/account/' + u.pseudo);
-            }
-            else
+                if (req.body.password == req.body.confirmPass) {
+                    var u = new User({
+                        pseudo: req.body.pseudo,
+                        password: req.body.password,
+                        email: req.body.email,
+                        avatarLink: "/images/default.png"
+                    });
+                    u.save(function (err) {
+                        if (err) throw err;
+                        console.log('User inserted');
+                    });
+                    req.session.isAuthenticated = true;
+                    req.session.username = u.pseudo;
+                    req.session.avatarLink = u.avatarLink;
+                    res.redirect('/user/account/' + u.pseudo);
+                } else
+                    res.redirect('/sign-up?error=pwdDifferent');
+            } else
                 res.redirect('/sign-up?error=exist');
-
-
         });
     },
     update: function (req, res) {//POST Request
-        console.log("UPDATE USER FUnCt !");
         User.findOne({pseudo: req.session.username}, function (err, user) {
             if (err) throw err;
             if (user) {

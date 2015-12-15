@@ -31,10 +31,16 @@ router.get('/sign-in', function (req, res) {
         res.redirect('/user/account/' + req.session.username);
     }
     else {
+        switch (req.query.error) {
+            case 'nouser':
+                var msg = "Le pseudo ou le mot de passe est incorrect !";
+                break;
+        }
         res.render('connexion', {
             title: "Bataille Navale - Connexion",
             active: 'Connexion',
-            session: req.session
+            session: req.session,
+            message: msg
         });
     }
 });//Affiche la vue de connexion
@@ -44,13 +50,22 @@ router.get('/sign-up', function (req, res) {
         res.redirect('/user/account/' + req.session.username);
     }
     else {
+        switch (req.query.error) {
+            case 'pwdDifferent':
+                var msg = "Les deux mots de passe sont différents !";
+                break;
+            case 'exist':
+                var msg = "Ce pseudo/email est déjà pris !";
+                break;
+        }
         res.render('inscription', {
             title: "Bataille Navale - Inscription",
             active: 'S\'inscrire',
-            session: req.session
+            session: req.session,
+            message: msg
         });
     }
 });//Affiche la vue de l'inscription
-router.post('/sign-out', user.sign_out);//Deconnecte l'utilisateur
+router.get('/sign-out', user.sign_out);//Deconnecte l'utilisateur
 
 module.exports = router;

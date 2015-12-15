@@ -21,6 +21,9 @@ var Rooms = {
             case 'notAllowed':
                 var msg = "Vous n'avez pas accès à cette room.";
                 break;
+            case 'OwnerQuit':
+                var msg = "Le créateur à quitté la room.";
+                break;
         }
         if (req.session.roomID) {
             Room.findOne({_id: req.session.roomID}, function (err, room) {
