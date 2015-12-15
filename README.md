@@ -11,4 +11,9 @@ Tâches accomplies :
 
 - Partie de Bataille Navale
 - Chat entre les 2 joueurs
-- Gestion de Users
+- Gestion de comptes utilisateurs (lecompte est facultatif pour pouvoir jouer)
+- Timer pour éviter les parties infinies
+
+Tâches non effectuées :
+
+- Gestion des Highscores
