@@ -57,6 +57,9 @@ router.get('/sign-up', function (req, res) {
             case 'exist':
                 var msg = "Ce pseudo/email est déjà pris !";
                 break;
+            case 'improper':
+                var msg = "Ce pseudo/email n'est pas conforme !";
+                break;
         }
         res.render('inscription', {
             title: "Bataille Navale - Inscription",

@@ -50,28 +50,33 @@ var Rooms = {
     },
     create: function (req, res) {
         if (!req.session.roomID) {
-            if (req.session.username === undefined) {
-                if (req.body.username.length > 20)
-                    req.body.username = req.body.username.substr(0, 20);
-                req.session.username = req.body.username;
-            }
-            if (!(req.body.roomName))
-                req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
-            else if (req.body.roomName.length > 20)
-                req.body.roomName = req.body.roomName.substr(0, 20);
-            req.body.private = (req.body.private == "on");
-            var r = new Room({
-                creator: req.session.username,
-                name: req.body.roomName,
-                private: req.body.private
-            });
-            r.save(function (err) {
-                if (err) throw err;
-                console.log('Room inserted');
-            });
-            req.session.roomID = r._id;
-            req.session.playerID = 'creator';
-            res.redirect('/lobby/' + r._id);
+            var regexPseudo = /^[A-Za-z0-9_[\]-]+$/;
+            var regexRoom = /^[A-Za-z0-9_[\]-]*$/;
+            if (regexPseudo.test(req.body.username) && regexRoom.test(req.body.roomName)) {
+                if (req.session.username === undefined) {
+                    if (req.body.username.length > 20)
+                        req.body.username = req.body.username.substr(0, 20);
+                    req.session.username = req.body.username;
+                }
+                if (!(req.body.roomName))
+                    req.body.roomName = "room_" + (Math.round(Math.random() * 100000)).toString();
+                else if (req.body.roomName.length > 20)
+                    req.body.roomName = req.body.roomName.substr(0, 20);
+                req.body.private = (req.body.private == "on");
+                var r = new Room({
+                    creator: req.session.username,
+                    name: req.body.roomName,
+                    private: req.body.private
+                });
+                r.save(function (err) {
+                    if (err) throw err;
+                    console.log('Room inserted');
+                });
+                req.session.roomID = r._id;
+                req.session.playerID = 'creator';
+                res.redirect('/lobby/' + r._id);
+            } else
+                res.redirect('/?error=improper');
         }
         else
             res.redirect('/?error=alreadyInGame');
