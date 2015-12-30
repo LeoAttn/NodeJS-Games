@@ -1,4 +1,18 @@
 extends layout
 
 block content
-    h1.center Coming Soon !
+    h1.center Tableau des victoires
+
+    div.list-room
+            table.table.table-striped.table-bordered
+                thead
+                    th.center Nom du vainqueur
+                    th.center Nombre de tours
+                    th.center Temps
+                    th.center Date
+                - for (var k in scores)
+                    tr(class = "room")
+                        td= scores[k].owner
+                        td= Math.round(scores[k].nbLap/2)
+                        td= Math.trunc(scores[k].time/1000) + "," + Math.round(scores[k].time%1000/100) + " s"
+                        td!= scores[k].createdOn

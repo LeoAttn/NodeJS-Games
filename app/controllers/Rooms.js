@@ -8,24 +8,25 @@ var mongoose = require("mongoose"),
 
 var Rooms = {
     index: function (req, res) {
+        var msg;
         switch (req.query.error) {
             case 'full':
-                var msg = "La partie est pleine ! Désolé...";
+                msg = "La partie est pleine ! Désolé...";
                 break;
             case 'noroom':
-                var msg = "Aucune room selectionnée !";
+                msg = "Aucune room selectionnée !";
                 break;
             case 'alreadyInGame':
-                var msg = "Vous avez déjà une partie en cours.";
+                msg = "Vous avez déjà une partie en cours.";
                 break;
             case 'notAllowed':
-                var msg = "Vous n'avez pas accès à cette room.";
+                msg = "Vous n'avez pas accès à cette room.";
                 break;
             case 'OwnerQuit':
-                var msg = "Le créateur à quitté la room.";
+                msg = "Le créateur à quitté la room.";
                 break;
             case 'improper':
-                var msg = "Ce pseudo/email n'est pas conforme !";
+                msg = "Ce pseudo/email n'est pas conforme !";
                 break;
         }
         if (req.session.roomID) {
@@ -39,7 +40,7 @@ var Rooms = {
             });
         }
 
-        Room.find({'private': false, 'playing': false}, "name creator playing ready", function (err, rooms) {
+        Room.find({'private': false, 'playing': false}, "name creator createdOn", function (err, rooms) {
             if (err) throw err;
             //res.json(rooms);
             res.render('index', {
@@ -66,11 +67,17 @@ var Rooms = {
                 else if (req.body.roomName.length > 20)
                     req.body.roomName = req.body.roomName.substr(0, 20);
                 req.body.private = (req.body.private == "on");
+                var t = new Date();
+                var mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+                var date = t.getDate() + " " + mois[t.getMonth()] + "&nbsp; à &nbsp;" + t.getHours() + ":" + t.getMinutes();
+
                 var r = new Room({
                     creator: req.session.username,
                     name: req.body.roomName,
-                    private: req.body.private
+                    private: req.body.private,
+                    createdOn: date
                 });
+                console.log('date = ' + new Date());
                 r.save(function (err) {
                     if (err) throw err;
                     console.log('Room inserted');

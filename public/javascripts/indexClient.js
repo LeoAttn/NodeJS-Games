@@ -14,6 +14,8 @@ function updateRoomList() {
 
 function displayRoomList(rooms) {
     $("tbody").find("tr.room").remove();
+    var mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+
     for (var k in rooms) {
         var tr = $('<tr>', {
             id: rooms[k]._id,
@@ -26,10 +28,7 @@ function displayRoomList(rooms) {
             text: rooms[k].creator
         }).appendTo(tr);
         $('<td>', {
-            text: rooms[k].playing
-        }).appendTo(tr);
-        $('<td>', {
-            text: rooms[k].private
+            html: rooms[k].createdOn
         }).appendTo(tr);
         var td = $('<td>', {
             class: 'center'

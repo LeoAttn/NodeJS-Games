@@ -3,8 +3,9 @@ var mongoose = require('mongoose'),
 
 var schema = new Schema({
     owner: {type: String, required: true},
-    score: {type: Int, required: true},
-    createdOn: {type: Date, default: Date.now}
+    nbLap: {type: Number, required: true},
+    time: {type: Number, required: true},
+    createdOn: {type: String, required: true}
 });
 
 exports.model = mongoose.model('Highscore', schema, 'Highscores');
