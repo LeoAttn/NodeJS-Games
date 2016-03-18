@@ -33,15 +33,13 @@ block content
                 thead
                     th.center Nom de la partie
                     th.center Créateur
-                    th.center IsPlaying
-                    th.center IsPrivate
+                    th.center Date de création
                     th.center Rejoindre
                 - for (var k in room)
                     tr(class = "room" id=room[k]._id)
-                        td=room[k].name
-                        td=room[k].creator
-                        td=room[k].playing
-                        td=room[k].private
+                        td= room[k].name
+                        td= room[k].creator
+                        td!= room[k].createdOn
                         td.center
                             button.btn.btn-primary(name="id" value=room[k]._id) Rejoindre
 

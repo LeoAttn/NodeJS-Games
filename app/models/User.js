@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     bcrypt = require('bcrypt-nodejs'),
-    SALT = 10;
+    SALT = 42;
 
 var schema = new Schema({
     first_name: {type: String, required: false, default: ''},
@@ -23,7 +23,10 @@ schema.pre('save', function (next) {
         if (err) return next(err);
         bcrypt.hash(user.password, salt, null, function (err, hash) {
             if (err) return next(err);
+            console.log("salt = " + salt);
+            console.log("pwd = " + user.password);
             user.password = hash;
+            console.log("hash pwd = " + user.password);
             next();
         });
     });

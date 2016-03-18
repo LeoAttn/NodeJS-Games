@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var room = require('../controllers/Rooms');
 var user = require('../controllers/Users');
+var highscore = require('../controllers/HighScores');
 
 /**===========================
         INDEX ROUTES
@@ -11,13 +12,7 @@ router.post('/create', room.create);//Crée une room,
 router.post('/join', room.joinLobby);//Rejoins une room via un boutton(form),
 router.get('/join/:id', room.joinLobby);//Rejoins une room via un lien
 router.get('/lobby/:id', room.lobby);//Affiche la vue du lobby
-router.get('/highscores', function (req, res) {
-    res.render('highscores', {
-        title: 'Bataille Navale - Highscores',
-        active: 'Highscores',
-        session: req.session
-    });
-});
+router.get('/highscores', highscore.index);
 router.get('/flush-session', function (req, res) {
     delete req.session.roomID;
     delete req.session.playerID;

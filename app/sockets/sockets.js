@@ -1,5 +1,6 @@
 var RoomsC = require('../controllers/Rooms'),
     UsersC = require('../controllers/Users');
+    ScoresC = require('../controllers/HighScores');
 
 var io,
     chat,
@@ -234,13 +235,17 @@ var IO = {
                     console.log(type);
                     s.emit('tirServ', {tab: 'att', type: type, x: x, y: y});
                     s.broadcast.to(s.session.roomID).emit('tirServ', {tab: 'def', type: type, x: x, y: y});
+                    room[s.session.roomID].nbLap++;
                     nextTurn(s, opponentID);
                     startCountdown(s, opponentID);
 
                     if (room[s.session.roomID].players[opponentID].batCoule == room[s.session.roomID].nbBat) {
                         stopCountdown(s, opponentID);
-                        if (s.session.isAuthenticated == true)
+                        if (s.session.isAuthenticated === true) {
                             UsersC.addWin(s.session.username);
+                            var time = new Date().getTime() - room[s.session.roomID].time;
+                            ScoresC.create(s.session.username, room[s.session.roomID].nbLap, time);
+                        }
                         changeState(s, s.session.playerID, 'win');
                         changeState(s, opponentID, 'loose');
                     }
@@ -519,7 +524,7 @@ function randomBoatPlacement(s, batPos, nbBat) {
 //Vérifie que les joueurs sont pret, (que leur bateaux ont été validé)
 function checkPlayersAreReady(s) {
     if (room[s.session.roomID].validationCptr == 2) {
-		console.log("LET'S START ! ")
+		console.log("LET'S START ! ");
         s.broadcast.emit('start');
         s.emit('start');
         var rand = Math.round(Math.random());
@@ -537,6 +542,8 @@ function checkPlayersAreReady(s) {
         changeState(s, secondPlayerID, 'wait');
 		console.log("FIRST PLAYER : "+ firstPlayerID);
 		console.log("SECOND PLAYER : "+ secondPlayerID);
+        room[s.session.roomID].nbLap = 0;
+        room[s.session.roomID].time = new Date().getTime();
         startCountdown(s, firstPlayerID);
 
     }

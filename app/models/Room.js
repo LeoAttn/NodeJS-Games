@@ -8,7 +8,7 @@ var schema = new Schema({
     playing: {type: Boolean, default: false},
     ready: {type: Boolean, default: false},
     private: {type: Boolean, required: true},
-    createdOn: {type: Date, default: Date.now}
+    createdOn: {type: String, required: true}
 });
 
 exports.model = mongoose.model('Room', schema, 'Rooms');
