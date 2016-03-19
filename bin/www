@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('NodeJS-Games:server');
 var http = require('http');
-var sass = require('node-sass');
 /**
  * Get port from environment and store in Express.
  */
