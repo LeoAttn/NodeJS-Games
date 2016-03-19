@@ -1,5 +1,5 @@
-$cellSize: 30px;
-$cellSpace: 2px;
+@cellSize: 30px;
+@cellSpace: 2px;
 
 body {
   //padding: 20px;
@@ -32,8 +32,8 @@ a {
 }
 
 .tab td {
-  width: $cellSize+1;
-  height: $cellSize+1;
+  width: @cellSize+1;
+  height: @cellSize+1;
 }
 
 .tab-container {
@@ -117,12 +117,12 @@ a {
 .cell-touche:after, .cell-dansleau:after {
   content: '';
     position: absolute;
-  top: $cellSpace * 3 - 1;
-  left: $cellSpace * 3 - 1;
-  right: $cellSpace * 3;
-  bottom: $cellSpace * 3;
-  border: ($cellSpace * 3 - $cellSpace / 2) solid #cc0000;
-  border-radius: $cellSize / 2;
+  top: @cellSpace * 3 - 1;
+  left: @cellSpace * 3 - 1;
+  right: @cellSpace * 3;
+  bottom: @cellSpace * 3;
+  border: (@cellSpace * 3 - @cellSpace / 2) solid #cc0000;
+  border-radius: @cellSize / 2;
 }
 
 .cell-dansleau:after {
@@ -135,11 +135,11 @@ a {
 }
 
 .bat {
-  width: $cellSize - $cellSpace * 2;
-  height: $cellSize - $cellSpace * 2;
-  margin: $cellSpace;
+  width: @cellSize - @cellSpace * 2;
+  height: @cellSize - @cellSpace * 2;
+  margin: @cellSpace;
   background-color: #22A7F0;
-  border-radius: ($cellSize - $cellSpace) / 3;
+  border-radius: (@cellSize - @cellSpace) / 3;
   cursor: grab;
 }
 
@@ -218,13 +218,13 @@ a {
   display: block;
 }
 
-$lobbyHeight: 400px;
+@lobbyHeight: 400px;
 
 #chat {
   float: right;
   display: inline-block;
   width: 50%;
-  height: $lobbyHeight;
+  height: @lobbyHeight;
 }
 
 .leftBlock {
@@ -234,7 +234,7 @@ $lobbyHeight: 400px;
   justify-content: space-between;
   padding: 0 20px;
   width: 50%;
-  height: $lobbyHeight;
+  height: @lobbyHeight;
   .startButton {
       animation: win 1s linear infinite;
   }
@@ -293,7 +293,7 @@ $lobbyHeight: 400px;
 }
 
 #chatMessages {
-  height: $lobbyHeight - 34px;
+  height: @lobbyHeight - 34px;
   overflow-x: hidden;
   overflow-y: auto;
   border: solid 1px #CCC;

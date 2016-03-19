@@ -7,7 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var sass = require('node-sass-middleware');
+var less = require('less-middleware');
 var mongoose = require('mongoose');
 
 var routes = require('./app/routes/index');
@@ -31,12 +31,14 @@ app.use(session({
     saveUninitialized: true
 }));
 
-//Lie le css avec le module sass
-app.use('/stylesheets', sass({
-    src: __dirname + '/app/sass',
-    dest: __dirname + '/public/stylesheets',
-    debug: false,
-    outputStyle: 'compressed'
+//Lie le css avec le module less
+app.use(less(path.join(__dirname, 'app', 'less'), {
+    dest: path.join(__dirname, 'public'),
+    preprocess: {
+        path: function(pathname, req) {
+            return pathname.replace(path.sep + 'stylesheets' + path.sep, path.sep);
+        }
+    }
 }));
 
 // init body parser
