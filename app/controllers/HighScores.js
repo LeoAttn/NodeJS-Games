@@ -16,7 +16,7 @@ var Highscores = {
                 session: req.session,
                 scores: highscores
             });
-        }).sort({_id:-1});
+        }).sort({_id: -1});
     },
     create: function (name, nbLap, time) {
         var t = new Date();

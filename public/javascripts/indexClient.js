@@ -1,15 +1,15 @@
 function updateRoomList() {
     $.ajax({
-        type: 'get',
-        url: '/api/'
-    })
+            type: 'get',
+            url: '/api/'
+        })
         .done(function (data) {
             console.log(data);
             displayRoomList(data);
         })
         .fail(function (request, status, error) {
             console.log('ERROR !');
-        })
+        });
 }
 
 function displayRoomList(rooms) {
@@ -41,6 +41,7 @@ function displayRoomList(rooms) {
         }).appendTo(td);
     }
 }
+
 
 $(function () {
     setInterval(updateRoomList, 6000);
