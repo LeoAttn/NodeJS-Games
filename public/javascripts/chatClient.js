@@ -12,7 +12,8 @@ function sendMessage() {
             traiteCmd(msg);
         else
             chat.emit('chatMessage', msg);
-        $('#messageInput').val('');
+        $('#messageInput').val('')
+            .focus();
     }
 }
 
