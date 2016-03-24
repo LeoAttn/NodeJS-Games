@@ -19,7 +19,7 @@ var api = require('./app/routes/api');
 
 var app = express();
 
-app.set('env', 'production');
+//app.set('env', 'production');
 // view engine setup
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
