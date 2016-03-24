@@ -39,7 +39,7 @@ var Users = {
         delete req.session.avatarLink;
         res.redirect('/');
     },
-    account: function (req, res) {
+    account: function (req, res, next) {
         console.log(req.params.username);
         console.log(JSON.stringify(req.session));
         if (req.session.isAuthenticated == true) {
@@ -49,23 +49,18 @@ var Users = {
                     if (req.query.edit && req.session.username == req.params.username) {
                         res.render('edit-account', {
                             title: "Bataille Navale - Edition du profil",
-                            active: 'Mon Compte',
-                            session: req.session,
                             user: userData
                         })
                     }
                     else {
                         res.render('account', {
                             title: "Bataille Navale - Profil " + userData.pseudo,
-                            active: 'Mon Compte',
-                            session: req.session,
                             user: userData
                         });
                     }
                 }
                 else {
-                    res.status(404).send('No content !');
-                    res.end();
+                    next();
                 }
             });
         }
@@ -107,46 +102,50 @@ var Users = {
         User.findOne({pseudo: req.session.username}, function (err, user) {
             if (err) throw err;
             if (user) {
-                var form = new formidable.IncomingForm();
+                //var form = new formidable.IncomingForm();
+                var fields = req.body;
                 var error = false;
-                form.parse(req, function (err, fields, files) {
-                    var regexPseudo = /^[A-Za-z0-9_[\]-]+$/;
-                    var regexEmail = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-                    if (regexPseudo.test(fields.pseudo) && regexEmail.test(fields.email)) {
+                //form.parse(req, function (err, fields, files) {
 
-                        if (fields.last_name != "")
-                            user.last_name = fields.last_name;
-                        if (fields.first_name != "")
-                            user.first_name = fields.first_name;
-                        if (fields.pseudo != "")
-                            user.pseudo = fields.pseudo;
-                        if (fields.email != "")
-                            user.email = fields.email;
-                    } else {
-                        error = true;
-                        res.redirect("/user/account/" + req.session.username + "?error=improper");
-                    }
-                });
+                var regexPseudo = /^[A-Za-z0-9_[\]-]+$/;
+                var regexEmail = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+                if (regexPseudo.test(fields.pseudo) && regexEmail.test(fields.email)) {
 
-                form.on('end', function (fields, files) {
+                    if (fields.last_name != "")
+                        user.last_name = fields.last_name;
+                    if (fields.first_name != "")
+                        user.first_name = fields.first_name;
+                    if (fields.pseudo != "")
+                        user.pseudo = fields.pseudo;
+                    if (fields.email != "")
+                        user.email = fields.email;
+                } else {
+                    error = true;
+                    res.redirect("/user/account/" + req.session.username + "?error=improper");
+                }
+                //});
+
+                //req.form.on('end', function (fields, files) {
+
+
+                if (req.form.openedFiles[0].size > 0) {
                     /* Temporary location of our uploaded file */
-                    var temp_path = this.openedFiles[0].path;
+                    var temp_path = req.form.openedFiles[0].path;
                     /* The file name of the uploaded file */
-                    var file_name = this.openedFiles[0].name;
+                    var file_name = 'avatar-' + fields.pseudo;
                     /* Location where we want to copy the uploaded file */
                     var new_location = path.join(path.dirname(), 'public/images/uploads/');
-                    fs.copy(temp_path, new_location + file_name, function (err) {
+                    fs.copy(temp_path, new_location + file_name, {replace: true}, function (err) {
                         if (err) {
                             console.error(err);
                         } else {
                             console.log("success!")
                         }
                     });
-
-                    if (this.openedFiles[0].size > 0)
-                        user.avatarLink = "/images/uploads/" + file_name;
-                    user.save();
-                });
+                    user.avatarLink = "/images/uploads/" + file_name;
+                }
+                user.save();
+                //});
                 if (!error)
                     res.redirect("/user/account/" + req.session.username);
             }

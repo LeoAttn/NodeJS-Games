@@ -1,9 +1,11 @@
 require('../models/Room');
+require('../models/User');
 
 var Users = require('./Users');
 
 var mongoose = require("mongoose"),
     Room = mongoose.model('Room');
+User = mongoose.model('User');
 
 
 var Rooms = {
@@ -45,21 +47,26 @@ var Rooms = {
             //res.json(rooms);
             res.render('index', {
                 title: 'Bataille Navale',
-                active: 'Home',
-                session: req.session,
                 room: rooms,
                 message: msg
             });
         });
     },
-    create: function (req, res) {
+    create: function (req, res, next) {
         if (!req.session.roomID) {
             var regexPseudo = /^[A-Za-z0-9_[\]-]+$/;
             var regexRoom = /^[A-Za-z0-9_[\]-]*$/;
             if (regexPseudo.test(req.body.username) && regexRoom.test(req.body.roomName)) {
-                if (req.session.username === undefined) {
+                if (req.session.username === undefined || !req.session.isAuthenticated) {
                     if (req.body.username.length > 20)
                         req.body.username = req.body.username.substr(0, 20);
+                    User.find({pseudo: req.body.username}, function (err, user) {
+                        if (user) {
+                            //res.redirect('/?error=pseudoExist');
+                            console.log('EXIST');
+                            return;
+                        }
+                    });
                     req.session.username = req.body.username;
                 }
                 if (!(req.body.roomName))
@@ -141,9 +148,7 @@ var Rooms = {
                 if (room) {
                     res.render('lobby', {
                         title: "Bataille Navale - Lobby: " + room.name,
-                        active: 'Partie en cours',
                         noReturnParty: true,
-                        session: req.session,
                         tRoom: room
                     });
                 }
@@ -166,8 +171,6 @@ var Rooms = {
                         req.cookies.roomID = room._id;
                         res.render('play', {
                             title: "Battaille Navale - En cours: " + room.name,
-                            active: 'Partie en cours',
-                            session: req.session
                         });
                     }
                     else {
