@@ -12,8 +12,6 @@ var Highscores = {
             //res.json(rooms);
             res.render('highscores', {
                 title: 'Bataille Navale -  Highscores',
-                active: 'Highscores',
-                session: req.session,
                 scores: highscores
             });
         }).sort({_id: -1});

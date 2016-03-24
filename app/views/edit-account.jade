@@ -5,7 +5,8 @@ block content
         div.accountLeftBlock
             img(class = "avatar big" src = user.avatarLink)
         div.accountRightBlock
-            form(action = "/user/update" enctype="multipart/form-data" method = "post")
+            form(action = "/user/update", enctype="multipart/form-data", method = "post")
+                input(type='text', name='_csrf', value=csrf)
                 div.form-group
                     label.control-label(for = "pseudo") Nom d'utilisateur
                     input.form-control(type = "text" name = "pseudo" value=user.pseudo)

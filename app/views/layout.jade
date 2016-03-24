@@ -1,10 +1,10 @@
-mixin tabs(url, name)
-    if (name == active)
+mixin tabs(link, name)
+    if link == /^[^?]*/.exec(url)
         li.active(role='presentation')
-            a(href=url)= name
+            a(href=link)= name
     else
         li(role='presentation')
-            a(href=url)= name
+            a(href=link)= name
 
 doctype html
 html

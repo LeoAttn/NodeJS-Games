@@ -33,8 +33,6 @@ router.get('/sign-in', function (req, res) {
         }
         res.render('connexion', {
             title: "Bataille Navale - Connexion",
-            active: 'Connexion',
-            session: req.session,
             message: msg
         });
     }
@@ -58,8 +56,6 @@ router.get('/sign-up', function (req, res) {
         }
         res.render('inscription', {
             title: "Bataille Navale - Inscription",
-            active: 'S\'inscrire',
-            session: req.session,
             message: msg
         });
     }

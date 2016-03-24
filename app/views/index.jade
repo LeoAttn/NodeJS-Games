@@ -9,7 +9,8 @@ block content
         h3 Créez une partie !
 
         form.form-horizontal(class = "create-room" action="/create" method = "post")
-            if(!session.isAuthenticated)
+            input(type='hidden', name='_csrf', value=csrf)
+            unless session.isAuthenticated
                 div.form-group
                     label.col-sm-3.control-label(for= "Uname") Nom d'utilisateur
                     div.col-sm-6: input.form-control(type ="text" name = "username" id="Uname" maxlength=20 required="required" value=(session.username) )
@@ -28,7 +29,8 @@ block content
 
     div.list-room
         h3 Rejoignez une partie !
-        form.form-horizontal(action="/join" method="post")
+        form.form-horizontal(action="/join", method="post")
+            input(type='hidden', name='_csrf', value=csrf)
             table.table.table-striped.table-bordered
                 thead
                     th.center Nom de la partie
@@ -41,7 +43,7 @@ block content
                         td= room[k].creator
                         td!= room[k].createdOn
                         td.center
-                            button.btn.btn-primary(name="id" value=room[k]._id) Rejoindre
+                            button.btn.btn-primary(type="submit", name="id", value=room[k]._id) Rejoindre
 
 block script
     script(src="/javascripts/indexClient.js")

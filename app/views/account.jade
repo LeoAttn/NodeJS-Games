@@ -3,7 +3,7 @@ extends layout
 block content
     div.account
         div.accountLeftBlock
-            img(class = "avatar big" src = user.avatarLink)
+            img.avatar.big(src=user.avatarLink)
         div.accountRightBlock
             div.center
                 span!= '<strong>Pseudo :&nbsp;&nbsp;</strong>'
@@ -21,10 +21,11 @@ block content
                 span!= '<strong>Statistiques :&nbsp;&nbsp;</strong>'
                 span="Nombre de Victoires " + user.wins
             div.center
-                a.btn.btn-info.btn-lg(href ="/user/account/"+ (user.pseudo) +"?edit=true") Editer
+                a.btn.btn-info.btn-lg(href ='/user/account/'+ (user.pseudo) +"?edit=true") Editer
             div.center
                 form(action = "/user/delete" method ="post")
+                    input(type='hidden', name='_csrf', value=csrf)
                     button.btn.btn-danger.btn-lg Supprimer votre compte
 
 block script
-    script(src="/javascripts/account.js")
+    //script(src="/javascripts/account.js")
