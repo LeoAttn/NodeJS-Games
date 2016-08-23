@@ -35,6 +35,6 @@ block content
 block script
     script(type='text/javascript').
         var sess = !{JSON.stringify(session)};
-        var token = csrf;
+        var token = '!{csrf}';
     script(src='/javascripts/lobbyClient.js')
     script(src='/javascripts/chatClient.js')

@@ -80,7 +80,7 @@ app.use('/user/update', function (req, res, next) {
 
 app.use(lusca({
     csrf: true,
-    csp: { /* ... */},
+    csp: '',
     xframe: 'SAMEORIGIN',
     p3p: 'ABCDEF',
     hsts: {maxAge: 31536000, includeSubDomains: true, preload: true},
@@ -92,6 +92,7 @@ app.use(function (req, res, next) {
         req.session.avatarLink = "/images/default.png";
     }
     res.locals.csrf = req.csrfToken();
+    console.log(res.locals.csrf);
     res.locals.session = req.session;
     res.locals.url = req.url;
     next();
