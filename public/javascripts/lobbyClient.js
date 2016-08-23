@@ -86,10 +86,10 @@ function unlockButton() {
 
 function startGame() {
     $.ajax({
-        type: 'put',
-        url: '/api/set-ready/' + sess.roomID,
-        data: "id=" + sess.roomID
-    })
+            type: 'put',
+            url: '/api/set-ready/' + sess.roomID,
+            data: "id=" + sess.roomID + "+_csrf=" + token
+        })
         .done(function (data) {
             socket.emit('startGame');
         })

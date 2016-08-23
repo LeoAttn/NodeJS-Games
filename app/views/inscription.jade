@@ -3,25 +3,25 @@ extends layout
 block content
     if message
         div.error-bg
-            p #{message}
+            p= message
 
     h3 Inscription :
-    form(action = "/user/create" method ="POST")
+    form(action='/user/create', method='POST')
         input(type='hidden', name='_csrf', value=csrf)
         div.form-group
-            label.control-label(name ="pseudo") Nom d'utilisateur
-            input.form-control(type = "text" name = "pseudo" id = "Uname" maxlength=20 required="required" autofocus="autofocus")
+            label.control-label(for='pseudo') Nom d'utilisateur
+            input.form-control#pseudo(type='text', name='pseudo', maxlength=20, required, autofocus)
         div.form-group
-            label.control-label(name ="email") Email
-            input.form-control(type = "email" name = "email" id = "email" required="required" )
+            label.control-label(for='email') Email
+            input.form-control#email(type='email', name='email', required)
         div.form-group
-            label.control-label(name ="password") Mot de passe
-            input.form-control(type = "password" name = "password" id = "password" required="required" )
+            label.control-label(for='password') Mot de passe
+            input.form-control#password(type='password', name='password', required)
         div.form-group
-            label.control-label(name ="confirmPass") Confirmation du mot de passe
-            input.form-control(type = "password" name = "confirmPass" id = "confirmPass" required="required" )
+            label.control-label(for='confirmPass') Confirmation du mot de passe
+            input.form-control#confirmPass(type='password', name='confirmPass', required)
         div.form-group
-                button.btn.btn-primary.btn-lg(name = "submit") S'inscrire
+            button.btn.btn-primary.btn-lg(type='submit') S'inscrire
 
 block script
-    script(src="/javascripts/inscription.js")
+    script(src='/javascripts/inscription.js')

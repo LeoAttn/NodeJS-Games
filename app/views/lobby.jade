@@ -11,12 +11,12 @@ block content
                 if session.playerID == 'creator'
                     div.form-group
                         label Temps entre chaque tour <small>(entre 10 et 600 sec)</small>
-                        input.form-control(type='number' value=60 step=1 min=10 max=600)#timeTimer
+                        input.form-control#timeTimer(type='number', value=60, step=1, min=10, max=600)
                     div.form-group
                         label Nombre de bateau <small>(entre 1 et 10)</small>
-                        input.form-control(type='number' value=5 step=1 min=1 max=10)#nbBat
+                        input.form-control#nbBat(type='number', value=5, step=1, min=1, max=10)
                     button.btn.btn-default.btn-lg.btn-block(onclick='promptLink()') Lien d'invitation
-                    button(onClick = "startGame()" class = "btn btn-success btn-lg btn-block" disabled)#startButton Lancer la partie
+                    button.btn.btn-success.btn-lg.btn-block#startButton(onClick='startGame()', disabled) Lancer la partie
                 else
                     div.form-group
                         label Temps entre chaque tour <small>(entre 10 et 600 sec)</small>
@@ -28,12 +28,13 @@ block content
             div#chatMessages
                 table.table.table-striped.table-bordered
             div.form-group: div.input-group
-                input(class = "form-control" placeholder="Type your text here..." maxlength=200)#messageInput
-                div.input-group-addon.btn.btn-default(onClick = "sendMessage()")#sendMessage
-                    span(class="glyphicon glyphicon-send" aria-hidden="true")
+                input.form-control#messageInput(placeholder='Type your text here...', maxlength=200)
+                div.input-group-addon.btn.btn-default#sendMessage(onClick='sendMessage()')
+                    span.glyphicon.glyphicon-send(aria-hidden='true')
 
 block script
-    script(type = "text/javascript").
+    script(type='text/javascript').
         var sess = !{JSON.stringify(session)};
-    script(src="/javascripts/lobbyClient.js")
-    script(src="/javascripts/chatClient.js")
+        var token = csrf;
+    script(src='/javascripts/lobbyClient.js')
+    script(src='/javascripts/chatClient.js')

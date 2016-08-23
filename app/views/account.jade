@@ -9,11 +9,13 @@ block content
                 span!= '<strong>Pseudo :&nbsp;&nbsp;</strong>'
                 span=user.pseudo
             if user.first_name != ''
-                span!= '<strong>Prénom :&nbsp;&nbsp;</strong>'
-                span=user.first_name
+                div.center
+                    span!= '<strong>Prénom :&nbsp;&nbsp;</strong>'
+                    span=user.first_name
             if user.last_name != ''
-                span!= '<strong>Nom :&nbsp;&nbsp;</strong>'
-                span=user.last_name
+                div.center
+                    span!= '<strong>Nom :&nbsp;&nbsp;</strong>'
+                    span=user.last_name
             div.center
                 span!= '<strong>Email :&nbsp;&nbsp;</strong>'
                 span=user.email
@@ -21,11 +23,8 @@ block content
                 span!= '<strong>Statistiques :&nbsp;&nbsp;</strong>'
                 span="Nombre de Victoires " + user.wins
             div.center
-                a.btn.btn-info.btn-lg(href ='/user/account/'+ (user.pseudo) +"?edit=true") Editer
+                a.btn.btn-info.btn-lg(href='/user/account/' + (user.pseudo) + '?edit=true') Editer
             div.center
-                form(action = "/user/delete" method ="post")
+                form(action='/user/delete', method='post')
                     input(type='hidden', name='_csrf', value=csrf)
                     button.btn.btn-danger.btn-lg Supprimer votre compte
-
-block script
-    //script(src="/javascripts/account.js")

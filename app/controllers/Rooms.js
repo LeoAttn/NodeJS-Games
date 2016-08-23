@@ -47,7 +47,7 @@ var Rooms = {
             //res.json(rooms);
             res.render('index', {
                 title: 'Bataille Navale',
-                room: rooms,
+                rooms: rooms,
                 message: msg
             });
         });

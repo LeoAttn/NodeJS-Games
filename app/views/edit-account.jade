@@ -3,27 +3,24 @@ extends layout
 block content
     div
         div.accountLeftBlock
-            img(class = "avatar big" src = user.avatarLink)
+            img.avatar.big(src=user.avatarLink)
         div.accountRightBlock
-            form(action = "/user/update", enctype="multipart/form-data", method = "post")
+            form(action='/user/update', enctype='multipart/form-data', method='post')
                 input(type='hidden', name='_csrf', value=csrf)
                 div.form-group
-                    label.control-label(for = "pseudo") Nom d'utilisateur
-                    input.form-control(type = "text" name = "pseudo" value=user.pseudo)
+                    label.control-label(for='pseudo') Nom d'utilisateur
+                    input.form-control#pseudo(type='text', name='pseudo', value=user.pseudo, maxlength=20, required)
                 div.form-group
-                    label.control-label(for = "first_name") Prénom
-                    input.form-control(type = "text" name = "first_name" value=user.first_name)
+                    label.control-label(for='first_name') Prénom
+                    input.form-control#first_name(type='text', name='first_name', value=user.first_name)
                 div.form-group
-                    label.control-label(for = "last_name") Nom
-                    input.form-control(type = "text" name = "last_name" value=user.last_name)
+                    label.control-label(for='last_name') Nom
+                    input.form-control#last_name(type='text', name='last_name', value=user.last_name)
                 div.form-group
-                    label.control-label(for = "email") Email
-                    input.form-control(type = "mail" name = "email" value=user.email)
+                    label.control-label(for='email') Email
+                    input.form-control#email(type='mail', name='email', value=user.email, required)
                 div.form-group
-                    label.control-label(for = "avatar") Avatar
-                    input(type="file" name="avatar")
-                 div.form-group
-                        button.btn.btn-primary.btn-lg(name = "submit") Editer
-
-block script
-    script(src="/javascripts/account.js")
+                    label.control-label(for='avatar') Avatar
+                    input#avatar(type='file', name='avatar')
+                div.form-group
+                    button.btn.btn-primary.btn-lg(type='submit') Editer

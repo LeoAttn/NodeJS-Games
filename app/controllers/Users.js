@@ -132,7 +132,7 @@ var Users = {
                     /* Temporary location of our uploaded file */
                     var temp_path = req.form.openedFiles[0].path;
                     /* The file name of the uploaded file */
-                    var file_name = 'avatar-' + fields.pseudo;
+                    var file_name = 'avatar-' + fields.pseudo + /[.][a-z0-9]+$/i.exec(req.form.openedFiles[0].name);
                     /* Location where we want to copy the uploaded file */
                     var new_location = path.join(path.dirname(), 'public/images/uploads/');
                     fs.copy(temp_path, new_location + file_name, {replace: true}, function (err) {
