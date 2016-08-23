@@ -62,7 +62,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // init le dossier public comme dossier static
 app.use(express.static(path.join(__dirname, 'public')));
 //Insère la favicon
-app.use(favicon(path.join(__dirname, 'public/', 'favicon.png')));
+app.use(favicon(path.join(__dirname, 'public/favicon.png')));
 
 var formidable = require('formidable');
 app.use('/user/update', function (req, res, next) {
@@ -92,7 +92,6 @@ app.use(function (req, res, next) {
         req.session.avatarLink = "/images/default.png";
     }
     res.locals.csrf = req.csrfToken();
-    console.log(res.locals.csrf);
     res.locals.session = req.session;
     res.locals.url = req.url;
     next();
